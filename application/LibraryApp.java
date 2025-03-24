@@ -1,19 +1,14 @@
-package application;
+package application.APP;
 
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.Font;
-import javax.swing.JLabel;
-import java.awt.BorderLayout;
 import java.awt.Panel;
 import java.awt.Color;
-import javax.swing.SwingConstants;
-import javax.swing.JPanel;
-import javax.swing.ImageIcon;
 import java.awt.Dimension;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class LibraryApp {
 
@@ -81,29 +76,59 @@ public class LibraryApp {
 		lblNewLabel.setFont(new Font("Jost", Font.BOLD, 31));
 		
 		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setBounds(670, 24, 109, 125);
+		lblNewLabel_3.setBounds(672, 0, 109, 125);
 		frmLibraryapp.getContentPane().add(lblNewLabel_3);
 		lblNewLabel_3.setMinimumSize(new Dimension(50, 50));
 		lblNewLabel_3.setMaximumSize(new Dimension(100, 100));
 		lblNewLabel_3.setIcon(new ImageIcon("E:\\L2 ACAD C\\S4\\BDD\\TP\\Untitled design.png"));
 		
 		JLabel lblNewLabel_4 = new JLabel("Username");
-		lblNewLabel_4.setFont(new Font("Jost", Font.BOLD, 19));
-		lblNewLabel_4.setBounds(537, 226, 97, 29);
+		lblNewLabel_4.setFont(new Font("Jost", Font.BOLD, 26));
+		lblNewLabel_4.setBounds(547, 195, 133, 35);
 		frmLibraryapp.getContentPane().add(lblNewLabel_4);
 		
 		JLabel lblNewLabel_4_1 = new JLabel("Password");
-		lblNewLabel_4_1.setFont(new Font("Jost", Font.BOLD, 19));
-		lblNewLabel_4_1.setBounds(537, 306, 97, 29);
+		lblNewLabel_4_1.setFont(new Font("Jost", Font.BOLD, 26));
+		lblNewLabel_4_1.setBounds(547, 306, 133, 35);
 		frmLibraryapp.getContentPane().add(lblNewLabel_4_1);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(537, 350, 246, 29);
+		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 27));
+		passwordField.setBounds(547, 352, 287, 49);
 		frmLibraryapp.getContentPane().add(passwordField);
 		
 		textField = new JTextField();
-		textField.setBounds(537, 266, 245, 29);
+		textField.setFont(new Font("Jost", Font.PLAIN, 27));
+		textField.setBounds(547, 253, 287, 49);
 		frmLibraryapp.getContentPane().add(textField);
 		textField.setColumns(10);
+		
+		JButton btnNewButton = new JButton("LOG IN");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String user = textField.getText();
+				String pass = String.valueOf(passwordField.getPassword());
+
+				// Dummy authentication (Replace with real validation logic)
+				if (user.equals("amine") && pass.equals("benallal")) {
+
+
+					// Open HomeScreen
+					new Home();
+
+					// Close Login Window
+					frmLibraryapp.dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+
+			}
+		});
+		btnNewButton.setForeground(new Color(255, 255, 255));
+		btnNewButton.setBackground(new Color(0, 102, 102));
+		btnNewButton.setFont(new Font("Jost", Font.BOLD, 19));
+		btnNewButton.setBounds(631, 442, 134, 49);
+		frmLibraryapp.getContentPane().add(btnNewButton);
 	}
 }
