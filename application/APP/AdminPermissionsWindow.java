@@ -17,6 +17,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.*;
 
 public class AdminPermissionsWindow extends JFrame {
 
@@ -24,10 +27,15 @@ public class AdminPermissionsWindow extends JFrame {
 	/**
 	 * 
 	 */
+	private Statement statement;
+	private Connection connection;
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable usersTable;
 	private JTextField usernameTextField;
+	
+	
+	
 
 	
 
@@ -53,6 +61,27 @@ public class AdminPermissionsWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public AdminPermissionsWindow(String username, String accessLevel) {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+		    connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
+		    
+		    if (connection != null) {
+		        System.out.println("Connected to the database successfully!");
+		    } else {
+		        System.out.println("Failed to connect to the database.");
+		    }
+		} catch (SQLException e1) {
+		    e1.printStackTrace();
+		}
+		
+		
+		
 		setTitle("Users Managing Table");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1500, 900);
@@ -72,30 +101,36 @@ public class AdminPermissionsWindow extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("CONNECTED AS:");
 		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setBounds(1059, 11, 164, 26);
+		lblNewLabel.setBounds(1026, 11, 197, 26);
 		panel.add(lblNewLabel);
-		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+		lblNewLabel.setFont(new Font("Jost", Font.BOLD, 20));
 		
 		JLabel lblusername = new JLabel(username);
 		lblusername.setForeground(new Color(255, 255, 255));
 		lblusername.setBounds(1233, 16, 120, 16);
 		panel.add(lblusername);
-		lblusername.setFont(new Font("Dialog", Font.BOLD, 20));
+		lblusername.setFont(new Font("Jost", Font.BOLD, 20));
 		
 		JLabel lblAccessLevel = new JLabel("ACCESS LEVEL :");
 		lblAccessLevel.setForeground(new Color(255, 255, 255));
-		lblAccessLevel.setBounds(1059, 68, 168, 16);
+		lblAccessLevel.setBounds(1026, 68, 201, 16);
 		panel.add(lblAccessLevel);
-		lblAccessLevel.setFont(new Font("Dialog", Font.BOLD, 20));
+		lblAccessLevel.setFont(new Font("Jost", Font.BOLD, 20));
 		
 		JLabel lblacceslevel = new JLabel(accessLevel);
 		lblacceslevel.setForeground(new Color(255, 255, 255));
 		lblacceslevel.setBounds(1233, 68, 120, 16);
 		panel.add(lblacceslevel);
-		lblacceslevel.setFont(new Font("Dialog", Font.BOLD, 20));
+		lblacceslevel.setFont(new Font("Jost", Font.BOLD, 20));
+		
+		JLabel lblNewLabel_1 = new JLabel("USERS TABLE");
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
+		lblNewLabel_1.setBounds(34, 27, 334, 57);
+		panel.add(lblNewLabel_1);
+		lblNewLabel_1.setFont(new Font("Jost", Font.BOLD, 22));
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(359, 194, 1104, 427);
+		scrollPane.setBounds(242, 194, 1104, 427);
 		contentPane.add(scrollPane);
 		
 		usersTable = new JTable();
@@ -109,32 +144,29 @@ public class AdminPermissionsWindow extends JFrame {
 		));
 		usersTable.setBackground(new Color(192, 192, 192));
 		
-		JLabel lblNewLabel_1 = new JLabel("USERS TABLE");
-		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblNewLabel_1.setBounds(30, 126, 334, 57);
-		contentPane.add(lblNewLabel_1);
-		
 		JLabel usernameLabel = new JLabel("Username:");
-		usernameLabel.setFont(new Font("Dialog", Font.BOLD, 20));
-		usernameLabel.setBounds(10, 244, 105, 20);
+		usernameLabel.setFont(new Font("Jost", Font.BOLD, 22));
+		usernameLabel.setBounds(10, 169, 105, 20);
 		contentPane.add(usernameLabel);
 		
 		usernameTextField = new JTextField();
-		usernameTextField.setBounds(137, 244, 169, 20);
+		usernameTextField.setBounds(10, 208, 181, 40);
 		contentPane.add(usernameTextField);
 		usernameTextField.setColumns(10);
 		
 		JLabel permissionLabel = new JLabel("Access Level:");
-		permissionLabel.setFont(new Font("Dialog", Font.BOLD, 20));
-		permissionLabel.setBounds(10, 330, 139, 57);
+		permissionLabel.setFont(new Font("Jost", Font.BOLD, 22));
+		permissionLabel.setBounds(10, 259, 139, 57);
 		contentPane.add(permissionLabel);
 		
 		JRadioButton adminRadio = new JRadioButton("Admin");
-		adminRadio.setBounds(157, 351, 109, 23);
+		adminRadio.setFont(new Font("Jost", Font.PLAIN, 12));
+		adminRadio.setBounds(10, 323, 109, 23);
 		contentPane.add(adminRadio);
 		
 		JRadioButton staffRadio = new JRadioButton("Staff");
-		staffRadio.setBounds(157, 381, 109, 23);
+		staffRadio.setFont(new Font("Jost", Font.PLAIN, 12));
+		staffRadio.setBounds(10, 353, 109, 23);
 		contentPane.add(staffRadio);
 		
 		ButtonGroup accessLevelGroup = new ButtonGroup();
@@ -142,15 +174,32 @@ public class AdminPermissionsWindow extends JFrame {
 		accessLevelGroup.add(staffRadio);
 		
 		JButton addUserButton = new JButton("Add User");
+		addUserButton.setBackground(new Color(0, 64, 128));
+		addUserButton.setForeground(new Color(255, 255, 255));
+		addUserButton.setFont(new Font("Jost", Font.BOLD, 16));
 		addUserButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String username=usernameTextField.getText();
 				DefaultTableModel usersTableModel = (DefaultTableModel) usersTable.getModel();
 				if(adminRadio.isSelected()) {
 					if(adminRadio.getText().equals("")) {
 						contentPane.add(missingUsername());
 						return;
 					}
-					usersTableModel.addRow(new Object[]{usernameTextField.getText(), adminRadio.getText()}); //TODO: Find an alternative to get the accessLevel selected.
+					usersTableModel.addRow(new Object[]{usernameTextField.getText(), adminRadio.getText()});
+					
+					
+					String requete = "INSERT INTO userstable (usernames, accesslevel) VALUES ('" + username + "', 'ADMIN')";
+					try {
+						statement=connection.createStatement();
+						statement.execute(requete);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					
+					//TODO: Find an alternative to get the accessLevel selected.
 					contentPane.add(addedUser());
 				}
 				if(staffRadio.isSelected()) {
@@ -158,15 +207,27 @@ public class AdminPermissionsWindow extends JFrame {
 						contentPane.add(missingUsername());
 						return;
 					}
+					
+					String requete = "INSERT INTO userstable (usernames, accesslevel) VALUES ('" + username + "', 'STAFF')";
+					try {
+						statement=connection.createStatement();
+						statement.execute(requete);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					usersTableModel.addRow(new Object[]{usernameTextField.getText(), staffRadio.getText()}); //TODO: Find an alternative to get the accessLevel selected.
 					contentPane.add(addedUser());
 				}
 			}
 		});
-		addUserButton.setBounds(137, 462, 89, 23);
+		addUserButton.setBounds(10, 383, 105, 40);
 		contentPane.add(addUserButton);
 		
 		JButton removeUserButton = new JButton("Remove Selected User");
+		removeUserButton.setFont(new Font("Jost", Font.BOLD, 19));
+		removeUserButton.setForeground(new Color(255, 255, 255));
+		removeUserButton.setBackground(new Color(255, 87, 87));
 		removeUserButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel usersTableModel = (DefaultTableModel) usersTable.getModel();
@@ -178,8 +239,23 @@ public class AdminPermissionsWindow extends JFrame {
 				}
 			}
 		});
-		removeUserButton.setBounds(75, 510, 207, 23);
+		removeUserButton.setBounds(1051, 647, 295, 40);
 		contentPane.add(removeUserButton);
+		
+		JButton btnNewButton = new JButton("Commit Changes");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new Home(username,accessLevel);
+        		dispose();
+				
+			}
+		});
+		btnNewButton.setBackground(new Color(56, 194, 56));
+		btnNewButton.setForeground(new Color(255, 255, 255));
+		btnNewButton.setFont(new Font("Jost", Font.BOLD, 18));
+		btnNewButton.setBounds(1165, 698, 181, 40);
+		contentPane.add(btnNewButton);
 		
 		
 		/*
