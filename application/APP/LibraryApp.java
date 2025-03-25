@@ -8,9 +8,12 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.*;
 
 public class LibraryApp {
-
+	private Connection connection;
+	private Statement statment;
+	
 	private JFrame frmLibraryapp;
 	private JPasswordField passwordField;
 	private JTextField textField;
@@ -73,7 +76,7 @@ public class LibraryApp {
 	 */
 	class RoundedButton extends JButton {
         private int cornerRadius;
-
+        
         public RoundedButton(String text, int cornerRadius) {
             super(text);
             this.cornerRadius = cornerRadius;
@@ -131,6 +134,12 @@ public class LibraryApp {
 	
 
 	private void initialize() {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		frmLibraryapp = new JFrame();
 		frmLibraryapp.getContentPane().setForeground(new Color(255, 255, 255));
 		frmLibraryapp.getContentPane().setBackground(new Color(192, 192, 192));
@@ -228,20 +237,36 @@ public class LibraryApp {
 					String pass = String.valueOf(passwordField.getPassword());
 
 					// Dummy authentication (Replace with real validation logic)
-					if (user.equals("amine") && pass.equals("1234")) {
+					if (user.equals("benallal") && pass.equals("amine")) {
 
 						String level="ADMIN";
 						// Open HomeScreen
+						try {
+						    connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
+						    
+						    if (connection != null) {
+						        System.out.println("Connected to the database successfully!");
+						    } else {
+						        System.out.println("Failed to connect to the database.");
+						    }
+						} catch (SQLException e1) {
+						    e1.printStackTrace();
+						}
 						new Home(user,level);
 
 						// Close Login Window
 						frmLibraryapp.dispose();
-					}else if (user.equals("usthb") && pass.equals("1212")){
-						String level="STAFF";
-						// Open HomeScreen
-						new Home(user,level);
+					}else if (user.equals("benallal") && pass.equals("amine")) {
 
-						// Close Login Window
+						String level="ADMIN";
+						// Open HomeScreen
+						try {
+							connection=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						new Home(user,level);
 						frmLibraryapp.dispose();
 						
 					}else {
@@ -257,12 +282,31 @@ public class LibraryApp {
 				String pass = String.valueOf(passwordField.getPassword());
 
 				// Dummy authentication (Replace with real validation logic)
-				if (user.equals("amine") && pass.equals("1234")) {
+				if (user.equals("benallal") && pass.equals("amine")) {
 
 					String level="ADMIN";
 					// Open HomeScreen
+					try {
+						connection=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					new Home(user,level);
 
+					// Close Login Window
+					frmLibraryapp.dispose();
+				}else if (user.equals("benallal") && pass.equals("amine")) {
+
+					String level="ADMIN";
+					// Open HomeScreen
+					try {
+						connection=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					new Home(user,level);
 					// Close Login Window
 					frmLibraryapp.dispose();
 				} else {
