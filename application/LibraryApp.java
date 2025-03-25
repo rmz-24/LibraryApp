@@ -236,7 +236,15 @@ public class LibraryApp {
 
 						// Close Login Window
 						frmLibraryapp.dispose();
-					} else {
+					}else if (user.equals("usthb") && pass.equals("1212")){
+						String level="STAFF";
+						// Open HomeScreen
+						new Home(user,level);
+
+						// Close Login Window
+						frmLibraryapp.dispose();
+						
+					}else {
 						JOptionPane.showMessageDialog(null, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
 					} // Simulates a button click
 		        }
