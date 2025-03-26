@@ -20,33 +20,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
+import java.util.Properties;
 
 public class AdminPermissionsWindow extends JFrame {
 
 	
-	/**
-	 * 
-	 */
-	private Statement statement;
 	private Connection connection;
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable usersTable;
 	private JTextField usernameTextField;
 	
-	
-	
-
-	
-
-	// Log Message Method. Called Line 128
-	private JLabel missingUsername() { //TODO: Not Working
-		JLabel logMessageLabel = new JLabel("Missing Username!");
-		logMessageLabel.setForeground(new Color(255, 0, 0));
-		logMessageLabel.setFont(new Font("Dialog", Font.BOLD, 20));
-		logMessageLabel.setBounds(133, 423, 105, 27);
-		return logMessageLabel;
-	}
 	
 	// Log Message Method. Called Line 128
 	private JLabel addedUser() { //TODO: Not Working
@@ -68,8 +52,10 @@ public class AdminPermissionsWindow extends JFrame {
 			e.printStackTrace();
 		}
 		
+		Properties props = LibraryApp.getProps();
+		// Open HomeScreen
 		try {
-		    connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
+		    connection = DriverManager.getConnection(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password"));
 		    
 		    if (connection != null) {
 		        System.out.println("Connected to the database successfully!");
@@ -78,6 +64,7 @@ public class AdminPermissionsWindow extends JFrame {
 		    }
 		} catch (SQLException e1) {
 		    e1.printStackTrace();
+		    JOptionPane.showMessageDialog(null, "Database error. Contact support.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		
@@ -133,15 +120,60 @@ public class AdminPermissionsWindow extends JFrame {
 		scrollPane.setBounds(242, 194, 1104, 427);
 		contentPane.add(scrollPane);
 		
+		
+		JButton removeUserButton = new JButton("Remove Selected User");
+		removeUserButton.setFont(new Font("Jost", Font.BOLD, 19));
+		removeUserButton.setForeground(new Color(255, 255, 255));
+		removeUserButton.setBackground(new Color(255, 87, 87));
+		removeUserButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DefaultTableModel usersTableModel = (DefaultTableModel) usersTable.getModel();
+				try {
+				int selectedRowIndex = usersTable.getSelectedRow();
+				
+				String userToDelete = (String) usersTable.getValueAt(selectedRowIndex, 0);
+
+				String sql = "DELETE FROM userstable WHERE usernames = ?";
+				try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+				    stmt.setString(1, userToDelete);
+				    stmt.executeUpdate();
+				} catch (SQLException ex) {
+				    //TODO JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage());
+					ex.printStackTrace();
+				}
+				
+				usersTableModel.removeRow(selectedRowIndex);
+				}catch(Exception ex){
+					JOptionPane.showMessageDialog(null, ex);
+				}
+			}
+		});
+		removeUserButton.setBounds(1051, 647, 295, 40);
+		contentPane.add(removeUserButton);
+		
+		
 		usersTable = new JTable();
 		scrollPane.setViewportView(usersTable);
+		// Make table non-editable
 		usersTable.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"User", "Permissions"
-			}
-		));
+		    new Object[][] {},
+		    new String[] {"User", "Permissions"}
+		) {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		});
+
+		// Add row selection listener
+		usersTable.getSelectionModel().addListSelectionListener(e -> {
+		    removeUserButton.setEnabled(usersTable.getSelectedRow() != -1);
+		});
 		usersTable.setBackground(new Color(192, 192, 192));
 		
 		JLabel usernameLabel = new JLabel("Username:");
@@ -182,17 +214,18 @@ public class AdminPermissionsWindow extends JFrame {
 				String username=usernameTextField.getText();
 				DefaultTableModel usersTableModel = (DefaultTableModel) usersTable.getModel();
 				if(adminRadio.isSelected()) {
-					if(adminRadio.getText().equals("")) {
-						contentPane.add(missingUsername());
-						return;
+					if(username.isEmpty()) {
+						//TODO JOptionPane.showMessageDialog(this, "Username cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+					    return;
 					}
 					usersTableModel.addRow(new Object[]{usernameTextField.getText(), adminRadio.getText()});
 					
 					
-					String requete = "INSERT INTO userstable (usernames, accesslevel) VALUES ('" + username + "', 'ADMIN')";
-					try {
-						statement=connection.createStatement();
-						statement.execute(requete);
+					String sql = "INSERT INTO userstable (usernames, accesslevel) VALUES (?, ?)";
+					try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+					    stmt.setString(1, username);
+					    stmt.setString(2, "ADMIN");
+					    stmt.executeUpdate();
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -203,20 +236,23 @@ public class AdminPermissionsWindow extends JFrame {
 					contentPane.add(addedUser());
 				}
 				if(staffRadio.isSelected()) {
-					if(staffRadio.getText().equals("")) {
-						contentPane.add(missingUsername());
-						return;
+					if(username.isEmpty()) {
+						//TODO JOptionPane.showMessageDialog(this, "Username cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+					    return;
 					}
 					
-					String requete = "INSERT INTO userstable (usernames, accesslevel) VALUES ('" + username + "', 'STAFF')";
-					try {
-						statement=connection.createStatement();
-						statement.execute(requete);
+					usersTableModel.addRow(new Object[]{usernameTextField.getText(), staffRadio.getText()});
+					
+					String sql = "INSERT INTO userstable (usernames, accesslevel) VALUES (?, ?)";
+					try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+					    stmt.setString(1, username);
+					    stmt.setString(2, "STAFF");
+					    stmt.executeUpdate();
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					usersTableModel.addRow(new Object[]{usernameTextField.getText(), staffRadio.getText()}); //TODO: Find an alternative to get the accessLevel selected.
+					
 					contentPane.add(addedUser());
 				}
 			}
@@ -224,23 +260,6 @@ public class AdminPermissionsWindow extends JFrame {
 		addUserButton.setBounds(10, 383, 105, 40);
 		contentPane.add(addUserButton);
 		
-		JButton removeUserButton = new JButton("Remove Selected User");
-		removeUserButton.setFont(new Font("Jost", Font.BOLD, 19));
-		removeUserButton.setForeground(new Color(255, 255, 255));
-		removeUserButton.setBackground(new Color(255, 87, 87));
-		removeUserButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DefaultTableModel usersTableModel = (DefaultTableModel) usersTable.getModel();
-				try {
-				int selectedRowIndex = usersTable.getSelectedRow();
-				usersTableModel.removeRow(selectedRowIndex);
-				}catch(Exception ex){
-					JOptionPane.showMessageDialog(null, ex);
-				}
-			}
-		});
-		removeUserButton.setBounds(1051, 647, 295, 40);
-		contentPane.add(removeUserButton);
 		
 		JButton btnNewButton = new JButton("Commit Changes");
 		btnNewButton.addMouseListener(new MouseAdapter() {

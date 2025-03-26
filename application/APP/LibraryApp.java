@@ -5,21 +5,47 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
+//import java.awt.geom.RoundRectangle2D;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
+import java.util.Properties;
 
 public class LibraryApp {
-	private Connection connection;
-	private Statement statment;
 	
+	
+	public static Properties getProps() {
+		Properties props = new Properties();
+		try {
+			props.load(new FileInputStream("config.properties"));
+			return props;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static boolean authenticate(String username, String password) {
+		Properties props = getProps();
+		if((username.equals(props.getProperty("db.user"))) && (password.equals(props.getProperty("db.password")))) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	private Connection connection;
 	private JFrame frmLibraryapp;
 	private JPasswordField passwordField;
-	private JTextField textField;
-	private JPasswordField passwordField_1;
-	class RoundedTextField extends JTextField {
-	    private int cornerRadius;
+	/*class RoundedTextField extends JTextField {
+		private static final long serialVersionUID = 1L;
+		private int cornerRadius;
 
 	    public RoundedTextField(int columns, int cornerRadius) {
 	        super(columns);
@@ -43,10 +69,11 @@ public class LibraryApp {
 	        g.setColor(Color.GRAY);
 	        ((Graphics2D) g).draw(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, cornerRadius, cornerRadius));
 	    }
-	}
+	}*/
 
-	class RoundedPasswordField extends JPasswordField {
-	    private int cornerRadius;
+	/*class RoundedPasswordField extends JPasswordField {
+		private static final long serialVersionUID = 1L;
+		private int cornerRadius;
 
 	    public RoundedPasswordField(int columns, int cornerRadius) {
 	        super(columns);
@@ -70,12 +97,12 @@ public class LibraryApp {
 	        g.setColor(Color.GRAY);
 	        ((Graphics2D) g).draw(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, cornerRadius, cornerRadius));
 	    }
-	}
-	/**
-	 * Launch the application.
-	 */
-	class RoundedButton extends JButton {
-        private int cornerRadius;
+	}*/
+	
+	
+	/*class RoundedButton extends JButton {
+		private static final long serialVersionUID = 1L;
+		private int cornerRadius;
         
         public RoundedButton(String text, int cornerRadius) {
             super(text);
@@ -102,7 +129,7 @@ public class LibraryApp {
         protected void paintBorder(Graphics g) {
             // No border
         }
-    }
+    }*/
 
     
 
@@ -130,8 +157,6 @@ public class LibraryApp {
 	 * Initialize the contents of the frame.
 	 */
 
-
-	
 
 	private void initialize() {
 		try {
@@ -179,9 +204,9 @@ public class LibraryApp {
 		panel.add(lblNewLabel_5);
 		
 		JLabel lblNewLabel_6 = new JLabel((String) null);
-		lblNewLabel_6.setDisabledIcon(new ImageIcon("E:\\L2 ACAD C\\S4\\BDD\\TP\\LM.png"));
+		lblNewLabel_6.setDisabledIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\LM.png"));
 		lblNewLabel_6.setSize(new Dimension(10, 10));
-		lblNewLabel_6.setIcon(new ImageIcon("E:\\L2 ACAD C\\S4\\BDD\\TP\\LM.png"));
+		lblNewLabel_6.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\LM.png"));
 		lblNewLabel_6.setBounds(40, 146, 297, 251);
 		panel.add(lblNewLabel_6);
 		
@@ -190,7 +215,7 @@ public class LibraryApp {
 		frmLibraryapp.getContentPane().add(lblNewLabel_3);
 		lblNewLabel_3.setMinimumSize(new Dimension(50, 50));
 		lblNewLabel_3.setMaximumSize(new Dimension(100, 100));
-		lblNewLabel_3.setIcon(new ImageIcon("E:\\L2 ACAD C\\S4\\BDD\\TP\\Untitled design.png"));
+		lblNewLabel_3.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\Untitled design.png"));
 		
 		JLabel lblNewLabel_4 = new JLabel("Username");
 		lblNewLabel_4.setForeground(new Color(255, 255, 255));
@@ -237,12 +262,13 @@ public class LibraryApp {
 					String pass = String.valueOf(passwordField.getPassword());
 
 					// Dummy authentication (Replace with real validation logic)
-					if (user.equals("benallal") && pass.equals("amine")) {
+					if (authenticate(user, pass)) {
 
 						String level="ADMIN";
+						Properties props = getProps();
 						// Open HomeScreen
 						try {
-						    connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
+						    connection = DriverManager.getConnection(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password"));
 						    
 						    if (connection != null) {
 						        System.out.println("Connected to the database successfully!");
@@ -251,27 +277,15 @@ public class LibraryApp {
 						    }
 						} catch (SQLException e1) {
 						    e1.printStackTrace();
+						    JOptionPane.showMessageDialog(null, "Database error. Contact support.", "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						new Home(user,level);
 
 						// Close Login Window
 						frmLibraryapp.dispose();
-					}else if (user.equals("benallal") && pass.equals("amine")) {
-
-						String level="ADMIN";
-						// Open HomeScreen
-						try {
-							connection=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
-						} catch (Exception e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						new Home(user,level);
-						frmLibraryapp.dispose();
-						
 					}else {
 						JOptionPane.showMessageDialog(null, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
-					} // Simulates a button click
+					}
 		        }
 			}
 		});
@@ -282,34 +296,28 @@ public class LibraryApp {
 				String pass = String.valueOf(passwordField.getPassword());
 
 				// Dummy authentication (Replace with real validation logic)
-				if (user.equals("benallal") && pass.equals("amine")) {
+				if (authenticate(user, pass)) {
 
 					String level="ADMIN";
+					Properties props = getProps();
 					// Open HomeScreen
 					try {
-						connection=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					    connection = DriverManager.getConnection(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password"));
+					    
+					    if (connection != null) {
+					        System.out.println("Connected to the database successfully!");
+					    } else {
+					        System.out.println("Failed to connect to the database.");
+					    }
+					} catch (SQLException e1) {
+					    e1.printStackTrace();
+					    JOptionPane.showMessageDialog(null, "Database error. Contact support.", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 					new Home(user,level);
 
 					// Close Login Window
 					frmLibraryapp.dispose();
-				}else if (user.equals("benallal") && pass.equals("amine")) {
-
-					String level="ADMIN";
-					// Open HomeScreen
-					try {
-						connection=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "benallal", "amine");
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					new Home(user,level);
-					// Close Login Window
-					frmLibraryapp.dispose();
-				} else {
+				}else {
 					JOptionPane.showMessageDialog(null, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 
