@@ -9,14 +9,26 @@ import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.Properties;
 
 public class LibraryApp {
+	private ImageIcon loadImage(String imageName) {
+	    URL imageURL = getClass().getClassLoader().getResource("resrc/" + imageName);
+	    if (imageURL != null) {
+	        return new ImageIcon(imageURL);
+	    }
+	    
+	    System.err.println("Image not found: " + imageName);
+	    return null; // Avoid NullPointerException
+	}
+
 	
-	
+	//private static Connection connection;
+	private static Connection connection;
 	public static Properties getProps() {
 		Properties props = new Properties();
 		try {
@@ -37,10 +49,19 @@ public class LibraryApp {
 		}
 		return false;
 	}
+	public static Connection getConnection() {
+        try {
+			return connection;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return connection;
+    }
+	
+	// ani nsyi nktb letter
 	
 	
-	
-	private Connection connection;
 	private JFrame frmLibraryapp;
 	private JPasswordField passwordField;
 	/*class RoundedTextField extends JTextField {
@@ -204,9 +225,10 @@ public class LibraryApp {
 		panel.add(lblNewLabel_5);
 		
 		JLabel lblNewLabel_6 = new JLabel((String) null);
-		lblNewLabel_6.setDisabledIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\LM.png"));
+		//lblNewLabel_6.setIcon(loadImage("LM.png"));
+		
 		lblNewLabel_6.setSize(new Dimension(10, 10));
-		lblNewLabel_6.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\LM.png"));
+		lblNewLabel_6.setIcon(new ImageIcon("src\\resrc\\LM.png"));
 		lblNewLabel_6.setBounds(40, 146, 297, 251);
 		panel.add(lblNewLabel_6);
 		
@@ -215,27 +237,27 @@ public class LibraryApp {
 		frmLibraryapp.getContentPane().add(lblNewLabel_3);
 		lblNewLabel_3.setMinimumSize(new Dimension(50, 50));
 		lblNewLabel_3.setMaximumSize(new Dimension(100, 100));
-		lblNewLabel_3.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\Untitled design.png"));
+		lblNewLabel_3.setIcon(new ImageIcon("src\\resrc\\Untitled design.png"));
 		
-		JLabel lblNewLabel_4 = new JLabel("Username");
-		lblNewLabel_4.setForeground(new Color(255, 255, 255));
-		lblNewLabel_4.setFont(new Font("Jost", Font.BOLD, 26));
-		lblNewLabel_4.setBounds(826, 329, 133, 35);
-		frmLibraryapp.getContentPane().add(lblNewLabel_4);
+		JLabel lblusername = new JLabel("Username");
+		lblusername.setForeground(new Color(255, 255, 255));
+		lblusername.setFont(new Font("Jost", Font.BOLD, 26));
+		lblusername.setBounds(826, 329, 133, 35);
+		frmLibraryapp.getContentPane().add(lblusername);
 		
-		JLabel lblNewLabel_4_1 = new JLabel("Password");
-		lblNewLabel_4_1.setForeground(new Color(255, 255, 255));
-		lblNewLabel_4_1.setFont(new Font("Jost", Font.BOLD, 26));
-		lblNewLabel_4_1.setBounds(826, 468, 133, 35);
-		frmLibraryapp.getContentPane().add(lblNewLabel_4_1);
+		JLabel lblpassword = new JLabel("Password");
+		lblpassword.setForeground(new Color(255, 255, 255));
+		lblpassword.setFont(new Font("Jost", Font.BOLD, 26));
+		lblpassword.setBounds(826, 468, 133, 35);
+		frmLibraryapp.getContentPane().add(lblpassword);
 		
 		//RoundedPasswordField passwordField = new RoundedPasswordField(20, 20);
 		passwordField = new JPasswordField();
-		
 		passwordField.setForeground(new Color(255, 255, 255));
 		passwordField.setBackground(new Color(145, 149, 153));
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		passwordField.setBounds(826, 520, 360, 49);
+		passwordField.setBorder(BorderFactory.createEmptyBorder()); // Removes the border
 		frmLibraryapp.getContentPane().add(passwordField);
 		
 		//RoundedTextField textField = new RoundedTextField(20, 20);
