@@ -21,8 +21,35 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
 import java.util.Properties;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 
 public class AdminPermissionsWindow extends JFrame {
+	private ImageIcon loadImage(String imageName) {
+	    return new ImageIcon(getClass().getResource("/resrc/" + imageName));
+	}
+	
+	
+	private void loadUserData() {
+	    DefaultTableModel model = (DefaultTableModel) usersTable.getModel();
+	    model.setRowCount(0); // Clear table before loading new data
+
+	    String sql = "SELECT usernames, accesslevel FROM userstable";
+	    
+	    try (PreparedStatement stmt = connection.prepareStatement(sql);
+	         ResultSet rs = stmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            String username = rs.getString("usernames");
+	            String accessLevel = rs.getString("accesslevel");
+	            model.addRow(new Object[]{username, accessLevel});
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Error loading users from database.", "Database Error", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
 
 	
 	private Connection connection;
@@ -45,6 +72,9 @@ public class AdminPermissionsWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public AdminPermissionsWindow(String username, String accessLevel) {
+		
+		
+		setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 		} catch (Exception e) {
@@ -86,11 +116,11 @@ public class AdminPermissionsWindow extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("CONNECTED AS:");
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setBounds(1026, 11, 197, 26);
-		panel.add(lblNewLabel);
-		lblNewLabel.setFont(new Font("Jost", Font.BOLD, 20));
+		JLabel lblconnectedas = new JLabel("CONNECTED AS:");
+		lblconnectedas.setForeground(new Color(255, 255, 255));
+		lblconnectedas.setBounds(1026, 11, 197, 26);
+		panel.add(lblconnectedas);
+		lblconnectedas.setFont(new Font("Jost", Font.BOLD, 20));
 		
 		JLabel lblusername = new JLabel(username);
 		lblusername.setForeground(new Color(255, 255, 255));
@@ -112,9 +142,19 @@ public class AdminPermissionsWindow extends JFrame {
 		
 		JLabel lblNewLabel_1 = new JLabel("USERS TABLE");
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
-		lblNewLabel_1.setBounds(34, 27, 334, 57);
+		lblNewLabel_1.setBounds(227, 27, 151, 57);
 		panel.add(lblNewLabel_1);
 		lblNewLabel_1.setFont(new Font("Jost", Font.BOLD, 22));
+		
+		JLabel lblNewLabel_1_1 = new JLabel("");
+		lblNewLabel_1_1.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+		lblNewLabel_1_1.setBounds(32, 20, 112, 80);
+		panel.add(lblNewLabel_1_1);
+		
+		JLabel lblNewLabel_1_2 = new JLabel("");
+		lblNewLabel_1_2.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+		lblNewLabel_1_2.setBounds(21, 20, 112, 80);
+		panel.add(lblNewLabel_1_2);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(242, 194, 1104, 427);
@@ -155,6 +195,10 @@ public class AdminPermissionsWindow extends JFrame {
 		usersTable = new JTable();
 		scrollPane.setViewportView(usersTable);
 		// Make table non-editable
+		usersTable.setRowHeight(30);
+		Font tableFont = new Font("Jost", Font.PLAIN, 18);
+		usersTable.setFont(tableFont); 
+		usersTable.getTableHeader().setFont(new Font("Jost", Font.BOLD, 20));
 		usersTable.setModel(new DefaultTableModel(
 		    new Object[][] {},
 		    new String[] {"User", "Permissions"}
@@ -169,6 +213,7 @@ public class AdminPermissionsWindow extends JFrame {
 		        return false;
 		    }
 		});
+		loadUserData();
 
 		// Add row selection listener
 		usersTable.getSelectionModel().addListSelectionListener(e -> {
@@ -261,8 +306,8 @@ public class AdminPermissionsWindow extends JFrame {
 		contentPane.add(addUserButton);
 		
 		
-		JButton btnNewButton = new JButton("Commit Changes");
-		btnNewButton.addMouseListener(new MouseAdapter() {
+		JButton btncommit = new JButton("Commit Changes");
+		btncommit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				new Home(username,accessLevel);
@@ -270,11 +315,11 @@ public class AdminPermissionsWindow extends JFrame {
 				
 			}
 		});
-		btnNewButton.setBackground(new Color(56, 194, 56));
-		btnNewButton.setForeground(new Color(255, 255, 255));
-		btnNewButton.setFont(new Font("Jost", Font.BOLD, 18));
-		btnNewButton.setBounds(1165, 698, 181, 40);
-		contentPane.add(btnNewButton);
+		btncommit.setBackground(new Color(56, 194, 56));
+		btncommit.setForeground(new Color(255, 255, 255));
+		btncommit.setFont(new Font("Jost", Font.BOLD, 18));
+		btncommit.setBounds(1165, 698, 181, 40);
+		contentPane.add(btncommit);
 		
 		
 		/*
