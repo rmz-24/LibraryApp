@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 public class Home{
+	
     private JFrame frmDashboard;
     
     private void openWindow(JFrame newWindow) {
@@ -16,6 +17,7 @@ public class Home{
     public Home(String user , String level) {
     	
         frmDashboard = new JFrame("Home");
+        frmDashboard.setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
         frmDashboard.setTitle("Dashboard");
         frmDashboard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frmDashboard.setSize(1500, 900);
@@ -28,15 +30,23 @@ public class Home{
         frmDashboard.getContentPane().add(panel);
         panel.setLayout(null);
         
-        JLabel lblNewLabel_1 = new JLabel("");
-        lblNewLabel_1.setBounds(40, 11, 112, 80);
-        lblNewLabel_1.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\LMsmall.png"));
-        panel.add(lblNewLabel_1);
+        JLabel lbllogo = new JLabel("");
+        lbllogo.setBounds(40, 11, 112, 80);
+        lbllogo.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+        panel.add(lbllogo);
         
         JButton addStudentButton = new JButton("");
+        addStudentButton.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		new Studentmanage(user,level);
+        		frmDashboard.dispose();
+        		
+        	}
+        });
         
         addStudentButton.setBackground(new Color(0, 102, 102));
-        addStudentButton.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\student.png"));
+        addStudentButton.setIcon(new ImageIcon("src\\resrc\\student.png"));
         addStudentButton.setBounds(40, 137, 112, 68);
         addStudentButton.setContentAreaFilled(false);
         addStudentButton.setBorderPainted(false); // Removes border
@@ -52,7 +62,7 @@ public class Home{
         panel.add(studentManagementLabel);
         
         JButton removeStudentButton = new JButton("");
-        removeStudentButton.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\books.png"));
+        removeStudentButton.setIcon(new ImageIcon("src\\resrc\\books.png"));
         removeStudentButton.setBounds(40, 265, 112, 68);
         removeStudentButton.setContentAreaFilled(false);
         removeStudentButton.setBorderPainted(false); // Removes border
@@ -69,7 +79,7 @@ public class Home{
         panel.add(addBookLabel);
         
         JButton removeBookButton = new JButton("");
-        removeBookButton.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\exclamation.png"));
+        removeBookButton.setIcon(new ImageIcon("src\\resrc\\exclamation.png"));
         removeBookButton.setBounds(40, 523, 112, 68);
         removeBookButton.setContentAreaFilled(false);
         removeBookButton.setBorderPainted(false); // Removes border
@@ -87,7 +97,7 @@ public class Home{
         panel.add(removeBookLabel);
         
         JButton borrowBookButton = new JButton("");
-        borrowBookButton.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\borrow_book.png"));
+        borrowBookButton.setIcon(new ImageIcon("src\\resrc\\borrow_book.png"));
         borrowBookButton.setBounds(40, 395, 112, 68);
         borrowBookButton.setContentAreaFilled(false);
         borrowBookButton.setBorderPainted(false); // Removes border
@@ -95,12 +105,6 @@ public class Home{
         borrowBookButton.setOpaque(false);
         borrowBookButton.setToolTipText("Logs a borrowed book to the database");
         panel.add(borrowBookButton);
-        
-        JLabel borrowBookLabel = new JLabel("Borrow Book");
-        borrowBookLabel.setBounds(60, 750, 92, 21);
-        borrowBookLabel.setForeground(Color.WHITE);
-        borrowBookLabel.setFont(new Font("Jost", Font.BOLD, 14));
-        panel.add(borrowBookLabel);
         
         JLabel booksManagementLabel = new JLabel("Books Management");
         booksManagementLabel.setForeground(Color.WHITE);
@@ -144,7 +148,7 @@ public class Home{
         
         JButton addUserButton = new JButton("");
         addUserButton.addActionListener(e -> openWindow(new AdminPermissionsWindow(user, level)));
-        addUserButton.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\add_16321386.png"));
+        addUserButton.setIcon(new ImageIcon("src\\resrc\\add_16321386.png"));
         addUserButton.setBounds(818, 11, 70, 66);
         addUserButton.setContentAreaFilled(false);
         addUserButton.setBorderPainted(false); // Removes border
@@ -166,8 +170,12 @@ public class Home{
         		
         	}
         });
-        logOutButton.setIcon(new ImageIcon("E:\\Projects\\LibraryApp\\resources\\images\\log-out_10024482.png"));
+        logOutButton.setIcon(new ImageIcon("src\\resrc\\log-out_10024482.png"));
         logOutButton.setBounds(1398, 773, 65, 65);
+        logOutButton.setContentAreaFilled(false);
+        logOutButton.setBorderPainted(false); // Removes border
+        logOutButton.setFocusPainted(false); // Removes focus border
+        logOutButton.setOpaque(false);
         frmDashboard.getContentPane().add(logOutButton);
 
         frmDashboard.setVisible(true);
