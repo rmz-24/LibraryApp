@@ -35,25 +35,25 @@ public class Home{
         lbllogo.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
         panel.add(lbllogo);
         
-        JButton addStudentButton = new JButton("");
-        addStudentButton.addMouseListener(new MouseAdapter() {
+        JButton studentManagementButton = new JButton("");
+        studentManagementButton.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new Studentmanage(user,level);
+        		new StudentManagementDashboard(user,level);
         		frmDashboard.dispose();
         		
         	}
         });
         
-        addStudentButton.setBackground(new Color(0, 102, 102));
-        addStudentButton.setIcon(new ImageIcon("src\\resrc\\student.png"));
-        addStudentButton.setBounds(40, 137, 112, 68);
-        addStudentButton.setContentAreaFilled(false);
-        addStudentButton.setBorderPainted(false); // Removes border
-        addStudentButton.setFocusPainted(false); // Removes focus border
-        addStudentButton.setOpaque(false);
-        addStudentButton.setToolTipText("Add a student to the library's database");
-        panel.add(addStudentButton);
+        studentManagementButton.setBackground(new Color(0, 102, 102));
+        studentManagementButton.setIcon(new ImageIcon("src\\resrc\\student.png"));
+        studentManagementButton.setBounds(40, 137, 112, 68);
+        studentManagementButton.setContentAreaFilled(false);
+        studentManagementButton.setBorderPainted(false); // Removes border
+        studentManagementButton.setFocusPainted(false); // Removes focus border
+        studentManagementButton.setOpaque(false);
+        studentManagementButton.setToolTipText("Opens a window to the student management dashboard");
+        panel.add(studentManagementButton);
         
         JLabel studentManagementLabel = new JLabel("Student Management");
         studentManagementLabel.setBounds(27, 216, 152, 21);
@@ -61,15 +61,23 @@ public class Home{
         studentManagementLabel.setForeground(new Color(255, 255, 255));
         panel.add(studentManagementLabel);
         
-        JButton removeStudentButton = new JButton("");
-        removeStudentButton.setIcon(new ImageIcon("src\\resrc\\books.png"));
-        removeStudentButton.setBounds(40, 265, 112, 68);
-        removeStudentButton.setContentAreaFilled(false);
-        removeStudentButton.setBorderPainted(false); // Removes border
-        removeStudentButton.setFocusPainted(false); // Removes focus border
-        removeStudentButton.setOpaque(false);
-        removeStudentButton.setToolTipText("Removes a student from the library's database");
-        panel.add(removeStudentButton);
+        JButton bookManagementButton = new JButton("");
+        bookManagementButton.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		new BookManagementDashboard(user,level);
+        		frmDashboard.dispose();
+        		
+        	}
+        });
+        bookManagementButton.setIcon(new ImageIcon("src\\resrc\\books.png"));
+        bookManagementButton.setBounds(40, 265, 112, 68);
+        bookManagementButton.setContentAreaFilled(false);
+        bookManagementButton.setBorderPainted(false); // Removes border
+        bookManagementButton.setFocusPainted(false); // Removes focus border
+        bookManagementButton.setOpaque(false);
+        bookManagementButton.setToolTipText("Opens a window to the book management dashboard");
+        panel.add(bookManagementButton);
         
         JLabel addBookLabel = new JLabel("Loan and Return");
         addBookLabel.setVerticalAlignment(SwingConstants.TOP);

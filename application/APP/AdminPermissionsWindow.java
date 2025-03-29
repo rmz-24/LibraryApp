@@ -25,9 +25,9 @@ import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 
 public class AdminPermissionsWindow extends JFrame {
-	private ImageIcon loadImage(String imageName) {
+	/*private ImageIcon loadImage(String imageName) {
 	    return new ImageIcon(getClass().getResource("/resrc/" + imageName));
-	}
+	}*/
 	
 	
 	private void loadUserData() {

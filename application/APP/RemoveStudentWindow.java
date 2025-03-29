@@ -6,16 +6,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
 
-public class Deletestudent extends JFrame {
-	private ImageIcon loadImage(String imageName) {
+public class RemoveStudentWindow extends JFrame {
+	private static final long serialVersionUID = 1L;
+	/*private ImageIcon loadImage(String imageName) {
 	    return new ImageIcon(getClass().getResource("/resrc/" + imageName));
-	}
+	}*/
     private JTextField studentiddlt;
     private JTextArea Sname, Sfname, Slevel;
     private Connection conn;
-    public Deletestudent() {
+    public RemoveStudentWindow() {
     	
-        setTitle("Delete Student");
+        setTitle("Student Removing Window");
         setSize(638, 415);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -27,17 +28,17 @@ public class Deletestudent extends JFrame {
         getContentPane().add(panel);
         panel.setLayout(null);
 
-        JLabel lbldelete = new JLabel("STUDENT DELETION");
-        lbldelete.setForeground(new Color(255, 255, 255));
-        lbldelete.setFont(new Font("Jost", Font.BOLD, 19));
-        lbldelete.setBounds(280, 24, 196, 31);
-        panel.add(lbldelete);
+        JLabel topLabel = new JLabel("STUDENT DELETION");
+        topLabel.setForeground(new Color(255, 255, 255));
+        topLabel.setFont(new Font("Jost", Font.BOLD, 19));
+        topLabel.setBounds(280, 24, 196, 31);
+        panel.add(topLabel);
 
-        JLabel lblStudentIddlt = new JLabel("STUDENT ID");
-        lblStudentIddlt.setForeground(new Color(0, 0, 0));
-        lblStudentIddlt.setFont(new Font("Jost", Font.BOLD, 19));
-        lblStudentIddlt.setBounds(10, 106, 196, 31);
-        getContentPane().add(lblStudentIddlt);
+        JLabel searchStudentIdLabel = new JLabel("ENTER STUDENT ID");
+        searchStudentIdLabel.setForeground(new Color(0, 0, 0));
+        searchStudentIdLabel.setFont(new Font("Jost", Font.BOLD, 19));
+        searchStudentIdLabel.setBounds(10, 106, 196, 31);
+        getContentPane().add(searchStudentIdLabel);
 
         studentiddlt = new JTextField(16);
         studentiddlt.setFont(new Font("Jost", Font.PLAIN, 22));
@@ -76,7 +77,7 @@ public class Deletestudent extends JFrame {
                     //conn.close();
 
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(Deletestudent.this, "Error: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(RemoveStudentWindow.this, "Error: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -178,6 +179,6 @@ public class Deletestudent extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Deletestudent();
+        new RemoveStudentWindow();
     }
 }

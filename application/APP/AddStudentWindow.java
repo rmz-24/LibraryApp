@@ -2,37 +2,46 @@ package APP;
 
 import javax.swing.*;
 import java.awt.*;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
+//import com.jgoodies.forms.layout.FormLayout;
+//import com.jgoodies.forms.layout.ColumnSpec;
+//import com.jgoodies.forms.layout.RowSpec;
 import java.sql.Connection;
-import com.jgoodies.forms.layout.FormSpecs;
-import net.miginfocom.swing.MigLayout;
+//import com.jgoodies.forms.layout.FormSpecs;
+//import net.miginfocom.swing.MigLayout;
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Statement;
+//import java.sql.Statement;
 import java.util.Properties;
 import java.sql.Date;
-import java.sql.DriverManager;
+//import java.sql.DriverManager;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Properties;
-import java.sql.Connection;
+//import java.util.Properties;
+//import java.sql.Connection;
 
-public class Studentforum extends JFrame {
-	private ImageIcon loadImage(String imageName) {
+public class AddStudentWindow extends JFrame {
+	private static final long serialVersionUID = 1L;
+	
+	
+	/*private ImageIcon loadImage(String imageName) {
 	    return new ImageIcon(getClass().getResource("/resrc/" + imageName));
-	}
+	}*/
+	
+	
 	private JTextField matriculefield;
 	private JTextField STUDENTNAME;
 	private JTextField STUDENTFNAME;
+	
+	
 	private Connection connection;
+	
+	
 	public static Properties getProps() {
 		Properties props = new Properties();
 		try {
@@ -77,14 +86,14 @@ public class Studentforum extends JFrame {
         }
     }
 
-    public Studentforum(String user , String pass) {
+    public AddStudentWindow(String user , String pass) {
     	
     	 this.connection = LibraryApp.getConnection();
 		// Dummy authentication (Replace with real validation logic)
 		
     	
         // Set frame properties
-        setTitle("Student Forum");
+        setTitle("Student Registering Window");
         setSize(763, 772);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -96,17 +105,17 @@ public class Studentforum extends JFrame {
         getContentPane().add(panel);
         panel.setLayout(null);
         
-        JLabel lblNewLabel = new JLabel("STUDENT FORUM");
-        lblNewLabel.setForeground(new Color(255, 255, 255));
-        lblNewLabel.setBounds(356, 22, 216, 35);
-        lblNewLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        panel.add(lblNewLabel);
+        JLabel topLabel = new JLabel("STUDENT REGISTERING");
+        topLabel.setForeground(new Color(255, 255, 255));
+        topLabel.setBounds(356, 22, 216, 35);
+        topLabel.setFont(new Font("Jost", Font.BOLD, 24));
+        panel.add(topLabel);
         
         
         String[] levels = {"Licence 1", "Licence 2", "Licence 3", "Master 1", "Master 2", "Doctorat" , "INJ1 ", "INJ2" ,"INJ3","INJ4","INJ5"};
         
         
-         JDateChooser SIGNEDDATE;
+        JDateChooser SIGNEDDATE;
         
         JPanel panel_1 = new JPanel();
         panel_1.setBackground(new Color(145, 149, 153));
@@ -171,7 +180,8 @@ public class Studentforum extends JFrame {
         STUDENTFNAME.setColumns(10);
         STUDENTFNAME.setBounds(30, 367, 269, 43);
         panel_1.add(STUDENTFNAME);
-        JComboBox LEVEL = new JComboBox<>(levels);
+        
+        JComboBox<String> LEVEL = new JComboBox<>(levels);
         LEVEL.setFont(new Font("Jost", Font.BOLD, 17));
         LEVEL.setBounds(30, 478, 269, 43);
         panel_1.add(LEVEL);
@@ -259,7 +269,7 @@ public class Studentforum extends JFrame {
     }
     
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Studentforum("user", "pass"));
+        SwingUtilities.invokeLater(() -> new AddStudentWindow("user", "pass"));
     }
 
 
