@@ -22,6 +22,7 @@ public class BookManagementDashboard extends JFrame {
 	private final JPanel panel = new JPanel();
 	
 	public BookManagementDashboard(String user, String level) {
+		setResizable(false);
 		
 		setTitle("Books Management");
 		setSize(536, 435);
@@ -51,7 +52,7 @@ public class BookManagementDashboard extends JFrame {
         		new AddBookWindow(user,level);
         	}
         });
-        addBookButton.setIcon(new ImageIcon("src\\resrc\\profile_10655019.png"));
+        addBookButton.setIcon(new ImageIcon("src\\resrc\\add_12146523.png"));
         addBookButton.setBounds(113, 195, 104, 68);
         addBookButton.setContentAreaFilled(false);
         addBookButton.setBorderPainted(false); // Removes border
@@ -67,7 +68,7 @@ public class BookManagementDashboard extends JFrame {
         	}
         });
         removeBookButton.setOpaque(false);
-        removeBookButton.setIcon(new ImageIcon("src\\resrc\\delete-account_16321987.png"));
+        removeBookButton.setIcon(new ImageIcon("src\\resrc\\remove_12146882.png"));
         removeBookButton.setFocusPainted(false);
         removeBookButton.setContentAreaFilled(false);
         removeBookButton.setBorderPainted(false);
