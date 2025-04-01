@@ -9,14 +9,40 @@ import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-//import java.net.URL;
+import java.net.URL;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.Properties;
 
 public class LibraryApp {
-	/*
+	private static String getAccessLevel(String username) {
+	    // First check for benallal
+	    if ("benallal".equalsIgnoreCase(username.trim())) {
+	        return "ADMIN"; // Hardcode access level for benallal
+	    }
+	    
+	    // For other users, check database
+	    String sql = "SELECT accesslevel FROM userstable WHERE UPPER(USERNAMES) = UPPER(?)";
+	    
+	    try (Connection conn = DriverManager.getConnection(
+	            getProps().getProperty("db.url"),
+	            getProps().getProperty("db.user"),
+	            getProps().getProperty("db.password"));
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        
+	        stmt.setString(1, username.trim());
+	        
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getString("accesslevel");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return "STAFF"; // Default access level
+	}
 	private ImageIcon loadImage(String imageName) {
 	    URL imageURL = getClass().getClassLoader().getResource("resrc/" + imageName);
 	    if (imageURL != null) {
@@ -26,7 +52,6 @@ public class LibraryApp {
 	    System.err.println("Image not found: " + imageName);
 	    return null; // Avoid NullPointerException
 	}
-	*/
 
 	
 	//private static Connection connection;
@@ -45,11 +70,35 @@ public class LibraryApp {
 	}
 	
 	public static boolean authenticate(String username, String password) {
-		Properties props = getProps();
-		if((username.equals(props.getProperty("db.user"))) && (password.equals(props.getProperty("db.password")))) {
-			return true;
-		}
-		return false;
+	    // First check for benallal/amine
+	    if ("benallal".equalsIgnoreCase(username.trim()) && "amine".equals(password)) {
+	        return true;
+	    }
+	    
+	    // If not benallal/amine, check against userstable
+	    String sql = "SELECT COUNT(*) FROM userstable WHERE UPPER(USERNAMES) = UPPER(?) AND PASSWORD = ?";
+	    
+	    try (Connection conn = DriverManager.getConnection(
+	            getProps().getProperty("db.url"),
+	            getProps().getProperty("db.user"),
+	            getProps().getProperty("db.password"));
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        
+	        stmt.setString(1, username.trim());
+	        stmt.setString(2, password);
+	        
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getInt(1) > 0;
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, 
+	            "Database error during authentication", 
+	            "Error", JOptionPane.ERROR_MESSAGE);
+	    }
+	    return false;
 	}
 	public static Connection getConnection() {
         try {
@@ -263,13 +312,14 @@ public class LibraryApp {
 		frmLibraryapp.getContentPane().add(passwordField);
 		
 		//RoundedTextField textField = new RoundedTextField(20, 20);
-		JTextArea textField = new JTextArea();
-		textField.setForeground(new Color(255, 255, 255));
-		textField.setBackground(new Color(145, 149, 153));
-		textField.setFont(new Font("Jost", Font.PLAIN, 26));
-		textField.setBounds(826, 376, 360, 49);
-		frmLibraryapp.getContentPane().add(textField);
-		textField.setColumns(10);
+		JTextField textArea = new JTextField();
+		textArea.setForeground(new Color(255, 255, 255));
+		textArea.setBackground(new Color(145, 149, 153));
+		textArea.setFont(new Font("Jost", Font.PLAIN, 26));
+		textArea.setBounds(826, 376, 360, 49);
+		textArea.setBorder(BorderFactory.createEmptyBorder());
+		frmLibraryapp.getContentPane().add(textArea);
+		textArea.setColumns(10);
 		 
 		//RoundedButton button = new RoundedButton("LOG IN", 20);
 		JButton button = new JButton("LOG IN");
@@ -279,74 +329,71 @@ public class LibraryApp {
         button.setFont(new Font("Jost", Font.BOLD, 27));
         button.setBounds(120, 100, 150, 50);
         passwordField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					String user = textField.getText();
-					String pass = String.valueOf(passwordField.getPassword());
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String user = textArea.getText();
+                    String pass = String.valueOf(passwordField.getPassword());
 
-					// Dummy authentication (Replace with real validation logic)
-					if (authenticate(user, pass)) {
+                    if (authenticate(user, pass)) {
+                        String accessLevel = getAccessLevel(user);
+                        
+                        Properties props = getProps();
+                        try {
+                            connection = DriverManager.getConnection(
+                                props.getProperty("db.url"), 
+                                props.getProperty("db.user"), 
+                                props.getProperty("db.password"));
+                            
+                            new Home(user, accessLevel);
+                            frmLibraryapp.dispose();
+                            
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
+                            JOptionPane.showMessageDialog(null, 
+                                "Database connection error", 
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, 
+                            "Invalid username or password", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String user = textArea.getText().trim();
+                String pass = String.valueOf(passwordField.getPassword());
 
-						String level="ADMIN";
-						Properties props = getProps();
-						// Open HomeScreen
-						try {
-						    connection = DriverManager.getConnection(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password"));
-						    
-						    if (connection != null) {
-						        System.out.println("Connected to the database successfully!");
-						    } else {
-						        System.out.println("Failed to connect to the database.");
-						    }
-						} catch (SQLException e1) {
-						    e1.printStackTrace();
-						    JOptionPane.showMessageDialog(null, "Database error. Contact support.", "Error", JOptionPane.ERROR_MESSAGE);
-						}
-						new Home(user,level);
-
-						// Close Login Window
-						frmLibraryapp.dispose();
-					}else {
-						JOptionPane.showMessageDialog(null, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
-					}
-		        }
-			}
-		});
-		button.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String user = textField.getText();
-				String pass = String.valueOf(passwordField.getPassword());
-
-				// Dummy authentication (Replace with real validation logic)
-				if (authenticate(user, pass)) {
-
-					String level="ADMIN";
-					Properties props = getProps();
-					// Open HomeScreen
-					try {
-					    connection = DriverManager.getConnection(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password"));
-					    
-					    if (connection != null) {
-					        System.out.println("Connected to the database successfully!");
-					    } else {
-					        System.out.println("Failed to connect to the database.");
-					    }
-					} catch (SQLException e1) {
-					    e1.printStackTrace();
-					    JOptionPane.showMessageDialog(null, "Database error. Contact support.", "Error", JOptionPane.ERROR_MESSAGE);
-					}
-					new Home(user,level);
-
-					// Close Login Window
-					frmLibraryapp.dispose();
-				}else {
-					JOptionPane.showMessageDialog(null, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-
-			}
-		});
+                if (authenticate(user, pass)) {
+                    String accessLevel = getAccessLevel(user);
+                    
+                    Properties props = getProps();
+                    try {
+                        connection = DriverManager.getConnection(
+                            props.getProperty("db.url"), 
+                            props.getProperty("db.user"), 
+                            props.getProperty("db.password"));
+                        
+                        new Home(user, accessLevel);
+                        frmLibraryapp.dispose();
+                        
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                        JOptionPane.showMessageDialog(null, 
+                            "Database connection error", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, 
+                        "Invalid username or password", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 		button.setForeground(new Color(255, 255, 255));
 		button.setBackground(new Color(0, 102, 102));
 		button.setFont(new Font("Jost", Font.BOLD, 19));
