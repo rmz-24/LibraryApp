@@ -17,6 +17,7 @@ public class StudentManagementDashboard extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private final JPanel panel = new JPanel();
     public StudentManagementDashboard(String user , String level) {
+    	setResizable(false);
     	//private Connection connection;
     	//this.connection = LibraryApp.getConnection();
     	 //String usernames =user;
@@ -43,6 +44,11 @@ public class StudentManagementDashboard extends JFrame {
         iconLabel.setBounds(87, 11, 100, 100);
         iconLabel.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
         topColorPanel.add(iconLabel);
+        
+        JLabel iconLabel_1 = new JLabel("");
+        iconLabel_1.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+        iconLabel_1.setBounds(87, 11, 100, 100);
+        topColorPanel.add(iconLabel_1);
         
         JButton addStudentButton = new JButton("");
         addStudentButton.addMouseListener(new MouseAdapter() {
