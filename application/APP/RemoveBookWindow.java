@@ -27,6 +27,7 @@ public class RemoveBookWindow extends JFrame {
     private JButton searchButton;
 
     public RemoveBookWindow() {
+    	setResizable(false);
         // Initialize connection once
         this.connection = LibraryApp.getConnection();
         
@@ -133,24 +134,25 @@ public class RemoveBookWindow extends JFrame {
     }
 
     private void searchBook() {
-        String bookId = bookIdField.getText().trim();
-        
+        String bookId = bookIdField.getText().trim().toUpperCase(); // Ensure uppercase format
+
         // Input validation
         if (bookId.isEmpty()) {
             showError("Please enter a Book ID");
             return;
         }
-        
-        if (!bookId.matches("\\d+")) {
-            showError("Book ID must contain only numbers");
+
+        if (!bookId.matches("BK\\d{4}")) {  // Ensures "BK" followed by exactly 5 digits
+            showError("Book ID must be in the format BKxxxxx (e.g., BK12345)");
             return;
         }
+        
 
         setUIState(false); // Disable UI during operation
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(
                 "SELECT BOOKNAME, BOOKAUTHOR, COPIESNBR FROM bookslist WHERE BOOKID = ?")) {
-            
+
             stmt.setString(1, bookId);
             ResultSet rs = stmt.executeQuery();
 
@@ -168,6 +170,7 @@ public class RemoveBookWindow extends JFrame {
             setUIState(true); // Re-enable UI
         }
     }
+
 
     private void confirmAndDelete() {
         String bookId = bookIdField.getText().trim();
