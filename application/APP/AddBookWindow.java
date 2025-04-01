@@ -66,7 +66,9 @@ public class AddBookWindow extends JFrame {
 		}
 		return false;
 	}
-	
+	 private void showError(String message) {
+	        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+	    }
 	
 	// MODIFIED: Enhanced insert method with new component support
 	private void insertBookData() {
@@ -80,6 +82,12 @@ public class AddBookWindow extends JFrame {
 	        java.util.Date selectedDate = dateChooser.getDate();
 
 	        // Validation
+	        if (!bookId.matches("BK\\d{4}")) {  // Ensures "BK" followed by exactly 5 digits
+	            showError("Book ID must be in the format BKxxxxx (e.g., BK12345)");
+	            clearForm();
+	            return;
+	        }
+	        
 	        if (bookId.isEmpty() || bookName.isEmpty() || bookAuthor.isEmpty() || selectedDate == null) {
 	            JOptionPane.showMessageDialog(this, "Please fill all fields", "Error", JOptionPane.ERROR_MESSAGE);
 	            return;
@@ -127,6 +135,7 @@ public class AddBookWindow extends JFrame {
 	
 	
 	public AddBookWindow(String user, String pass) {
+		setResizable(false);
 		
 		this.connection = LibraryApp.getConnection();
 		
@@ -194,6 +203,7 @@ public class AddBookWindow extends JFrame {
         bookIdField.setFont(new Font("Jost", Font.PLAIN, 22));
         bookIdField.setBounds(30, 140, 269, 43);
         panel_1.add(bookIdField);
+        /*
         bookIdField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -203,6 +213,7 @@ public class AddBookWindow extends JFrame {
                 }
             }
         });
+        */
         bookIdField.setColumns(10);
         
         bookNameField = new JTextField();
