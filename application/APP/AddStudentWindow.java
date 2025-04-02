@@ -40,6 +40,8 @@ public class AddStudentWindow extends JFrame {
 	
 	
 	private Connection connection;
+	private JTextField numfield;
+	private JTextField mailfield;
 	
 	
 	public static Properties getProps() {
@@ -63,9 +65,9 @@ public class AddStudentWindow extends JFrame {
 		return false;
 	}
 	
-	private void insertStudentData(String studentId, String name, String firstName, String student_level, java.util.Date signedDate) {
+	private void insertStudentData(String studentId, String name, String firstName, String student_level, java.util.Date signedDate , int num,String email) {
         try {
-        	String sql = "INSERT INTO studentlist (\"STUDENTID\", \"NAME\", \"FIRSTNAME\", \"STUDENT_LEVEL\", \"SIGNED_IN_DATE\") VALUES (?, ?, ?, ?, ?)";
+        	String sql = "INSERT INTO studentlist (\"STUDENTID\", \"NAME\", \"FIRSTNAME\", \"STUDENT_LEVEL\", \"SIGNED_IN_DATE\",\"NUM_TEL\",\"MAILETU\") VALUES (?, ?, ?, ?, ?,?,?)";
 
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, studentId);
@@ -73,6 +75,8 @@ public class AddStudentWindow extends JFrame {
             stmt.setString(3, firstName);
             stmt.setString(4, student_level);
             stmt.setDate(5, new Date(signedDate.getTime()));
+            stmt.setInt(6, num);
+            stmt.setString(7, email);
 
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0) {
@@ -107,7 +111,7 @@ public class AddStudentWindow extends JFrame {
         
         JLabel topLabel = new JLabel("STUDENT REGISTERING");
         topLabel.setForeground(new Color(255, 255, 255));
-        topLabel.setBounds(356, 22, 216, 35);
+        topLabel.setBounds(325, 22, 280, 35);
         topLabel.setFont(new Font("Jost", Font.BOLD, 24));
         panel.add(topLabel);
         
@@ -123,31 +127,31 @@ public class AddStudentWindow extends JFrame {
         getContentPane().add(panel_1);
         panel_1.setLayout(null);
         
-        JLabel lblStudentId = new JLabel("STUDENT ID");
+        JLabel lblStudentId = new JLabel("STUDENT ID *");
         lblStudentId.setForeground(Color.WHITE);
         lblStudentId.setFont(new Font("Jost", Font.BOLD, 24));
         lblStudentId.setBounds(30, 94, 216, 35);
         panel_1.add(lblStudentId);
         
-        JLabel lblStudentname = new JLabel("STUDENT NAME");
+        JLabel lblStudentname = new JLabel("STUDENT NAME *");
         lblStudentname.setForeground(Color.WHITE);
         lblStudentname.setFont(new Font("Jost", Font.BOLD, 24));
         lblStudentname.setBounds(30, 205, 216, 35);
         panel_1.add(lblStudentname);
         
-        JLabel lblStudentlevel = new JLabel("STUDENT LEVEL");
+        JLabel lblStudentlevel = new JLabel("STUDENT LEVEL *");
         lblStudentlevel.setForeground(Color.WHITE);
         lblStudentlevel.setFont(new Font("Jost", Font.BOLD, 24));
         lblStudentlevel.setBounds(30, 432, 216, 35);
         panel_1.add(lblStudentlevel);
         
-        JLabel lblStudentfname = new JLabel("STUDENT FIRSTNAME");
+        JLabel lblStudentfname = new JLabel("STUDENT FIRSTNAME *");
         lblStudentfname.setForeground(Color.WHITE);
         lblStudentfname.setFont(new Font("Jost", Font.BOLD, 24));
         lblStudentfname.setBounds(30, 321, 269, 35);
         panel_1.add(lblStudentfname);
         
-        JLabel lblStudentsigndate = new JLabel("SIGNED IN ");
+        JLabel lblStudentsigndate = new JLabel("SIGNED IN  *");
         lblStudentsigndate.setForeground(Color.WHITE);
         lblStudentsigndate.setFont(new Font("Jost", Font.BOLD, 24));
         lblStudentsigndate.setBounds(30, 545, 216, 35);
@@ -190,6 +194,38 @@ public class AddStudentWindow extends JFrame {
         SIGNEDDATE.setBounds(30, 591, 269, 43);
         panel_1.add(SIGNEDDATE);
         SIGNEDDATE.setFont(new Font("Jost", Font.PLAIN, 22));
+        numfield = new JTextField();
+        numfield.setFont(new Font("Jost", Font.PLAIN, 22));
+        numfield.setColumns(10);
+        numfield.setBounds(386, 480, 269, 43);
+        panel_1.add(numfield);
+        numfield.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) { 
+                    e.consume(); // Ignore non-digit input
+                }
+            }
+        });
+        
+        JLabel lblPhoneNumber = new JLabel("PHONE NUMBER *");
+        lblPhoneNumber.setForeground(Color.WHITE);
+        lblPhoneNumber.setFont(new Font("Jost", Font.BOLD, 24));
+        lblPhoneNumber.setBounds(386, 434, 216, 35);
+        panel_1.add(lblPhoneNumber);
+        
+        mailfield = new JTextField();
+        mailfield.setFont(new Font("Jost", Font.PLAIN, 22));
+        mailfield.setColumns(10);
+        mailfield.setBounds(386, 591, 269, 43);
+        panel_1.add(mailfield);
+        
+        JLabel lblEmail = new JLabel("EMAIL");
+        lblEmail.setForeground(Color.WHITE);
+        lblEmail.setFont(new Font("Jost", Font.BOLD, 24));
+        lblEmail.setBounds(386, 545, 216, 35);
+        panel_1.add(lblEmail);
         
         JButton btnAddStudent = new JButton("Add New Student");
         btnAddStudent.addMouseListener(new MouseAdapter() {
@@ -220,10 +256,19 @@ public class AddStudentWindow extends JFrame {
                     String firstName = STUDENTFNAME.getText().trim();
                     String level = (String) LEVEL.getSelectedItem();
                     java.util.Date signedDate = SIGNEDDATE.getDate();
+                    String numText = numfield.getText().trim();
+                    if (numText.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Number field cannot be empty!", "Input Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    
+                    // Convert to integer after validation
+                    int num = Integer.parseInt(numText);
+                    String email = mailfield.getText().trim();
 
                     // Validate required fields
-                    if (name.isEmpty() || firstName.isEmpty() || level == null || signedDate == null) {
-                        JOptionPane.showMessageDialog(null, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
+                    if (name.isEmpty() || firstName.isEmpty() || level == null || signedDate == null ) {
+                        JOptionPane.showMessageDialog(null, "All ( * ) fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
@@ -232,7 +277,7 @@ public class AddStudentWindow extends JFrame {
 
                     // Insert into database
                     
-                    insertStudentData(studentId, name, firstName, level, sqlDate);
+                    insertStudentData(studentId, name, firstName, level, sqlDate,num,email);
 
                     // Close form
                     dispose();
@@ -261,6 +306,8 @@ public class AddStudentWindow extends JFrame {
         btnAbort.setBackground(new Color(128, 0, 0));
         btnAbort.setBounds(410, 667, 123, 40);
         panel_1.add(btnAbort);
+        
+        
 
         
 
@@ -271,6 +318,4 @@ public class AddStudentWindow extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AddStudentWindow("user", "pass"));
     }
-
-
 }
