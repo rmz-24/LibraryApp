@@ -21,7 +21,7 @@ public class RemoveBookWindow extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JTextField bookIdField;
-    private JTextArea bookName, bookAuthor, copiesNbr;
+    private JTextArea bookName, bookAuthor, availableQty;
     private Connection connection;
     private JButton removeBookButton;
     private JButton searchButton;
@@ -102,11 +102,11 @@ public class RemoveBookWindow extends JFrame {
         bookName.setEditable(false);
         getContentPane().add(bookName);
         
-        JLabel selectedBookName = new JLabel("BOOK NAME");
-        selectedBookName.setForeground(Color.BLACK);
-        selectedBookName.setFont(new Font("Jost", Font.BOLD, 19));
-        selectedBookName.setBounds(407, 106, 196, 31);
-        getContentPane().add(selectedBookName);
+        JLabel selectedBookNameLabel = new JLabel("BOOK NAME");
+        selectedBookNameLabel.setForeground(Color.BLACK);
+        selectedBookNameLabel.setFont(new Font("Jost", Font.BOLD, 19));
+        selectedBookNameLabel.setBounds(407, 106, 196, 31);
+        getContentPane().add(selectedBookNameLabel);
         
         bookAuthor = new JTextArea();
         bookAuthor.setFont(new Font("Jost", Font.BOLD, 20));
@@ -114,23 +114,23 @@ public class RemoveBookWindow extends JFrame {
         bookAuthor.setEditable(false);
         getContentPane().add(bookAuthor);
         
-        JLabel selectedBookAuthor = new JLabel("BOOK AUTHOR");
-        selectedBookAuthor.setForeground(Color.BLACK);
-        selectedBookAuthor.setFont(new Font("Jost", Font.BOLD, 19));
-        selectedBookAuthor.setBounds(407, 195, 196, 31);
-        getContentPane().add(selectedBookAuthor);
+        JLabel selectedBookAuthorLabel = new JLabel("BOOK AUTHOR");
+        selectedBookAuthorLabel.setForeground(Color.BLACK);
+        selectedBookAuthorLabel.setFont(new Font("Jost", Font.BOLD, 19));
+        selectedBookAuthorLabel.setBounds(407, 195, 196, 31);
+        getContentPane().add(selectedBookAuthorLabel);
         
-        copiesNbr = new JTextArea();
-        copiesNbr.setFont(new Font("Jost", Font.BOLD, 20));
-        copiesNbr.setBounds(407, 311, 184, 31);
-        copiesNbr.setEditable(false);
-        getContentPane().add(copiesNbr);
+        availableQty = new JTextArea();
+        availableQty.setFont(new Font("Jost", Font.BOLD, 20));
+        availableQty.setBounds(407, 311, 184, 31);
+        availableQty.setEditable(false);
+        getContentPane().add(availableQty);
         
-        JLabel selectedBookCopiesNbr = new JLabel("COPIES NUMBER");
-        selectedBookCopiesNbr.setForeground(Color.BLACK);
-        selectedBookCopiesNbr.setFont(new Font("Jost", Font.BOLD, 19));
-        selectedBookCopiesNbr.setBounds(407, 276, 196, 31);
-        getContentPane().add(selectedBookCopiesNbr);
+        JLabel selectedBookAvailableQtyLabel = new JLabel("AVAILABLE QUANTITY");
+        selectedBookAvailableQtyLabel.setForeground(Color.BLACK);
+        selectedBookAvailableQtyLabel.setFont(new Font("Jost", Font.BOLD, 19));
+        selectedBookAvailableQtyLabel.setBounds(407, 276, 196, 31);
+        getContentPane().add(selectedBookAvailableQtyLabel);
     }
 
     private void searchBook() {
@@ -142,7 +142,7 @@ public class RemoveBookWindow extends JFrame {
             return;
         }
 
-        if (!bookId.matches("BK\\d{4}")) {  // Ensures "BK" followed by exactly 5 digits
+        if (!bookId.matches("BK\\d{5}")) {  // Ensures "BK" followed by exactly 5 digits
             showError("Book ID must be in the format BKxxxxx (e.g., BK12345)");
             return;
         }
@@ -151,7 +151,7 @@ public class RemoveBookWindow extends JFrame {
         setUIState(false); // Disable UI during operation
 
         try (PreparedStatement stmt = connection.prepareStatement(
-                "SELECT BOOKNAME, BOOKAUTHOR, COPIESNBR FROM bookslist WHERE BOOKID = ?")) {
+                "SELECT BOOKNAME, BOOKAUTHOR, AVAILABLE_QTY FROM bookslist WHERE BOOKID = ?")) {
 
             stmt.setString(1, bookId);
             ResultSet rs = stmt.executeQuery();
@@ -159,7 +159,7 @@ public class RemoveBookWindow extends JFrame {
             if (rs.next()) {
                 bookName.setText(rs.getString("BOOKNAME"));
                 bookAuthor.setText(rs.getString("BOOKAUTHOR"));
-                copiesNbr.setText(String.valueOf(rs.getInt("COPIESNBR")));
+                availableQty.setText(String.valueOf(rs.getInt("AVAILABLE_QTY")));
             } else {
                 showInfo("No book found with ID: " + bookId);
                 resetForm();
@@ -214,7 +214,7 @@ public class RemoveBookWindow extends JFrame {
         bookIdField.setText("");
         bookName.setText("");
         bookAuthor.setText("");
-        copiesNbr.setText("");
+        availableQty.setText("");
         bookIdField.requestFocus();
     }
 
