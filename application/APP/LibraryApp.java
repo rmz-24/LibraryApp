@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
@@ -43,7 +42,7 @@ public class LibraryApp {
 	    }
 	    return "STAFF"; // Default access level
 	}
-	private ImageIcon loadImage(String imageName) {
+	/*private ImageIcon loadImage(String imageName) {
 	    URL imageURL = getClass().getClassLoader().getResource("resrc/" + imageName);
 	    if (imageURL != null) {
 	        return new ImageIcon(imageURL);
@@ -51,7 +50,7 @@ public class LibraryApp {
 	    
 	    System.err.println("Image not found: " + imageName);
 	    return null; // Avoid NullPointerException
-	}
+	}*/
 
 	
 	//private static Connection connection;

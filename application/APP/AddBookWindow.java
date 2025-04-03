@@ -2,23 +2,18 @@ package APP;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.util.Properties;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,8 +23,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
-import com.toedter.calendar.JDateChooser;
-
 public class AddBookWindow extends JFrame {
 
 	/**
@@ -38,11 +31,11 @@ public class AddBookWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private JTextField bookIdField;
-	private JTextField bookNameField;
-	private JTextField bookAuthorField;
-	private JFormattedTextField bookPriceField;
-	private JSpinner copiesSpinner;
-	private JDateChooser dateChooser;
+    private JTextField bookNameField;
+    private JTextField bookAuthorField;
+    private JComboBox<String> Category;
+    private JSpinner publishYearSpinner;
+    private JSpinner availableQtySpinner;
 	
 	private Connection connection;
 	
@@ -74,36 +67,36 @@ public class AddBookWindow extends JFrame {
 	private void insertBookData() {
 	    try {
 	        // Get values from components
-	        String bookId = bookIdField.getText().trim();
-	        String bookName = bookNameField.getText().trim();
-	        String bookAuthor = bookAuthorField.getText().trim();
-	        double price = ((Number)bookPriceField.getValue()).doubleValue();
-	        int copies = (Integer)copiesSpinner.getValue();
-	        java.util.Date selectedDate = dateChooser.getDate();
+	    	String bookId = bookIdField.getText().trim();
+            String bookName = bookNameField.getText().trim();
+            String bookAuthor = bookAuthorField.getText().trim();
+            String category = Category.getSelectedItem().toString().trim();
+            int publishYear = (Integer) publishYearSpinner.getValue();
+            int availableQty = (Integer) availableQtySpinner.getValue();
 
 	        // Validation
-	        if (!bookId.matches("BK\\d{4}")) {  // Ensures "BK" followed by exactly 5 digits
+	        if (!bookId.matches("BK\\d{5}")) {  // Ensures "BK" followed by exactly 5 digits
 	            showError("Book ID must be in the format BKxxxxx (e.g., BK12345)");
 	            clearForm();
 	            return;
 	        }
 	        
-	        if (bookId.isEmpty() || bookName.isEmpty() || bookAuthor.isEmpty() || selectedDate == null) {
+	        if (bookId.isEmpty() || bookName.isEmpty() || bookAuthor.isEmpty() || category.isEmpty()) {
 	            JOptionPane.showMessageDialog(this, "Please fill all fields", "Error", JOptionPane.ERROR_MESSAGE);
 	            return;
 	        }
 
 	        // Database insertion
-	        String sql = "INSERT INTO bookslist (BOOKID, BOOKNAME, BOOKAUTHOR, BOOKPRICE, COPIESNBR, BOOKREGISTERDATE) "
+	        String sql = "INSERT INTO bookslist (BOOKID, BOOKNAME, BOOKAUTHOR, CATEGORIE, PUBLISH_YEAR, AVAILABLE_QTY) "
 	                   + "VALUES (?, ?, ?, ?, ?, ?)";
 
 	        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-	            stmt.setString(1, bookId);
-	            stmt.setString(2, bookName);
-	            stmt.setString(3, bookAuthor);
-	            stmt.setBigDecimal(4, BigDecimal.valueOf(price));
-	            stmt.setInt(5, copies);
-	            stmt.setDate(6, new java.sql.Date(selectedDate.getTime()));
+	        	stmt.setString(1, bookId);
+                stmt.setString(2, bookName);
+                stmt.setString(3, bookAuthor);
+                stmt.setString(4, category);
+                stmt.setInt(5, publishYear);
+                stmt.setInt(6, availableQty);
 
 	            int rowsInserted = stmt.executeUpdate();
 	            if (rowsInserted > 0) {
@@ -125,12 +118,12 @@ public class AddBookWindow extends JFrame {
 
 	// NEW: Helper method to clear form
 	private void clearForm() {
-	    bookIdField.setText("");
-	    bookNameField.setText("");
-	    bookAuthorField.setText("");
-	    bookPriceField.setValue(0.00);
-	    copiesSpinner.setValue(1);
-	    dateChooser.setDate(null);
+		bookIdField.setText("");
+        bookNameField.setText("");
+        bookAuthorField.setText("");
+        Category.setSelectedItem(null);
+        publishYearSpinner.setValue(2025);
+        availableQtySpinner.setValue(1);
 	}
 	
 	
@@ -169,36 +162,6 @@ public class AddBookWindow extends JFrame {
         bookIdLabel.setBounds(30, 94, 216, 35);
         panel_1.add(bookIdLabel);
         
-        JLabel bookNameLabel = new JLabel("BOOK NAME");
-        bookNameLabel.setForeground(Color.WHITE);
-        bookNameLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        bookNameLabel.setBounds(30, 205, 216, 35);
-        panel_1.add(bookNameLabel);
-        
-        JLabel authorNameLabel = new JLabel("AUTHOR NAME");
-        authorNameLabel.setForeground(Color.WHITE);
-        authorNameLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        authorNameLabel.setBounds(30, 321, 269, 35);
-        panel_1.add(authorNameLabel);
-        
-        JLabel bookPriceLabel = new JLabel("BOOK PRICE");
-        bookPriceLabel.setForeground(Color.WHITE);
-        bookPriceLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        bookPriceLabel.setBounds(30, 432, 216, 35);
-        panel_1.add(bookPriceLabel);
-        
-        JLabel copiesNumberLabel = new JLabel("COPIES NUMBER ");
-        copiesNumberLabel.setForeground(Color.WHITE);
-        copiesNumberLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        copiesNumberLabel.setBounds(367, 432, 216, 35);
-        panel_1.add(copiesNumberLabel);
-        
-        JLabel bookRegisteryDate1 = new JLabel("REGISTERY DATE ");
-        bookRegisteryDate1.setForeground(Color.WHITE);
-        bookRegisteryDate1.setFont(new Font("Jost", Font.BOLD, 24));
-        bookRegisteryDate1.setBounds(30, 545, 229, 35);
-        panel_1.add(bookRegisteryDate1);
-        
         bookIdField = new JTextField();
         bookIdField.setFont(new Font("Jost", Font.PLAIN, 22));
         bookIdField.setBounds(30, 140, 269, 43);
@@ -216,58 +179,62 @@ public class AddBookWindow extends JFrame {
         */
         bookIdField.setColumns(10);
         
+        JLabel bookNameLabel = new JLabel("BOOK NAME");
+        bookNameLabel.setForeground(Color.WHITE);
+        bookNameLabel.setFont(new Font("Jost", Font.BOLD, 24));
+        bookNameLabel.setBounds(30, 205, 216, 35);
+        panel_1.add(bookNameLabel);
+        
         bookNameField = new JTextField();
         bookNameField.setFont(new Font("Jost", Font.PLAIN, 22));
         bookNameField.setColumns(10);
         bookNameField.setBounds(30, 252, 269, 43);
         panel_1.add(bookNameField);
         
+        JLabel authorNameLabel = new JLabel("AUTHOR NAME");
+        authorNameLabel.setForeground(Color.WHITE);
+        authorNameLabel.setFont(new Font("Jost", Font.BOLD, 24));
+        authorNameLabel.setBounds(30, 317, 269, 35);
+        panel_1.add(authorNameLabel);
+        
         bookAuthorField = new JTextField();
-        bookAuthorField.setFont(new Font("Jost", Font.PLAIN, 22));
+        bookAuthorField.setFont(new Font("Dialog", Font.PLAIN, 22));
         bookAuthorField.setColumns(10);
         bookAuthorField.setBounds(30, 367, 269, 43);
         panel_1.add(bookAuthorField);
         
+        String[] categories = {"MATHS", "PHYSIQUE", "ARCHI", "MDF"};
         
-        NumberFormat priceFormat = NumberFormat.getNumberInstance();
-        priceFormat.setMinimumFractionDigits(2);
-        priceFormat.setMaximumFractionDigits(2);
-        bookPriceField = new JFormattedTextField(priceFormat);
-        bookPriceField.setBounds(30, 478, 269, 43);  // Adjust position
-        bookPriceField.setFont(new Font("Jost", Font.PLAIN, 22));
-        panel_1.add(bookPriceField);
-      
-        bookPriceField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                if (!(Character.isDigit(c) || c == '.' || c == KeyEvent.VK_BACK_SPACE)) {
-                    e.consume();
-                }
-            }
-        });
+        JLabel categoryLabel = new JLabel("CATEGORY");
+        categoryLabel.setForeground(Color.WHITE);
+        categoryLabel.setFont(new Font("Dialog", Font.BOLD, 24));
+        categoryLabel.setBounds(30, 432, 269, 35);
+        panel_1.add(categoryLabel);
         
+        Category = new JComboBox<>(categories);
+        Category.setFont(new Font("Dialog", Font.PLAIN, 22));
+        Category.setBounds(30, 478, 200, 43);
+        panel_1.add(Category);
         
-        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(
-            1,    // initial value
-            1,    // minimum (per your CHECK constraint)
-            99,   // maximum (NUMBER(2,0) limit)
-            1     // step
-        );
-        copiesSpinner = new JSpinner(spinnerModel);
-        copiesSpinner.setBounds(367, 478, 120, 43);  // Match your label position
-        panel_1.add(copiesSpinner);
-
-        // Style the spinner
-        //JComponent editor = ((JSpinner.NumberEditor)copiesSpinner.getEditor());
-        //editor.getTextField().setFont(new Font("Jost", Font.PLAIN, 22));
+        JLabel availableQtyLabel = new JLabel("AVAILABLE QUANTITY");
+        availableQtyLabel.setForeground(Color.WHITE);
+        availableQtyLabel.setFont(new Font("Jost", Font.BOLD, 24));
+        availableQtyLabel.setBounds(367, 432, 308, 35);
+        panel_1.add(availableQtyLabel);
         
-        dateChooser = new JDateChooser();
-        dateChooser.setBounds(30, 591, 269, 43);
-        dateChooser.setFont(new Font("Jost", Font.PLAIN, 22));
-        panel_1.add(dateChooser);
+        availableQtySpinner = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
+        availableQtySpinner.setBounds(367, 478, 100, 30);
+        panel_1.add(availableQtySpinner);
         
+        JLabel publishYearLabel = new JLabel("PUBLISH YEAR");
+        publishYearLabel.setForeground(Color.WHITE);
+        publishYearLabel.setFont(new Font("Jost", Font.BOLD, 24));
+        publishYearLabel.setBounds(30, 545, 229, 35);
+        panel_1.add(publishYearLabel);
         
+        publishYearSpinner = new JSpinner(new SpinnerNumberModel(2025, 1, 9999, 1));
+        publishYearSpinner.setBounds(30, 591, 100, 30);
+        panel_1.add(publishYearSpinner);
         
         JButton submitButton = new JButton("Register Book");
         submitButton.setForeground(Color.WHITE);
@@ -290,7 +257,6 @@ public class AddBookWindow extends JFrame {
         cancelButton.setBounds(410, 667, 123, 40);
         panel_1.add(cancelButton);
         
-        
         setVisible(true);
 		
 	}
@@ -298,7 +264,4 @@ public class AddBookWindow extends JFrame {
 	public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AddBookWindow("user", "pass"));
     }
-	
-	
-
 }
