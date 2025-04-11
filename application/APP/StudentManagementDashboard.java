@@ -58,7 +58,7 @@ public class StudentManagementDashboard extends JFrame {
         	}
         });
         addStudentButton.setIcon(new ImageIcon("src\\resrc\\profile_10655019.png"));
-        addStudentButton.setBounds(113, 195, 104, 68);
+        addStudentButton.setBounds(22, 196, 104, 68);
         addStudentButton.setContentAreaFilled(false);
         addStudentButton.setBorderPainted(false); // Removes border
         addStudentButton.setFocusPainted(false); // Removes focus border
@@ -77,19 +77,19 @@ public class StudentManagementDashboard extends JFrame {
         removeStudentButton.setFocusPainted(false);
         removeStudentButton.setContentAreaFilled(false);
         removeStudentButton.setBorderPainted(false);
-        removeStudentButton.setBounds(294, 195, 104, 68);
+        removeStudentButton.setBounds(203, 196, 104, 68);
         panel.add(removeStudentButton);
         
         JLabel addStudentLabel = new JLabel("Add student ");
         addStudentLabel.setForeground(new Color(255, 255, 255));
         addStudentLabel.setFont(new Font("Jost", Font.BOLD, 13));
-        addStudentLabel.setBounds(132, 285, 77, 14);
+        addStudentLabel.setBounds(41, 286, 77, 14);
         panel.add(addStudentLabel);
         
         JLabel removeStudentLabel = new JLabel("Remove student ");
         removeStudentLabel.setForeground(new Color(255, 255, 255));
         removeStudentLabel.setFont(new Font("Jost", Font.BOLD, 13));
-        removeStudentLabel.setBounds(301, 285, 97, 14);
+        removeStudentLabel.setBounds(210, 286, 97, 14);
         panel.add(removeStudentLabel);
         
         JButton backHomeButton = new JButton("");
@@ -108,6 +108,29 @@ public class StudentManagementDashboard extends JFrame {
         backHomeButton.setBorderPainted(false);
         backHomeButton.setBounds(433, 333, 104, 68);
         panel.add(backHomeButton);
+        
+        JLabel editStudentLabel = new JLabel("Edit student ");
+        editStudentLabel.setForeground(Color.WHITE);
+        editStudentLabel.setFont(new Font("Jost", Font.BOLD, 13));
+        editStudentLabel.setBounds(409, 286, 83, 14);
+        panel.add(editStudentLabel);
+        
+        JButton removeStudentButton_1 = new JButton("");
+        removeStudentButton_1.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		new editstudent();
+        		dispose();
+        		
+        	}
+        });
+        removeStudentButton_1.setOpaque(false);
+        removeStudentButton_1.setIcon(new ImageIcon("src\\resrc\\user_16784047.png"));
+        removeStudentButton_1.setFocusPainted(false);
+        removeStudentButton_1.setContentAreaFilled(false);
+        removeStudentButton_1.setBorderPainted(false);
+        removeStudentButton_1.setBounds(390, 196, 104, 68);
+        panel.add(removeStudentButton_1);
 
         setVisible(true);
     }
