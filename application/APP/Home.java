@@ -2,18 +2,23 @@ package APP;
 
 import javax.swing.*;
 
+import com.sun.jdi.connect.spi.Connection;
+
 import java.awt.Color;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Properties;
+import java.sql.*;
 
 public class Home {
-	JLabel bookLabel, availableQtyLabel_1, availableQtyLabel_2, bookLabel_3, availableQtyLabel_4,
-    bookLabel_5, availableQtyLabel_6, bookLabel_7, availableQtyLabel_8, bookLabel_9,
-    availableQtyLabel_10, bookLabel_11, availableQtyLabel_12, bookLabel_13, availableQtyLabel_14,
-    bookLabel_15, availableQtyLabel_16, bookLabel_17, availableQtyLabel_18, bookLabel_19;
+	JLabel bookLabel, bookLabel_1, bookLabel_2, bookLabel_3, bookLabel_4,
+    bookLabel_5, bookLabel_6, bookLabel_7, bookLabel_8, bookLabel_9,
+    bookLabel_10, bookLabel_11, bookLabel_12, bookLabel_13, bookLabel_14,
+    bookLabel_15, bookLabel_16, bookLabel_17, bookLabel_18, bookLabel_19;
 
 	JLabel bookNumberLabel, bookNumberLabel_1, bookNumberLabel_2, bookNumberLabel_3, bookNumberLabel_4,
     bookNumberLabel_5, bookNumberLabel_6, bookNumberLabel_7, bookNumberLabel_8, bookNumberLabel_9;
@@ -25,9 +30,9 @@ public class Home {
 	        bookLabel_11, bookLabel_13, bookLabel_15, bookLabel_17, bookLabel_19
 	    };
 
-	    JLabel[] availableQtyLabels = {
-	    		availableQtyLabel_1, availableQtyLabel_2, availableQtyLabel_4, availableQtyLabel_6, availableQtyLabel_8,
-	    		availableQtyLabel_10, availableQtyLabel_12, availableQtyLabel_14, availableQtyLabel_16, availableQtyLabel_18
+	    JLabel[] bookPriceLabels = {
+	    		bookLabel_1, bookLabel_2, bookLabel_4, bookLabel_6, bookLabel_8,
+		        bookLabel_10, bookLabel_12, bookLabel_14, bookLabel_16, bookLabel_18
 	        
 	    };
 
@@ -40,17 +45,17 @@ public class Home {
 	        int bookCount = 0;
 	        while (rs.next() && bookCount < bookNameLabels.length) {
 	            String bookName = rs.getString("BOOKNAME");
-	            String availableQty = "  " + rs.getInt("AVAILABLE_QTY");
+	            String bookcopies = "  " + rs.getInt("AVAILABLE_QTY");
 
-	            System.out.println("Book: " + bookName + ", Available Quantity: " + availableQty);
+	            System.out.println("Book: " + bookName + ", copies: " + bookcopies);
 
 	            bookNameLabels[bookCount].setText(bookName);
-	            availableQtyLabels[bookCount].setText(availableQty);
+	            bookPriceLabels[bookCount].setText(bookcopies);
 
 	            bookNameLabels[bookCount].revalidate();
 	            bookNameLabels[bookCount].repaint();
-	            availableQtyLabels[bookCount].revalidate();
-	            availableQtyLabels[bookCount].repaint();
+	            bookPriceLabels[bookCount].revalidate();
+	            bookPriceLabels[bookCount].repaint();
 
 	            bookCount++;
 	        }
@@ -58,7 +63,7 @@ public class Home {
 	        // Clear remaining labels if fewer than 10 books are loaded
 	        for (int i = bookCount; i < bookNameLabels.length; i++) {
 	            bookNameLabels[i].setText("");
-	            availableQtyLabels[i].setText("");
+	            bookPriceLabels[i].setText("");
 	        }
 
 	    } catch (Exception e) {
@@ -272,8 +277,15 @@ public class Home {
         removeBookLabel.setForeground(Color.WHITE);
         removeBookLabel.setFont(new Font("Jost", Font.BOLD, 15));
         panel.add(removeBookLabel);
-        
+        //getClass().getResource("/resrc/borrow_book.png")
         JButton borrowBookButton = new JButton("");
+        borrowBookButton.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		new EmpruntsManagement(user,level);
+        		 frmDashboard.dispose();
+        	}
+        });
         borrowBookButton.setIcon(new ImageIcon("src\\resrc\\borrow_book.png"));
         borrowBookButton.setBounds(40, 395, 112, 68);
         borrowBookButton.setContentAreaFilled(false);
@@ -462,59 +474,59 @@ public class Home {
         bookLabel = createBookLabel(70, 31, 181, 39);
         booksdisplay.add(bookLabel);
 
-        availableQtyLabel_1 = createBookLabel(261, 31, 50, 39);
-        booksdisplay.add(availableQtyLabel_1);
+        bookLabel_1 = createBookLabel(261, 31, 50, 39);
+        booksdisplay.add(bookLabel_1);
 
-        availableQtyLabel_2 = createBookLabel(261, 81, 50, 39);
-        booksdisplay.add(availableQtyLabel_2);
+        bookLabel_2 = createBookLabel(261, 81, 50, 39);
+        booksdisplay.add(bookLabel_2);
 
         bookLabel_3 = createBookLabel(70, 81, 181, 39);
         booksdisplay.add(bookLabel_3);
 
-        availableQtyLabel_4 = createBookLabel(261, 131, 50, 39);
-        booksdisplay.add(availableQtyLabel_4);
+        bookLabel_4 = createBookLabel(261, 131, 50, 39);
+        booksdisplay.add(bookLabel_4);
 
         bookLabel_5 = createBookLabel(70, 131, 181, 39);
         booksdisplay.add(bookLabel_5);
 
-        availableQtyLabel_6 = createBookLabel(261, 181, 50, 39);
-        booksdisplay.add(availableQtyLabel_6);
+        bookLabel_6 = createBookLabel(261, 181, 50, 39);
+        booksdisplay.add(bookLabel_6);
 
         bookLabel_7 = createBookLabel(70, 181, 181, 39);
         booksdisplay.add(bookLabel_7);
 
-        availableQtyLabel_8 = createBookLabel(261, 231, 50, 39);
-        booksdisplay.add(availableQtyLabel_8);
+        bookLabel_8 = createBookLabel(261, 231, 50, 39);
+        booksdisplay.add(bookLabel_8);
 
         bookLabel_9 = createBookLabel(70, 231, 181, 39);
         booksdisplay.add(bookLabel_9);
 
-        availableQtyLabel_10 = createBookLabel(261, 281, 50, 39);
-        booksdisplay.add(availableQtyLabel_10);
+        bookLabel_10 = createBookLabel(261, 281, 50, 39);
+        booksdisplay.add(bookLabel_10);
 
         bookLabel_11 = createBookLabel(70, 281, 181, 39);
         booksdisplay.add(bookLabel_11);
 
-        availableQtyLabel_12 = createBookLabel(261, 331, 50, 39);
-        booksdisplay.add(availableQtyLabel_12);
+        bookLabel_12 = createBookLabel(261, 331, 50, 39);
+        booksdisplay.add(bookLabel_12);
 
         bookLabel_13 = createBookLabel(70, 331, 181, 39);
         booksdisplay.add(bookLabel_13);
 
-        availableQtyLabel_14 = createBookLabel(261, 381, 50, 39);
-        booksdisplay.add(availableQtyLabel_14);
+        bookLabel_14 = createBookLabel(261, 381, 50, 39);
+        booksdisplay.add(bookLabel_14);
 
         bookLabel_15 = createBookLabel(70, 381, 181, 39);
         booksdisplay.add(bookLabel_15);
 
-        availableQtyLabel_16 = createBookLabel(261, 431, 50, 39);
-        booksdisplay.add(availableQtyLabel_16);
+        bookLabel_16 = createBookLabel(261, 431, 50, 39);
+        booksdisplay.add(bookLabel_16);
 
         bookLabel_17 = createBookLabel(70, 431, 181, 39);
         booksdisplay.add(bookLabel_17);
 
-        availableQtyLabel_18 = createBookLabel(261, 481, 50 ,39);
-        booksdisplay.add(availableQtyLabel_18);
+        bookLabel_18 = createBookLabel(261, 481, 50 ,39);
+        booksdisplay.add(bookLabel_18);
 
         bookLabel_19 = createBookLabel(70, 481, 181, 39);
         booksdisplay.add(bookLabel_19);
