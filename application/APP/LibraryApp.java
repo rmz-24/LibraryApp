@@ -5,10 +5,12 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
 //import java.awt.geom.RoundRectangle2D;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
@@ -42,7 +44,7 @@ public class LibraryApp {
 	    }
 	    return "STAFF"; // Default access level
 	}
-	/*private ImageIcon loadImage(String imageName) {
+	private ImageIcon loadImage(String imageName) {
 	    URL imageURL = getClass().getClassLoader().getResource("resrc/" + imageName);
 	    if (imageURL != null) {
 	        return new ImageIcon(imageURL);
@@ -50,7 +52,7 @@ public class LibraryApp {
 	    
 	    System.err.println("Image not found: " + imageName);
 	    return null; // Avoid NullPointerException
-	}*/
+	}
 
 	
 	//private static Connection connection;
@@ -114,7 +116,7 @@ public class LibraryApp {
 	
 	private JFrame frmLibraryapp;
 	private JPasswordField passwordField;
-	/*class RoundedTextField extends JTextField {
+	class RoundedTextField extends JTextField {
 		private static final long serialVersionUID = 1L;
 		private int cornerRadius;
 
@@ -129,7 +131,7 @@ public class LibraryApp {
 	        Graphics2D g2d = (Graphics2D) g;
 	        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-	        g2d.setColor(Color.WHITE);
+	        g2d.setColor(Color.GRAY);
 	        g2d.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius));
 
 	        super.paintComponent(g);
@@ -137,12 +139,12 @@ public class LibraryApp {
 
 	    @Override
 	    protected void paintBorder(Graphics g) {
-	        g.setColor(Color.GRAY);
+	        g.setColor(Color.BLACK);
 	        ((Graphics2D) g).draw(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, cornerRadius, cornerRadius));
 	    }
-	}*/
+	}
 
-	/*class RoundedPasswordField extends JPasswordField {
+	class RoundedPasswordField extends JPasswordField {
 		private static final long serialVersionUID = 1L;
 		private int cornerRadius;
 
@@ -157,7 +159,7 @@ public class LibraryApp {
 	        Graphics2D g2d = (Graphics2D) g;
 	        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-	        g2d.setColor(Color.WHITE);
+	        g2d.setColor(Color.GRAY);
 	        g2d.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius));
 
 	        super.paintComponent(g);
@@ -165,13 +167,13 @@ public class LibraryApp {
 
 	    @Override
 	    protected void paintBorder(Graphics g) {
-	        g.setColor(Color.GRAY);
+	        g.setColor(Color.BLACK);
 	        ((Graphics2D) g).draw(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, cornerRadius, cornerRadius));
 	    }
-	}*/
+	}
 	
 	
-	/*class RoundedButton extends JButton {
+	class RoundedButton extends JButton {
 		private static final long serialVersionUID = 1L;
 		private int cornerRadius;
         
@@ -200,7 +202,7 @@ public class LibraryApp {
         protected void paintBorder(Graphics g) {
             // No border
         }
-    }*/
+    }
 
     
 
@@ -301,8 +303,8 @@ public class LibraryApp {
 		lblpassword.setBounds(826, 468, 133, 35);
 		frmLibraryapp.getContentPane().add(lblpassword);
 		
-		//RoundedPasswordField passwordField = new RoundedPasswordField(20, 20);
-		passwordField = new JPasswordField();
+		RoundedPasswordField passwordField = new RoundedPasswordField(20, 20);
+		//passwordField = new JPasswordField();
 		passwordField.setForeground(new Color(255, 255, 255));
 		passwordField.setBackground(new Color(145, 149, 153));
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 24));
@@ -310,8 +312,8 @@ public class LibraryApp {
 		passwordField.setBorder(BorderFactory.createEmptyBorder()); // Removes the border
 		frmLibraryapp.getContentPane().add(passwordField);
 		
-		//RoundedTextField textField = new RoundedTextField(20, 20);
-		JTextField textArea = new JTextField();
+		RoundedTextField textArea = new RoundedTextField(20, 20);
+		//JTextField textArea = new JTextField();
 		textArea.setForeground(new Color(255, 255, 255));
 		textArea.setBackground(new Color(145, 149, 153));
 		textArea.setFont(new Font("Jost", Font.PLAIN, 26));
@@ -320,8 +322,8 @@ public class LibraryApp {
 		frmLibraryapp.getContentPane().add(textArea);
 		textArea.setColumns(10);
 		 
-		//RoundedButton button = new RoundedButton("LOG IN", 20);
-		JButton button = new JButton("LOG IN");
+		RoundedButton button = new RoundedButton("LOG IN", 20);
+		//JButton button = new JButton("LOG IN");
 		
 		button.setBackground(new Color(0, 102, 102));
         button.setForeground(Color.WHITE);
