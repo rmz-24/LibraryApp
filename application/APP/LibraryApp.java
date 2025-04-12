@@ -17,6 +17,18 @@ import java.sql.*;
 import java.util.Properties;
 
 public class LibraryApp {
+	
+	public static String user;
+	public static String level;
+	public String pass;
+	
+    
+    public static String getuser() {
+        return user;
+    }
+    public static String getlevel() {
+        return level;
+    }
 	private static String getAccessLevel(String username) {
 	    // First check for benallal
 	    if ("benallal".equalsIgnoreCase(username.trim())) {
@@ -251,6 +263,7 @@ public class LibraryApp {
 		panel.setBackground(new Color(0, 102, 102));
 		panel.setBounds(0, 0, 372, 937);
 		frmLibraryapp.getContentPane().add(panel);
+		//apres hnzid hna ta3 ywli lelor
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel_1 = new JLabel("WELCOME TO \r\n");
@@ -333,11 +346,11 @@ public class LibraryApp {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    String user = textArea.getText();
-                    String pass = String.valueOf(passwordField.getPassword());
+                     user = textArea.getText();
+                     pass = String.valueOf(passwordField.getPassword());
 
                     if (authenticate(user, pass)) {
-                        String accessLevel = getAccessLevel(user);
+                       level = getAccessLevel(user);
                         
                         Properties props = getProps();
                         try {
@@ -346,7 +359,7 @@ public class LibraryApp {
                                 props.getProperty("db.user"), 
                                 props.getProperty("db.password"));
                             
-                            new Home(user, accessLevel);
+                            new Home(user, level);
                             frmLibraryapp.dispose();
                             
                         } catch (SQLException e1) {
@@ -366,8 +379,8 @@ public class LibraryApp {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                String user = textArea.getText().trim();
-                String pass = String.valueOf(passwordField.getPassword());
+                 user = textArea.getText().trim();
+                pass = String.valueOf(passwordField.getPassword());
 
                 if (authenticate(user, pass)) {
                     String accessLevel = getAccessLevel(user);
