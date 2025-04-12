@@ -120,7 +120,7 @@ public class StudentManagementDashboard extends JFrame {
         	@Override
         	public void mouseClicked(MouseEvent e) {
         		new editstudent();
-        		dispose();
+        		
         		
         	}
         });
@@ -131,6 +131,22 @@ public class StudentManagementDashboard extends JFrame {
         removeStudentButton_1.setBorderPainted(false);
         removeStudentButton_1.setBounds(390, 196, 104, 68);
         panel.add(removeStudentButton_1);
+        
+        JButton removeStudentButton_1_1 = new JButton("");
+        removeStudentButton_1_1.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		new studentslist();
+        		dispose();
+        	}
+        });
+        removeStudentButton_1_1.setOpaque(false);
+        removeStudentButton_1_1.setIcon(new ImageIcon("src\\resrc\\list_11916758.png"));
+        removeStudentButton_1_1.setFocusPainted(false);
+        removeStudentButton_1_1.setContentAreaFilled(false);
+        removeStudentButton_1_1.setBorderPainted(false);
+        removeStudentButton_1_1.setBounds(481, 126, 33, 33);
+        panel.add(removeStudentButton_1_1);
 
         setVisible(true);
     }
