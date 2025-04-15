@@ -20,14 +20,14 @@ import javax.swing.JComboBox;
 import com.toedter.calendar.JDateChooser;
 import java.util.*;
 
-public class addloan extends JFrame {
+public class RegisterLoanWindow extends JFrame {
     private final JPanel panel = new JPanel();
     private JTextField sid;
     private JTextField sname;
     private JDateChooser dateEmpChooser;
     private JDateChooser dateRetAssumChooser;
     private Connection connection;
-    public addloan(String user,String level) {
+    public RegisterLoanWindow(String user,String level) {
     	connection=LibraryApp.getConnection();
     	setResizable(false);
         setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
@@ -104,7 +104,7 @@ public class addloan extends JFrame {
         btnAbort.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new EmpruntsManagement(user,level);
+        		new LoanManagementDashboard(user,level);
         		dispose();
         	
         	}
@@ -161,7 +161,7 @@ public class addloan extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new addloan("user","access");
+                new RegisterLoanWindow("user","access");
             }
         });
     }

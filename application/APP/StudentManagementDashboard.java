@@ -119,7 +119,7 @@ public class StudentManagementDashboard extends JFrame {
         removeStudentButton_1.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new editstudent();
+        		new EditStudentWindow();
         		
         		
         	}
@@ -136,7 +136,7 @@ public class StudentManagementDashboard extends JFrame {
         removeStudentButton_1_1.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new studentslist();
+        		new StudentsListWindow();
         		dispose();
         	}
         });

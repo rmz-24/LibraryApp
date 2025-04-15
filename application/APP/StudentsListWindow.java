@@ -25,13 +25,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 
-public class studentslist extends JFrame{
+public class StudentsListWindow extends JFrame{
 	  private final JPanel panel = new JPanel();
 	  private Connection connection;
 	  private final JPanel panel_1 = new JPanel();
 	  private JTable usersTable;
 	  
-	  public studentslist() {
+	  public StudentsListWindow() {
 		    connection=LibraryApp.getConnection();
 		    setResizable(false);
 	        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
@@ -135,7 +135,7 @@ public class studentslist extends JFrame{
 		    }
 		}
 	public static void main(String[] args) {
-		new studentslist();
+		new StudentsListWindow();
 		
 	}
 }

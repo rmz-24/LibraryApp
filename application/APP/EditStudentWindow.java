@@ -8,7 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
 
-public class editstudent extends JFrame{
+public class EditStudentWindow extends JFrame{
 	private JTextField studentiddlt;
     private JTextArea Sname, Sfname, Slevel;
     private Connection conn;
@@ -20,7 +20,7 @@ public class editstudent extends JFrame{
     private JTextField  snumber;      // Student phone number field
     private JTextField  smail;        // Student email field
      // Search input field
-    editstudent(){
+    EditStudentWindow(){
     	conn = LibraryApp.getConnection();
     	initializeComponents();
     	
@@ -280,6 +280,6 @@ public class editstudent extends JFrame{
     
     
     public static void main(String[] args) {
-        new editstudent();
+        new EditStudentWindow();
     }
 }

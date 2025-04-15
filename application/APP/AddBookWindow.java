@@ -75,8 +75,8 @@ public class AddBookWindow extends JFrame {
             int availableQty = (Integer) availableQtySpinner.getValue();
 
 	        // Validation
-	        if (!bookId.matches("BK\\d{5}")) {  // Ensures "BK" followed by exactly 5 digits
-	            showError("Book ID must be in the format BKxxxxx (e.g., BK12345)");
+	        if (!bookId.matches("BK\\d{4}")) {  // Ensures "BK" followed by exactly 4 digits
+	            showError("Book ID must be in the format BKxxxxx (e.g., BK1234)");
 	            clearForm();
 	            return;
 	        }

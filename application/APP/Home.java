@@ -282,7 +282,7 @@ public class Home {
         borrowBookButton.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new EmpruntsManagement(user,level);
+        		new LoanManagementDashboard(user,level);
         		 frmDashboard.dispose();
         	}
         });
