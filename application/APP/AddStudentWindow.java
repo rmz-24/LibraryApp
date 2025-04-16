@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Calendar;
 //import java.sql.Statement;
 import java.util.Properties;
 import java.sql.Date;
@@ -194,6 +195,12 @@ public class AddStudentWindow extends JFrame {
         SIGNEDDATE.setBounds(30, 591, 269, 43);
         panel_1.add(SIGNEDDATE);
         SIGNEDDATE.setFont(new Font("Jost", Font.PLAIN, 22));
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);  // Set to midnight
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);  
+        cal.set(Calendar.MILLISECOND, 0);
+        SIGNEDDATE.setDate(cal.getTime());
         numfield = new JTextField();
         numfield.setFont(new Font("Jost", Font.PLAIN, 22));
         numfield.setColumns(10);

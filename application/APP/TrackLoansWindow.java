@@ -75,7 +75,7 @@ public class TrackLoansWindow extends JFrame {
         topPanel.add(topLabel);
         
         JLabel iconLabel = new JLabel("");
-        iconLabel.setBounds(30, 11, 50, 50);
+        iconLabel.setBounds(10, 0, 101, 68);
         iconLabel.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
         topPanel.add(iconLabel);
         
@@ -238,7 +238,7 @@ public class TrackLoansWindow extends JFrame {
                         }
                         break;
                     case 2:
-                        statusText = "Returned Late";
+                        statusText = "Late";
                         break;
                     default:
                         statusText = "Unknown";

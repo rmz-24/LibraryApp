@@ -202,7 +202,7 @@ public class RegisterLoanWindow extends JFrame {
                     return;
         		
         	}
-        	String query = "INSERT INTO EMPRUNTS (NUM_EMP, NUM_ETU, BOOK_CODE, DATE_EMP, DATE_RET_ASSUM, STATUT) VALUES (emprunts_seq.NEXTVAL, ?, ?, ?, ?, 0)";
+        	String query = "INSERT INTO EMPRUNTS (NUM_EMP, NUM_ETU, BOOK_CODE, DATE_EMP, DATE_RET_ASSUM, STATUT) VALUES (emprunts_seq.NEXTVAL, ?, ?, ?, ?, 1)";
         	PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, numEtu);
             pstmt.setString(2, bookCode);

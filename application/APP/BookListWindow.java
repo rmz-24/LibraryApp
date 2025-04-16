@@ -25,13 +25,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 
-public class StudentsListWindow extends JFrame{
+public class BookListWindow extends JFrame{
 	  private final JPanel panel = new JPanel();
 	  private Connection connection;
 	  private final JPanel panel_1 = new JPanel();
-	  private JTable StudentsTable;
+	  private JTable BooksTable;
 	  
-	  public StudentsListWindow() {
+	  public BookListWindow() {
 		    connection=LibraryApp.getConnection();
 		    setResizable(false);
 	        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
@@ -65,16 +65,16 @@ public class StudentsListWindow extends JFrame{
 	        JScrollPane scrollPane = new JScrollPane();
 	        scrollPane.setBounds(69, 149, 1104, 572);
 	        getContentPane().add(scrollPane);
-	        StudentsTable = new JTable();
-			scrollPane.setViewportView(StudentsTable);
+	        BooksTable = new JTable();
+			scrollPane.setViewportView(BooksTable);
 			// Make table non-editable
-			StudentsTable.setRowHeight(30);
+			BooksTable.setRowHeight(30);
 			Font tableFont = new Font("Jost", Font.PLAIN, 18);
-			StudentsTable.setFont(tableFont); 
-			StudentsTable.getTableHeader().setFont(new Font("Jost", Font.BOLD, 20));
-			StudentsTable.setModel(new DefaultTableModel(
+			BooksTable.setFont(tableFont); 
+			BooksTable.getTableHeader().setFont(new Font("Jost", Font.BOLD, 20));
+			BooksTable.setModel(new DefaultTableModel(
 			    new Object[][] {},
-			    new String[] {"Student Id" ,"Name", "First Name","Level","Signed In"}
+			    new String[] {"Book Id" ,"Book Name", "Author","Categorie","Publish date","QTE"}
 			) {
 			    /**
 				 * 
@@ -93,7 +93,7 @@ public class StudentsListWindow extends JFrame{
 				public void mouseClicked(MouseEvent e) {
 					String user =LibraryApp.getuser();
 					String level =LibraryApp.getlevel();
-					new StudentManagementDashboard(user,level);
+					new BookManagementDashboard(user,level);
 					dispose();
 				}
 			});
@@ -110,21 +110,22 @@ public class StudentsListWindow extends JFrame{
 		  setVisible(true);
 	  }
 	  private void loadUserData() {
-		    DefaultTableModel model = (DefaultTableModel) StudentsTable.getModel();
+		    DefaultTableModel model = (DefaultTableModel) BooksTable.getModel();
 		    model.setRowCount(0); // Clear table before loading new data
 
-		    String sql = "SELECT STUDENTID, NAME,FIRSTNAME,STUDENT_LEVEL,SIGNED_IN_DATE FROM studentlist order by SIGNED_IN_DATE";
+		    String sql = "SELECT BOOKID, BOOKNAME,BOOKAUTHOR,Categorie,publish_year,available_qty FROM bookslist order by BOOKNAME";
 		    
 		    try (PreparedStatement stmt = connection.prepareStatement(sql);
 		         ResultSet rs = stmt.executeQuery()) {
 
 		        while (rs.next()) {
-		            String studentId = rs.getString("STUDENTID");
-		            String name = rs.getString("NAME");
-		            String firstname = rs.getString("FIRSTNAME");
-		            String level = rs.getString("STUDENT_LEVEL");
-		            Date signing_date = rs.getDate("SIGNED_IN_DATE");
-		            model.addRow(new Object[]{studentId, name, firstname,level,signing_date});
+		            String bookId = rs.getString("BOOKID");
+		            String bookname = rs.getString("BOOKNAME");
+		            String author = rs.getString("BOOKAUTHOR");
+		            String categorie = rs.getString("Categorie");
+		            int publish_date = rs.getInt("publish_year");
+		            int qte =rs.getInt("available_qty");
+		            model.addRow(new Object[]{bookId, bookname, author,categorie,publish_date,qte});
 		        }
 
 		    } catch (SQLException e) {
@@ -135,7 +136,7 @@ public class StudentsListWindow extends JFrame{
 		    }
 		}
 	public static void main(String[] args) {
-		new StudentsListWindow();
+		new BookListWindow();
 		
 	}
 }

@@ -238,12 +238,33 @@ public class ReturnRegisteringWindow extends JFrame {
                 if (rs.next()) {
                     // Check if loan is already returned
                     int status = rs.getInt("STATUT");
-                    if (status == 0 || status == 2) {
+                    if (status == 0 ) {
                         showError("This loan has already been returned.");
                         clearForm();
                         return;
                     }
-                    
+                    if (status == 2 ) {
+                        showError("Warning : Late Return !");
+                        studentIdField.setText(rs.getString("NUM_ETU"));
+                        bookIdField.setText(rs.getString("BOOK_CODE"));
+                        
+                        // Format dates
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        Date loanDate = rs.getDate("DATE_EMP");
+                        Date dueDate = rs.getDate("DATE_RET_ASSUM");
+                        
+                        loanDateField.setText(dateFormat.format(loanDate));
+                        dueDateField.setText(dateFormat.format(dueDate));
+                        
+                        // Set status label
+                        statusLabel.setText("STATUS: LATE ");
+                        statusLabel.setForeground(new Color(255, 0, 0));
+                        
+                        // Enable return date and button
+                        returnDateChooser.setEnabled(true);
+                        registerReturnButton.setEnabled(true);
+                    }
+                    if (status == 1 ) {
                     // Populate fields with loan data
                     studentIdField.setText(rs.getString("NUM_ETU"));
                     bookIdField.setText(rs.getString("BOOK_CODE"));
@@ -263,6 +284,7 @@ public class ReturnRegisteringWindow extends JFrame {
                     // Enable return date and button
                     returnDateChooser.setEnabled(true);
                     registerReturnButton.setEnabled(true);
+                    }
                 } else {
                     showError("No active loan found with ID: " + loanId);
                     clearForm();
