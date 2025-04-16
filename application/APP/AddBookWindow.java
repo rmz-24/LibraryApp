@@ -75,8 +75,8 @@ public class AddBookWindow extends JFrame {
             int availableQty = (Integer) availableQtySpinner.getValue();
 
 	        // Validation
-	        if (!bookId.matches("BK\\d{4}")) {  // Ensures "BK" followed by exactly 4 digits
-	            showError("Book ID must be in the format BKxxxxx (e.g., BK1234)");
+	        if (!bookId.matches("BK\\d{5}")) {  // Ensures "BK" followed by exactly 5 digits
+	            showError("Book ID must be in the format BKxxxxx (e.g., BK12345)");
 	            clearForm();
 	            return;
 	        }
@@ -203,7 +203,29 @@ public class AddBookWindow extends JFrame {
         bookAuthorField.setBounds(30, 367, 269, 43);
         panel_1.add(bookAuthorField);
         
-        String[] categories = {"MATHS", "PHYSIQUE", "ARCHI", "MDF"};
+        String[] categories = {
+        	    "MATHS",          // Mathématiques
+        	    "PHYSIQUE",       // Physique
+        	    "CHIMIE",         // Chimie
+        	    "INFORMATIQUE",   // Informatique
+        	    "ELECTRONIQUE",   // Électronique
+        	    "AUTOMATIQUE",    // Automatique
+        	    "TELECOMS",       // Télécommunications
+        	    "GENIE CIVIL",    // Génie Civil
+        	    "MECANIQUE",      // Mécanique
+        	    "ELECTROTECHNIQUE", // Électrotechnique
+        	    "ARCHI",          // Architecture
+        	    "GEOLOGIE",       // Géologie
+        	    "BIOLOGIE",       // Biologie
+        	    "MDF",            // Méthodes de Fabrication
+        	    "ROBOTIQUE",      // Robotique
+        	    "ENERGIE",        // Énergies renouvelables
+        	    "SCIENCES DE LA TERRE", // Sciences de la Terre
+        	    "GESTION",        // Gestion et économie
+        	    "LANGUE",         // Langues (Français, Anglais, etc.)
+        	    "HISTOIRE",       // Histoire des sciences
+        	    "PHILOSOPHIE"     // Philosophie des sciences
+        	};
         
         JLabel categoryLabel = new JLabel("CATEGORY");
         categoryLabel.setForeground(Color.WHITE);
