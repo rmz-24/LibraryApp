@@ -98,7 +98,7 @@ public class BookManagementDashboard extends JFrame {
             }
         });
         editBookButton.setOpaque(false);
-        editBookButton.setIcon(new ImageIcon("src\\resrc\\edit_3597088.png"));
+        editBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\textbook_18624674.png"));
         editBookButton.setFocusPainted(false);
         editBookButton.setContentAreaFilled(false);
         editBookButton.setBorderPainted(false);
@@ -113,7 +113,7 @@ public class BookManagementDashboard extends JFrame {
             }
         });
         searchBookButton.setOpaque(false);
-        searchBookButton.setIcon(new ImageIcon("src\\resrc\\search_3844467.png")); // Use an appropriate search icon
+        searchBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\SEARCHBOOK.png")); // Use an appropriate search icon
         searchBookButton.setFocusPainted(false);
         searchBookButton.setContentAreaFilled(false);
         searchBookButton.setBorderPainted(false);
@@ -149,6 +149,21 @@ public class BookManagementDashboard extends JFrame {
         backHomeButton.setBorderPainted(false);
         backHomeButton.setBounds(433, 340, 104, 68);
         panel.add(backHomeButton);
+        
+        JButton removeStudentButton_1_1 = new JButton("");
+        removeStudentButton_1_1.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		new BookListWindow();
+        	}
+        });
+        removeStudentButton_1_1.setOpaque(false);
+        removeStudentButton_1_1.setIcon(new ImageIcon("src\\resrc\\list_11916758.png"));
+        removeStudentButton_1_1.setFocusPainted(false);
+        removeStudentButton_1_1.setContentAreaFilled(false);
+        removeStudentButton_1_1.setBorderPainted(false);
+        removeStudentButton_1_1.setBounds(475, 126, 33, 33);
+        panel.add(removeStudentButton_1_1);
         
         setVisible(true);
     }
