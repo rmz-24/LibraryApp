@@ -3,3 +3,5 @@
 .project
 config.properties
 /external_jars/
+/.idea/
+/classes/
