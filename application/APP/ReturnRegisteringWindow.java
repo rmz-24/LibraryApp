@@ -89,7 +89,7 @@ public class ReturnRegisteringWindow extends JFrame {
         loanIdField = new JTextField();
         loanIdField.setFont(new Font("Jost", Font.PLAIN, 22));
         loanIdField.setBounds(30, 140, 269, 43);
-        loanIdField.addActionListener(e -> searchLoan());
+        loanIdField.addActionListener(_ -> searchLoan());
         mainPanel.add(loanIdField);
         loanIdField.setColumns(10);
         
@@ -191,7 +191,7 @@ public class ReturnRegisteringWindow extends JFrame {
         registerReturnButton.setBackground(new Color(56, 194, 56));
         registerReturnButton.setFont(new Font("Jost", Font.BOLD, 18));
         registerReturnButton.setBounds(217, 667, 181, 40);
-        registerReturnButton.addActionListener(e -> registerReturn());
+        registerReturnButton.addActionListener((_) -> registerReturn());
         registerReturnButton.setEnabled(false);
         mainPanel.add(registerReturnButton);
         

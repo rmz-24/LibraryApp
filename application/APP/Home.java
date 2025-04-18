@@ -2,21 +2,21 @@ package APP;
 
 import javax.swing.*;
 
-import com.sun.jdi.connect.spi.Connection;
-
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Properties;
 import java.sql.*;
 
 public class Home {
 	public class RoundedPanel extends JPanel {
-	    private int cornerRadius;
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private int cornerRadius;
 
 	    public RoundedPanel(int cornerRadius) {
 	        super();
@@ -353,10 +353,10 @@ public class Home {
         frmDashboard.getContentPane().add(panel);
         panel.setLayout(null);
         
-        JLabel lbllogo = new JLabel("");
-        lbllogo.setBounds(40, 11, 112, 80);
-        lbllogo.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
-        panel.add(lbllogo);
+        JLabel logoLabel = new JLabel("");
+        logoLabel.setBounds(40, 11, 112, 80);
+        logoLabel.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+        panel.add(logoLabel);
         
         JButton studentManagementButton = new JButton("");
         studentManagementButton.addMouseListener(new MouseAdapter() {
@@ -400,15 +400,15 @@ public class Home {
         bookManagementButton.setToolTipText("Opens a window to the book management dashboard");
         panel.add(bookManagementButton);
         
-        JLabel addBookLabel = new JLabel("Loan and Return");
-        addBookLabel.setVerticalAlignment(SwingConstants.TOP);
-        addBookLabel.setBounds(10, 536, 129, 21);
-        addBookLabel.setForeground(Color.WHITE);
-        addBookLabel.setFont(new Font("Jost", Font.BOLD, 15));
-        panel.add(addBookLabel);
+        JLabel loanAndReturnLabel = new JLabel("Loan and Return");
+        loanAndReturnLabel.setVerticalAlignment(SwingConstants.TOP);
+        loanAndReturnLabel.setBounds(10, 536, 129, 21);
+        loanAndReturnLabel.setForeground(Color.WHITE);
+        loanAndReturnLabel.setFont(new Font("Jost", Font.BOLD, 15));
+        panel.add(loanAndReturnLabel);
         
         JButton removeBookButton = new JButton("");
-        removeBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\exclamation.png"));
+        removeBookButton.setIcon(new ImageIcon("src\\resrc\\exclamation.png"));
         removeBookButton.setBounds(40, 717, 112, 68);
         removeBookButton.setContentAreaFilled(false);
         removeBookButton.setBorderPainted(false);
@@ -417,13 +417,13 @@ public class Home {
         removeBookButton.setToolTipText("Removes a book from the library's database");
         panel.add(removeBookButton);
         
-        JLabel removeBookLabel = new JLabel("Report");
-        removeBookLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        removeBookLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        removeBookLabel.setBounds(-17, 796, 102, 21);
-        removeBookLabel.setForeground(Color.WHITE);
-        removeBookLabel.setFont(new Font("Jost", Font.BOLD, 15));
-        panel.add(removeBookLabel);
+        JLabel blacklistLabel = new JLabel("Blacklist");
+        blacklistLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        blacklistLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+        blacklistLabel.setBounds(-17, 796, 102, 21);
+        blacklistLabel.setForeground(Color.WHITE);
+        blacklistLabel.setFont(new Font("Jost", Font.BOLD, 15));
+        panel.add(blacklistLabel);
         //getClass().getResource("/resrc/borrow_book.png")
         JButton borrowBookButton = new JButton("");
         borrowBookButton.addMouseListener(new MouseAdapter() {
@@ -433,7 +433,7 @@ public class Home {
         		 frmDashboard.dispose();
         	}
         });
-        borrowBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\borrow_book.png"));
+        borrowBookButton.setIcon(new ImageIcon("src\\resrc\\borrow_book.png"));
         borrowBookButton.setBounds(40, 438, 112, 68);
         borrowBookButton.setContentAreaFilled(false);
         borrowBookButton.setBorderPainted(false);
@@ -504,7 +504,7 @@ public class Home {
         panel_1.add(accessLevelLabel1);
         
         JButton addUserButton = new JButton("");
-        addUserButton.addActionListener(e -> openWindow(new AdminPermissionsWindow(user, level)));
+        addUserButton.addActionListener(_ -> openWindow(new AdminPermissionsWindow(user, level)));
         addUserButton.setIcon(new ImageIcon("src\\resrc\\add_16321386.png"));
         addUserButton.setBounds(1002, 11, 70, 66);
         addUserButton.setContentAreaFilled(false);
@@ -546,7 +546,7 @@ public class Home {
         		}
         });
         backHomeButton.setOpaque(false);
-        backHomeButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\log-out_10024482.png"));
+        backHomeButton.setIcon(new ImageIcon("src\\resrc\\log-out_10024482.png"));
         backHomeButton.setFocusPainted(false);
         backHomeButton.setContentAreaFilled(false);
         backHomeButton.setBorderPainted(false);
@@ -848,20 +848,20 @@ public class Home {
         empruntdisplay.add(empruntidLabel_9);
         
         
-        JLabel lbldisplay1 = new JLabel("Student recently added");
-        lbldisplay1.setFont(new Font("Jost", Font.BOLD, 23));
-        lbldisplay1.setBounds(228, 130, 277, 36);
-        frmDashboard.getContentPane().add(lbldisplay1);
+        JLabel recentlyRegisteredStudentsLabel = new JLabel("Recently Registered Students");
+        recentlyRegisteredStudentsLabel.setFont(new Font("Jost", Font.BOLD, 23));
+        recentlyRegisteredStudentsLabel.setBounds(228, 130, 340, 36);
+        frmDashboard.getContentPane().add(recentlyRegisteredStudentsLabel);
         
-        JLabel lblBooksRecentlyAdded = new JLabel("Books recently added");
-        lblBooksRecentlyAdded.setFont(new Font("Jost", Font.BOLD, 23));
-        lblBooksRecentlyAdded.setBounds(748, 130, 277, 36);
-        frmDashboard.getContentPane().add(lblBooksRecentlyAdded);
+        JLabel recentlyAddedBooksLabel = new JLabel("Recently Added Books");
+        recentlyAddedBooksLabel.setFont(new Font("Jost", Font.BOLD, 23));
+        recentlyAddedBooksLabel.setBounds(748, 130, 277, 36);
+        frmDashboard.getContentPane().add(recentlyAddedBooksLabel);
         
-        JLabel lbllatereturn = new JLabel("Late returns");
-        lbllatereturn.setFont(new Font("Jost", Font.BOLD, 23));
-        lbllatereturn.setBounds(1181, 130, 427, 36);
-        frmDashboard.getContentPane().add(lbllatereturn);
+        JLabel lateReturnsLabel = new JLabel("Late returns");
+        lateReturnsLabel.setFont(new Font("Jost", Font.BOLD, 23));
+        lateReturnsLabel.setBounds(1181, 130, 427, 36);
+        frmDashboard.getContentPane().add(lateReturnsLabel);
         empruntdisplay.revalidate();
         empruntdisplay.repaint();
         loadLateEmprunts();
@@ -870,17 +870,17 @@ public class Home {
         frmDashboard.setVisible(true);
     }
     private JLabel createEmpruntLabel(int x, int y, int width, int height) {
-    	JLabel label = new JLabel();
+    	JLabel loanerNameLabel = new JLabel();
     	width=150;
-        label.setBounds(x, y, width, height);
-        label.setFont(new Font("Jost", Font.BOLD, 17));
-        label.setOpaque(true);
-        label.setBackground(Color.WHITE);
-        label.setForeground(Color.BLACK); // Ensure text is visible
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        label.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
+        loanerNameLabel.setBounds(x, y, width, height);
+        loanerNameLabel.setFont(new Font("Jost", Font.BOLD, 17));
+        loanerNameLabel.setOpaque(true);
+        loanerNameLabel.setBackground(Color.WHITE);
+        loanerNameLabel.setForeground(Color.BLACK); // Ensure text is visible
+        loanerNameLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        loanerNameLabel.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
         
-        return label;
+        return loanerNameLabel;
     }
 
     private JLabel createIDLabel(int x, int y, int width, int height) {
@@ -894,37 +894,37 @@ public class Home {
     }
     
     private JLabel createStudentLabel(int x, int y, int width, int height) {
-        JLabel label = new JLabel();
-        label.setBounds(x, y, width, height);
-        label.setFont(new Font("Jost", Font.BOLD, 17));
-        label.setOpaque(true);
-        label.setBackground(Color.WHITE);
-        label.setForeground(Color.BLACK); // Ensure text is visible
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        label.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
-        return label;
+        JLabel stdNameLabel = new JLabel();
+        stdNameLabel.setBounds(x, y, width, height);
+        stdNameLabel.setFont(new Font("Jost", Font.BOLD, 17));
+        stdNameLabel.setOpaque(true);
+        stdNameLabel.setBackground(Color.WHITE);
+        stdNameLabel.setForeground(Color.BLACK); // Ensure text is visible
+        stdNameLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        stdNameLabel.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
+        return stdNameLabel;
     }
     private JLabel createBookLabel(int x, int y, int width, int height) {
-        JLabel label = new JLabel();
+        JLabel bkNameLabel = new JLabel();
         //width=181;
-        label.setBounds(x, y, width, height);
-        label.setFont(new Font("Jost", Font.BOLD, 17));
-        label.setOpaque(true);
-        label.setBackground(Color.WHITE);
-        label.setForeground(Color.BLACK); // Ensure text is visible
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        label.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
-        return label;
+        bkNameLabel.setBounds(x, y, width, height);
+        bkNameLabel.setFont(new Font("Jost", Font.BOLD, 17));
+        bkNameLabel.setOpaque(true);
+        bkNameLabel.setBackground(Color.WHITE);
+        bkNameLabel.setForeground(Color.BLACK); // Ensure text is visible
+        bkNameLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        bkNameLabel.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
+        return bkNameLabel;
     }
     
     private JLabel createNumberLabel(int x, int y, int width, int height) {
-        JLabel label = new JLabel("", SwingConstants.CENTER);
-        label.setBounds(x, y, width, height);
-        label.setFont(new Font("Jost", Font.BOLD, 14));
-        label.setOpaque(true);
-        label.setBackground(new Color(200, 200, 200));
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        return label;
+        JLabel counterLabel = new JLabel("", SwingConstants.CENTER);
+        counterLabel.setBounds(x, y, width, height);
+        counterLabel.setFont(new Font("Jost", Font.BOLD, 14));
+        counterLabel.setOpaque(true);
+        counterLabel.setBackground(new Color(200, 200, 200));
+        counterLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        return counterLabel;
     }
     private JLabel createBookNumberLabel(int x, int y, int width, int height) {
         JLabel label = new JLabel("", SwingConstants.CENTER);

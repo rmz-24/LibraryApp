@@ -10,7 +10,6 @@ import java.awt.geom.RoundRectangle2D;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
@@ -56,17 +55,6 @@ public class LibraryApp {
 	    }
 	    return "STAFF"; // Default access level
 	}
-	private ImageIcon loadImage(String imageName) {
-	    URL imageURL = getClass().getClassLoader().getResource("resrc/" + imageName);
-	    if (imageURL != null) {
-	        return new ImageIcon(imageURL);
-	    }
-	    
-	    System.err.println("Image not found: " + imageName);
-	    return null; // Avoid NullPointerException
-	}
-
-	
 	//private static Connection connection;
 	private static Connection connection;
 	public static Properties getProps() {
@@ -123,11 +111,8 @@ public class LibraryApp {
 		return connection;
     }
 	
-	// ani nsyi nktb letter
-	
 	
 	private JFrame frmLibraryapp;
-	private JPasswordField passwordField;
 	class RoundedTextField extends JTextField {
 		private static final long serialVersionUID = 1L;
 		private int cornerRadius;

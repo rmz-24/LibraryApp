@@ -82,7 +82,7 @@ public class EditBookWindow extends JFrame {
         bookIdField = new JTextField();
         bookIdField.setFont(new Font("Jost", Font.PLAIN, 22));
         bookIdField.setBounds(30, 140, 269, 43);
-        bookIdField.addActionListener(e -> searchBook());
+        bookIdField.addActionListener(_ -> searchBook());
         mainPanel.add(bookIdField);
         bookIdField.setColumns(10);
         
@@ -174,7 +174,7 @@ public class EditBookWindow extends JFrame {
         updateButton.setBackground(new Color(56, 194, 56));
         updateButton.setFont(new Font("Jost", Font.BOLD, 18));
         updateButton.setBounds(217, 667, 181, 40);
-        updateButton.addActionListener(e -> updateBookData());
+        updateButton.addActionListener(_ -> updateBookData());
         updateButton.setEnabled(false);
         mainPanel.add(updateButton);
         

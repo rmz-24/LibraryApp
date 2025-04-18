@@ -98,7 +98,7 @@ public class BookManagementDashboard extends JFrame {
             }
         });
         editBookButton.setOpaque(false);
-        editBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\textbook_18624674.png"));
+        editBookButton.setIcon(new ImageIcon("src\\resrc\\textbook_18624674.png"));
         editBookButton.setFocusPainted(false);
         editBookButton.setContentAreaFilled(false);
         editBookButton.setBorderPainted(false);
@@ -113,7 +113,7 @@ public class BookManagementDashboard extends JFrame {
             }
         });
         searchBookButton.setOpaque(false);
-        searchBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\SEARCHBOOK.png")); // Use an appropriate search icon
+        searchBookButton.setIcon(new ImageIcon("src\\resrc\\SEARCHBOOK.png")); // Use an appropriate search icon
         searchBookButton.setFocusPainted(false);
         searchBookButton.setContentAreaFilled(false);
         searchBookButton.setBorderPainted(false);

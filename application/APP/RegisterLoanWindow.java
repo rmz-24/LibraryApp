@@ -6,8 +6,6 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
-import java.sql.Date;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,12 +14,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import com.toedter.calendar.JDateChooser;
-import java.util.*;
 
 public class RegisterLoanWindow extends JFrame {
-    private final JPanel panel = new JPanel();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final JPanel panel = new JPanel();
     private JTextField sid;
     private JTextField sname;
     private JDateChooser dateEmpChooser;
@@ -76,30 +76,6 @@ public class RegisterLoanWindow extends JFrame {
         sname.setColumns(10);
         sname.setBounds(52, 325, 269, 43);
         panel.add(sname);
-        String[] categorie = {
-        	    "MATHS",          // Mathématiques
-        	    "PHYSIQUE",       // Physique
-        	    "CHIMIE",         // Chimie
-        	    "INFORMATIQUE",   // Informatique
-        	    "ELECTRONIQUE",   // Électronique
-        	    "AUTOMATIQUE",    // Automatique
-        	    "TELECOMS",       // Télécommunications
-        	    "GENIE CIVIL",    // Génie Civil
-        	    "MECANIQUE",      // Mécanique
-        	    "ELECTROTECHNIQUE", // Électrotechnique
-        	    "ARCHI",          // Architecture
-        	    "GEOLOGIE",       // Géologie
-        	    "BIOLOGIE",       // Biologie
-        	    "MDF",            // Méthodes de Fabrication
-        	    "ROBOTIQUE",      // Robotique
-        	    "ENERGIE",        // Énergies renouvelables
-        	    "SCIENCES DE LA TERRE", // Sciences de la Terre
-        	    "GESTION",        // Gestion et économie
-        	    "LANGUE",         // Langues (Français, Anglais, etc.)
-        	    "HISTOIRE",       // Histoire des sciences
-        	    "PHILOSOPHIE"     // Philosophie des sciences
-        	};
-        
         JButton btnAbort = new JButton("Abort");
         btnAbort.addMouseListener(new MouseAdapter() {
         	@Override

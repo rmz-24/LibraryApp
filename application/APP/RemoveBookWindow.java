@@ -63,7 +63,7 @@ public class RemoveBookWindow extends JFrame {
         bookIdField = new JTextField(16);
         bookIdField.setFont(new Font("Jost", Font.PLAIN, 22));
         bookIdField.setBounds(10, 141, 204, 43);
-        bookIdField.addActionListener(e -> searchBook()); // Enable Enter key search
+        bookIdField.addActionListener(_ -> searchBook()); // Enable Enter key search
         getContentPane().add(bookIdField);
         
         // Search Button

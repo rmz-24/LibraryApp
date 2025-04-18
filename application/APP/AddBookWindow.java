@@ -263,7 +263,7 @@ public class AddBookWindow extends JFrame {
         submitButton.setBackground(new Color(56, 194, 56));
         submitButton.setFont(new Font("Jost", Font.BOLD, 18));
         submitButton.setBounds(217, 667, 181, 40);
-        submitButton.addActionListener(e -> insertBookData());
+        submitButton.addActionListener(_ -> insertBookData());
         panel_1.add(submitButton);
         
         JButton cancelButton = new JButton("Cancel");

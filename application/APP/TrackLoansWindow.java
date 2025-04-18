@@ -102,7 +102,7 @@ public class TrackLoansWindow extends JFrame {
         searchButton.setForeground(Color.WHITE);
         searchButton.setFont(new Font("Jost", Font.BOLD, 14));
         searchButton.setBounds(310, 80, 100, 30);
-        searchButton.addActionListener(e -> performSearch());
+        searchButton.addActionListener(_ -> performSearch());
         mainPanel.add(searchButton);
         
         // Filter combo box
@@ -116,7 +116,7 @@ public class TrackLoansWindow extends JFrame {
         filterComboBox = new JComboBox<>(filterOptions);
         filterComboBox.setFont(new Font("Jost", Font.PLAIN, 14));
         filterComboBox.setBounds(560, 80, 150, 30);
-        filterComboBox.addActionListener(e -> {
+        filterComboBox.addActionListener(_ -> {
             String selectedFilter = (String) filterComboBox.getSelectedItem();
             loadLoansData(selectedFilter);
         });
@@ -128,7 +128,7 @@ public class TrackLoansWindow extends JFrame {
         refreshButton.setForeground(Color.WHITE);
         refreshButton.setFont(new Font("Jost", Font.BOLD, 14));
         refreshButton.setBounds(730, 80, 100, 30);
-        refreshButton.addActionListener(e -> {
+        refreshButton.addActionListener(_ -> {
             String selectedFilter = (String) filterComboBox.getSelectedItem();
             loadLoansData(selectedFilter);
         });

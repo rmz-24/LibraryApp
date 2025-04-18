@@ -95,7 +95,7 @@ public class SearchBookWindow extends JFrame {
         searchTextField = new JTextField();
         searchTextField.setFont(new Font("Jost", Font.PLAIN, 16));
         searchTextField.setBounds(460, 90, 230, 30);
-        searchTextField.addActionListener(e -> performSearch());
+        searchTextField.addActionListener(_ -> performSearch());
         mainPanel.add(searchTextField);
         
         // Search button
@@ -104,7 +104,7 @@ public class SearchBookWindow extends JFrame {
         searchButton.setForeground(Color.WHITE);
         searchButton.setFont(new Font("Jost", Font.BOLD, 16));
         searchButton.setBounds(700, 90, 100, 30);
-        searchButton.addActionListener(e -> performSearch());
+        searchButton.addActionListener(_ -> performSearch());
         mainPanel.add(searchButton);
         
         // Results table
@@ -132,7 +132,7 @@ public class SearchBookWindow extends JFrame {
         clearButton.setForeground(Color.WHITE);
         clearButton.setFont(new Font("Jost", Font.BOLD, 16));
         clearButton.setBounds(300, 510, 100, 35);
-        clearButton.addActionListener(e -> clearSearch());
+        clearButton.addActionListener(_ -> clearSearch());
         mainPanel.add(clearButton);
         
         closeButton = new JButton("Close");
