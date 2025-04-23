@@ -20,7 +20,7 @@ public class LoanManagementDashboard extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private final JPanel panel = new JPanel();
 		
-	public LoanManagementDashboard(String user, String level) {
+	public LoanManagementDashboard(String user, String level,ThemeToggleButton togglebutton) {
 		
 		setResizable(false);
 		//private Connection connection;
@@ -31,13 +31,23 @@ public class LoanManagementDashboard extends JFrame{
 		setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
 		setTitle("Emprunts Management");
 		setSize(536, 435);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		panel.setBackground(new Color(182, 182, 182));
 		panel.setBounds(0, 0, 1695, 1023);
 		getContentPane().add(panel);
 		panel.setLayout(null);
+		
+		panel.setBounds(0, 0, 1322, 894);
+	  	if(togglebutton.isSelected()) {
+	  		panel.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		panel.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
+		
 		
 		JPanel topColorPanel = new JPanel();
 		topColorPanel.setBackground(new Color(0, 102, 102));
@@ -54,11 +64,11 @@ public class LoanManagementDashboard extends JFrame{
 		addemprunt.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new RegisterLoanWindow(user, level);
+				new RegisterLoanWindow(user, level,togglebutton);
 				dispose();
 			}
 		});
-		addemprunt.setIcon(new ImageIcon("src\\resrc\\handbook_18447619.png"));
+		addemprunt.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\handbook_18447619.png"));
 		addemprunt.setBounds(51, 199, 64, 64);
 		addemprunt.setBorderPainted(false); // Removes border
 		addemprunt.setFocusPainted(false); // Removes focus border
@@ -68,7 +78,7 @@ public class LoanManagementDashboard extends JFrame{
 		
 		JButton reviwreturns = new JButton("");
 		reviwreturns.setOpaque(false);
-		reviwreturns.setIcon(new ImageIcon("src\\resrc\\bookreturn_11860727.png"));
+		reviwreturns.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\bookreturn_11860727.png"));
 		reviwreturns.setFocusPainted(false);
 		reviwreturns.setBorderPainted(false);
 		reviwreturns.setBounds(224, 199, 64, 64);
@@ -76,7 +86,7 @@ public class LoanManagementDashboard extends JFrame{
 		reviwreturns.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new ReturnRegisteringWindow(user, level);
+				new ReturnRegisteringWindow(user, level,togglebutton);
 				dispose();
 			}
 		});
@@ -84,7 +94,7 @@ public class LoanManagementDashboard extends JFrame{
 		
 		JButton reviewloans = new JButton("");
 		reviewloans.setOpaque(false);
-		reviewloans.setIcon(new ImageIcon("src\\resrc\\location-book_18588122.png"));
+		reviewloans.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\location-book_18588122.png"));
 		reviewloans.setFocusPainted(false);
 		reviewloans.setBorderPainted(false);
 		reviewloans.setBounds(391, 199, 64, 64);
@@ -92,7 +102,7 @@ public class LoanManagementDashboard extends JFrame{
 		reviewloans.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new TrackLoansWindow(user, level);
+				new TrackLoansWindow(user, level,togglebutton);
 				dispose();
 			}
 		});
@@ -128,20 +138,22 @@ public class LoanManagementDashboard extends JFrame{
 		backHomeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new Home(user, level);
+				
+				new Home(user, level,togglebutton);
 				dispose();
+				
 			}
 		});
 		
 		setVisible(true);
 	}
 	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new LoanManagementDashboard("admin", "admin");
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		SwingUtilities.invokeLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				new LoanManagementDashboard("admin", "admin",togglebutton);
+//			}
+//		});
+//	}
 }

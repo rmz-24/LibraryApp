@@ -6,6 +6,8 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
+import java.sql.Date;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,20 +16,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import com.toedter.calendar.JDateChooser;
+import java.util.*;
 
 public class RegisterLoanWindow extends JFrame {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final JPanel panel = new JPanel();
+    private final JPanel panel = new JPanel();
     private JTextField sid;
     private JTextField sname;
     private JDateChooser dateEmpChooser;
     private JDateChooser dateRetAssumChooser;
     private Connection connection;
-    public RegisterLoanWindow(String user,String level) {
+    public RegisterLoanWindow(String user,String level,ThemeToggleButton togglebutton) {
+    	
+		
+	  	
     	connection=LibraryApp.getConnection();
     	setResizable(false);
         setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
@@ -38,9 +41,16 @@ public class RegisterLoanWindow extends JFrame {
         getContentPane().setLayout(null);
         
         panel.setBackground(new Color(182, 182, 182));
-        panel.setBounds(0, 0, 1695, 1023);
+        panel.setBounds(0, 0, 747, 649);
         getContentPane().add(panel);
         panel.setLayout(null);
+        if(togglebutton.isSelected()) {
+	  		panel.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		panel.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
         
         JPanel topColorPanel = new JPanel();
         topColorPanel.setBackground(new Color(0, 102, 102));
@@ -76,11 +86,35 @@ public class RegisterLoanWindow extends JFrame {
         sname.setColumns(10);
         sname.setBounds(52, 325, 269, 43);
         panel.add(sname);
+        String[] categorie = {
+        	    "MATHS",          // Mathématiques
+        	    "PHYSIQUE",       // Physique
+        	    "CHIMIE",         // Chimie
+        	    "INFORMATIQUE",   // Informatique
+        	    "ELECTRONIQUE",   // Électronique
+        	    "AUTOMATIQUE",    // Automatique
+        	    "TELECOMS",       // Télécommunications
+        	    "GENIE CIVIL",    // Génie Civil
+        	    "MECANIQUE",      // Mécanique
+        	    "ELECTROTECHNIQUE", // Électrotechnique
+        	    "ARCHI",          // Architecture
+        	    "GEOLOGIE",       // Géologie
+        	    "BIOLOGIE",       // Biologie
+        	    "MDF",            // Méthodes de Fabrication
+        	    "ROBOTIQUE",      // Robotique
+        	    "ENERGIE",        // Énergies renouvelables
+        	    "SCIENCES DE LA TERRE", // Sciences de la Terre
+        	    "GESTION",        // Gestion et économie
+        	    "LANGUE",         // Langues (Français, Anglais, etc.)
+        	    "HISTOIRE",       // Histoire des sciences
+        	    "PHILOSOPHIE"     // Philosophie des sciences
+        	};
+        
         JButton btnAbort = new JButton("Abort");
         btnAbort.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new LoanManagementDashboard(user,level);
+        		new LoanManagementDashboard(user,level,togglebutton);
         		dispose();
         	
         	}
@@ -132,15 +166,15 @@ public class RegisterLoanWindow extends JFrame {
         setVisible(true);
     }
     
-    // Proper main method implementation
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new RegisterLoanWindow("user","access");
-            }
-        });
-    }
+//    // Proper main method implementation
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new RegisterLoanWindow("user","access");
+//            }
+//        });
+//    }
     
     private void  addnewloan() {
     	String numEtu = sid.getText();

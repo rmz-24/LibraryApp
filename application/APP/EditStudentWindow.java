@@ -9,11 +9,9 @@ import java.awt.event.MouseEvent;
 import java.sql.*;
 
 public class EditStudentWindow extends JFrame{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private Connection conn;
+	private JTextField studentiddlt;
+    private JTextArea Sname, Sfname, Slevel;
+    private Connection conn;
     private JTextField Ssearch;
     private JTextField  sid;          // Student ID display field
     private JTextField  stuname;      // Student name field
@@ -22,9 +20,9 @@ public class EditStudentWindow extends JFrame{
     private JTextField  snumber;      // Student phone number field
     private JTextField  smail;        // Student email field
      // Search input field
-    EditStudentWindow(){
+    EditStudentWindow(ThemeToggleButton tg){
     	conn = LibraryApp.getConnection();
-    	initializeComponents();
+    	
     	
     	
     	setTitle("Edit Student");
@@ -32,7 +30,17 @@ public class EditStudentWindow extends JFrame{
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
+        JPanel panelbg = new JPanel();
+        if(tg.isSelected()) {
+        	panelbg.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
 
+	  	}else {
+	  		panelbg.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
+        setContentPane(panelbg);
+        panelbg.setLayout(null);
+        initializeComponents();
         JPanel panel = new JPanel();
         panel.setBackground(new Color(0, 102, 102));
         panel.setBounds(-55, 0, 1666, 94);
@@ -258,7 +266,15 @@ public class EditStudentWindow extends JFrame{
         Ssearch.setFont(new Font("Jost", Font.PLAIN, 22));
         Ssearch.setBounds(40, 182, 204, 43);
         getContentPane().add(Ssearch);
-        
+
+        // ... rest of your component initialization ...
+    }
+    private void configureButton(JButton button, Color bg, int x, int y) {
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Jost", Font.BOLD, 24));
+        button.setBackground(bg);
+        button.setBounds(x, y, 140, 50);
+        getContentPane().add(button);
     }
     private void configureTextField(JTextField field, int x, int y) {
         field.setFont(new Font("Jost", Font.PLAIN, 20));
@@ -273,7 +289,7 @@ public class EditStudentWindow extends JFrame{
     }
     
     
-    public static void main(String[] args) {
-        new EditStudentWindow();
-    }
+//    public static void main(String[] args) {
+//        new EditStudentWindow();
+//    }
 }

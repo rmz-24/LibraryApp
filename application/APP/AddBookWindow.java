@@ -127,7 +127,7 @@ public class AddBookWindow extends JFrame {
 	}
 	
 	
-	public AddBookWindow(String user, String pass) {
+	public AddBookWindow(String user, String pass , ThemeToggleButton tg) {
 		setResizable(false);
 		
 		this.connection = LibraryApp.getConnection();
@@ -263,7 +263,7 @@ public class AddBookWindow extends JFrame {
         submitButton.setBackground(new Color(56, 194, 56));
         submitButton.setFont(new Font("Jost", Font.BOLD, 18));
         submitButton.setBounds(217, 667, 181, 40);
-        submitButton.addActionListener(_ -> insertBookData());
+        submitButton.addActionListener(e -> insertBookData());
         panel_1.add(submitButton);
         
         JButton cancelButton = new JButton("Cancel");
@@ -278,12 +278,19 @@ public class AddBookWindow extends JFrame {
         cancelButton.setBackground(new Color(128, 0, 0));
         cancelButton.setBounds(410, 667, 123, 40);
         panel_1.add(cancelButton);
+        if(tg.isSelected()) {
+        	panel_1.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		panel_1.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
         
         setVisible(true);
 		
 	}
 	
-	public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new AddBookWindow("user", "pass"));
-    }
+//	public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new AddBookWindow("user", "pass"));
+//    }
 }

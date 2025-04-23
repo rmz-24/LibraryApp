@@ -14,13 +14,23 @@ public class RemoveStudentWindow extends JFrame {
     private JTextField studentiddlt;
     private JTextArea Sname, Sfname, Slevel;
     private Connection conn;
-    public RemoveStudentWindow() {
+    public RemoveStudentWindow(ThemeToggleButton tg) {
     	
         setTitle("Student Removing Window");
         setSize(638, 415);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
+        JPanel panelbg = new JPanel();
+        if(tg.isSelected()) {
+        	panelbg.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		panelbg.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
+        setContentPane(panelbg);
+        panelbg.setLayout(null);
 
         JPanel panel = new JPanel();
         panel.setBackground(new Color(0, 102, 102));
@@ -178,7 +188,7 @@ public class RemoveStudentWindow extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        new RemoveStudentWindow();
-    }
+//    public static void main(String[] args) {
+//        new RemoveStudentWindow();
+//    }
 }

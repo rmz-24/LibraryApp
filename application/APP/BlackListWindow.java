@@ -25,26 +25,31 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 
-public class BookListWindow extends JFrame{
+public class BlackListWindow extends JFrame{
 	  private final JPanel panel = new JPanel();
 	  private Connection connection;
 	  private final JPanel panel_1 = new JPanel();
-	  private JTable BooksTable;
+	  private JTable StudentsTable;
 	  
-	  public BookListWindow(ThemeToggleButton tg) {
+	  public BlackListWindow(ThemeToggleButton tg) {
+		  
+		    JPanel panel_2 = new JPanel();
+			panel_2.setBounds(0, 0, 1322, 894);
+		  	if(tg.isSelected()) {
+		  		panel_2.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+		  	}else {
+		  		panel_2.setBackground(new Color(240, 240, 240));
+		  		
+		  	}
 		    connection=LibraryApp.getConnection();
 		    setResizable(false);
 	        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
-	        setTitle("Students List");
+	        setTitle("Black List");
 	        setSize(1262, 888);
 	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Changed to DISPOSE_ON_CLOSE
 	        setLocationRelativeTo(null);
 	        getContentPane().setLayout(null);
-	  	     JPanel panelbg = new JPanel();
-	  	     setContentPane(panelbg);
-	  	     panelbg.setLayout(null);
-	  	    
-
 	        
 	        JPanel topColorPanel = new JPanel();
 	        topColorPanel.setLayout(null);
@@ -57,29 +62,21 @@ public class BookListWindow extends JFrame{
 	        iconLabel.setBounds(87, 11, 100, 100);
 	        topColorPanel.add(iconLabel);
 	        
-	        JLabel iconLabel_1 = new JLabel("");
-	        iconLabel_1.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
-	        iconLabel_1.setBounds(87, 11, 100, 100);
-	        topColorPanel.add(iconLabel_1);
 	        
-	        JLabel iconLabel_2 = new JLabel("");
-	        iconLabel_2.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
-	        iconLabel_2.setBounds(372, 0, 100, 100);
-	        topColorPanel.add(iconLabel_2);
 	        
 	        JScrollPane scrollPane = new JScrollPane();
 	        scrollPane.setBounds(69, 149, 1104, 572);
 	        getContentPane().add(scrollPane);
-	        BooksTable = new JTable();
-			scrollPane.setViewportView(BooksTable);
+	        StudentsTable = new JTable();
+			scrollPane.setViewportView(StudentsTable);
 			// Make table non-editable
-			BooksTable.setRowHeight(30);
+			StudentsTable.setRowHeight(30);
 			Font tableFont = new Font("Jost", Font.PLAIN, 18);
-			BooksTable.setFont(tableFont); 
-			BooksTable.getTableHeader().setFont(new Font("Jost", Font.BOLD, 20));
-			BooksTable.setModel(new DefaultTableModel(
+			StudentsTable.setFont(tableFont); 
+			StudentsTable.getTableHeader().setFont(new Font("Jost", Font.BOLD, 20));
+			StudentsTable.setModel(new DefaultTableModel(
 			    new Object[][] {},
-			    new String[] {"Book Id" ,"Book Name", "Author","Categorie","Publish date","QTE"}
+			    new String[] {"Student Id" ,"Name", "First Name","Level","Signed In"}
 			) {
 			    /**
 				 * 
@@ -98,7 +95,7 @@ public class BookListWindow extends JFrame{
 				public void mouseClicked(MouseEvent e) {
 					String user =LibraryApp.getuser();
 					String level =LibraryApp.getlevel();
-					new BookManagementDashboard(user,level,tg);
+					new Home(user,level,tg);
 					dispose();
 				}
 			});
@@ -107,36 +104,37 @@ public class BookListWindow extends JFrame{
 			btnGoBack.setBackground(new Color(56, 194, 56));
 			btnGoBack.setBounds(558, 764, 181, 40);
 			getContentPane().add(btnGoBack);
+			
+			
+			getContentPane().add(panel_2);
+			
+			
+	        
 			loadUserData();
-			if(tg.isSelected()) {
-	        	panelbg.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
-
-		  	}else {
-		  		panelbg.setBackground(new Color(182, 182, 182));
-		  		
-		  	}
+		  
 		  
 		  
 		  
 		  setVisible(true);
 	  }
 	  private void loadUserData() {
-		    DefaultTableModel model = (DefaultTableModel) BooksTable.getModel();
+		    DefaultTableModel model = (DefaultTableModel) StudentsTable.getModel();
 		    model.setRowCount(0); // Clear table before loading new data
+		   
 
-		    String sql = "SELECT BOOKID, BOOKNAME,BOOKAUTHOR,Categorie,publish_year,available_qty FROM bookslist order by BOOKNAME";
+		    String sql = "SELECT STUDENTID, NAME,FIRSTNAME,STUDENT_LEVEL,SIGNED_IN_DATE FROM studentlist where studentid in ("
+		    		+ "select studentid from blacklist where etat='black') order by SIGNED_IN_DATE";
 		    
 		    try (PreparedStatement stmt = connection.prepareStatement(sql);
 		         ResultSet rs = stmt.executeQuery()) {
 
 		        while (rs.next()) {
-		            String bookId = rs.getString("BOOKID");
-		            String bookname = rs.getString("BOOKNAME");
-		            String author = rs.getString("BOOKAUTHOR");
-		            String categorie = rs.getString("Categorie");
-		            int publish_date = rs.getInt("publish_year");
-		            int qte =rs.getInt("available_qty");
-		            model.addRow(new Object[]{bookId, bookname, author,categorie,publish_date,qte});
+		            String studentId = rs.getString("STUDENTID");
+		            String name = rs.getString("NAME");
+		            String firstname = rs.getString("FIRSTNAME");
+		            String level = rs.getString("STUDENT_LEVEL");
+		            Date signing_date = rs.getDate("SIGNED_IN_DATE");
+		            model.addRow(new Object[]{studentId, name, firstname,level,signing_date});
 		        }
 
 		    } catch (SQLException e) {
@@ -146,8 +144,4 @@ public class BookListWindow extends JFrame{
 		            "Database Error", JOptionPane.ERROR_MESSAGE);
 		    }
 		}
-//	public static void main(String[] args) {
-//		new BookListWindow();
-//		
-//	}
 }

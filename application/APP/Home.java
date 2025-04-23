@@ -2,21 +2,111 @@ package APP;
 
 import javax.swing.*;
 
+import com.sun.jdi.connect.spi.Connection;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Properties;
 import java.sql.*;
 
 public class Home {
+	public class RoundedLabel extends JLabel {
+	    private static final long serialVersionUID = 1L;
+	    private int cornerRadius;
+	    private Color borderColor;
+	    private Color backgroundColor;
+
+	    public RoundedLabel(String text, int cornerRadius) {
+	        super(text);
+	        this.cornerRadius = cornerRadius;
+	        this.borderColor = Color.BLACK; // Default border color
+	        this.backgroundColor = Color.GRAY; // Default background color
+	        //setOpaque(false); // Make the label transparent
+	        setOpaque(false); // Important to disable default square background
+	        setBackground(new Color(0,0,0,0)); // Optional extra safety: make sure background is fully transparent
+	        setHorizontalAlignment(SwingConstants.CENTER);
+	        setVerticalAlignment(SwingConstants.CENTER);
+	    }
+
+	    // Constructor with more customization options
+	    public RoundedLabel(String text, int cornerRadius, Color backgroundColor, Color borderColor) {
+	        this(text, cornerRadius);
+	        this.backgroundColor = backgroundColor;
+	        this.borderColor = borderColor;
+	       
+	    }
+
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        Graphics2D g2d = (Graphics2D) g.create();
+	        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+	        // Draw rounded background
+	        Color bgcolor = getForeground().white;
+	        g2d.setColor(bgcolor);
+	        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius);
+
+	        // Draw text centered
+	        FontMetrics fm = g2d.getFontMetrics();
+	        int textWidth = fm.stringWidth(getText());
+	        int textHeight = fm.getAscent();
+	        int x = (getWidth() - textWidth) / 2;
+	        int y = (getHeight() + textHeight) / 2 - 2; // center vertically
+
+	        g2d.setColor(getForeground()); // Text color
+	        g2d.drawString(getText(), x, y);
+
+	        g2d.dispose();
+	    }
+
+	    @Override
+	    protected void paintBorder(Graphics g) {
+	        Graphics2D g2d = (Graphics2D) g;
+	        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	        
+	        // Paint the rounded border
+	        g2d.setColor(borderColor);
+	        g2d.draw(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, cornerRadius, cornerRadius));
+	    }
+
+	    // Getters and setters for colors
+	    public Color getBorderColor() {
+	        return borderColor;
+	    }
+
+	    public void setBorderColor(Color borderColor) {
+	        this.borderColor = borderColor;
+	        repaint();
+	    }
+
+	    public Color getBackgroundColor() {
+	        return backgroundColor;
+	    }
+
+	    public void setBackgroundColor(Color backgroundColor) {
+	        this.backgroundColor = backgroundColor;
+	        repaint();
+	    }
+
+	    public int getCornerRadius() {
+	        return cornerRadius;
+	    }
+
+	    public void setCornerRadius(int cornerRadius) {
+	        this.cornerRadius = cornerRadius;
+	        repaint();
+	    }
+	}
+	
+	
+	
 	public class RoundedPanel extends JPanel {
-	    /**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		private int cornerRadius;
+	    private int cornerRadius;
 
 	    public RoundedPanel(int cornerRadius) {
 	        super();
@@ -331,13 +421,23 @@ public class Home {
     private JLabel numberLabel_7;
     private JLabel numberLabel_8;
     private JLabel numberLabel_9;
+    private JPanel mainBackgroundPanel;
+    private JLabel lbldisplay1; // "Students recently added"
+    private JLabel lblBooksRecentlyAdded; // "Books recently added"
+    private JLabel lbllatereturn;
+ 
+    /**
+     * @wbp.nonvisual location=-43,-11
+     */
+    private final JPanel panel_6 = new JPanel();
     
     private void openWindow(JFrame newWindow) {
         frmDashboard.dispose();
         newWindow.setVisible(true);
     }
     
-    public Home(String user, String level) {
+    public Home(String user, String level, ThemeToggleButton tgl) {
+    	ThemeToggleButton tg=tgl;
         frmDashboard = new JFrame("Home");
         frmDashboard.setResizable(false);
         frmDashboard.setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
@@ -346,24 +446,70 @@ public class Home {
         frmDashboard.setSize(1662, 946);
         frmDashboard.setLocationRelativeTo(null);
         frmDashboard.getContentPane().setLayout(null);
+        JPanel mainBackgroundPanel = new JPanel();
+        mainBackgroundPanel = new JPanel();
+        mainBackgroundPanel.setLayout(null);
+        mainBackgroundPanel.setBackground(new Color(240, 240, 240)); // Light gray
+        frmDashboard.setContentPane(mainBackgroundPanel);
+        lbldisplay1 = new JLabel("Student recently added");
+        lbldisplay1.setFont(new Font("Jost", Font.BOLD, 23));
+        lbldisplay1.setBounds(228, 130, 277, 36);
+        frmDashboard.getContentPane().add(lbldisplay1);
+        
+        lblBooksRecentlyAdded = new JLabel("Books recently added");
+        lblBooksRecentlyAdded.setFont(new Font("Jost", Font.BOLD, 23));
+        lblBooksRecentlyAdded.setBounds(748, 130, 277, 36);
+        frmDashboard.getContentPane().add(lblBooksRecentlyAdded);
+        
+        lbllatereturn = new JLabel("Late returns");
+        lbllatereturn.setFont(new Font("Jost", Font.BOLD, 23));
+        lbllatereturn.setBounds(1181, 130, 427, 36);
+        frmDashboard.getContentPane().add(lbllatereturn);
+//        ThemeToggleButton toggleButton = new ThemeToggleButton(
+//        	    mainBackgroundPanel, 
+//        	    lbldisplay1, 
+//        	    lblBooksRecentlyAdded, 
+//        	    lbllatereturn
+//        	);
+//        
+//        	toggleButton.setBounds(1562, 99, 60, 30);
+//        	mainBackgroundPanel.add(toggleButton);
+        
+        if(tg.isSelected()) {
+        	mainBackgroundPanel.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+        	lbllatereturn.setForeground(Color.white);
+        	lblBooksRecentlyAdded.setForeground(Color.white);
+        	lbldisplay1.setForeground(Color.white);
+
+        	
+        	
+
+	  	}else {
+	  		mainBackgroundPanel.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
+        
+        
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(0, 102, 102));
         panel.setBounds(0, 0, 202, 1122);
-        frmDashboard.getContentPane().add(panel);
+        panel.setBackground(new Color(0, 102, 102));
+        mainBackgroundPanel.add(panel);
         panel.setLayout(null);
         
-        JLabel logoLabel = new JLabel("");
-        logoLabel.setBounds(40, 11, 112, 80);
-        logoLabel.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
-        panel.add(logoLabel);
+        JLabel lbllogo = new JLabel("");
+        lbllogo.setBounds(40, 11, 112, 80);
+        lbllogo.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+        panel.add(lbllogo);
         
         JButton studentManagementButton = new JButton("");
         studentManagementButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new StudentManagementDashboard(user,level);
-                frmDashboard.dispose();
+                new StudentManagementDashboard(user,level,tgl);
+        		frmDashboard.dispose();
+
+               
             }
         });
         
@@ -387,10 +533,15 @@ public class Home {
         bookManagementButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new BookManagementDashboard(user,level);
-                frmDashboard.dispose();
+                new BookManagementDashboard(user,level,tgl);
+        		frmDashboard.dispose();
+
+               
             }
         });
+      
+       
+
         bookManagementButton.setIcon(new ImageIcon("src\\resrc\\books.png"));
         bookManagementButton.setBounds(40, 280, 112, 68);
         bookManagementButton.setContentAreaFilled(false);
@@ -400,40 +551,51 @@ public class Home {
         bookManagementButton.setToolTipText("Opens a window to the book management dashboard");
         panel.add(bookManagementButton);
         
-        JLabel loanAndReturnLabel = new JLabel("Loan and Return");
-        loanAndReturnLabel.setVerticalAlignment(SwingConstants.TOP);
-        loanAndReturnLabel.setBounds(10, 536, 129, 21);
-        loanAndReturnLabel.setForeground(Color.WHITE);
-        loanAndReturnLabel.setFont(new Font("Jost", Font.BOLD, 15));
-        panel.add(loanAndReturnLabel);
+        JLabel addBookLabel = new JLabel("Loan and Return");
+        addBookLabel.setVerticalAlignment(SwingConstants.TOP);
+        addBookLabel.setBounds(10, 536, 129, 21);
+        addBookLabel.setForeground(Color.WHITE);
+        addBookLabel.setFont(new Font("Jost", Font.BOLD, 15));
+        panel.add(addBookLabel);
         
-        JButton removeBookButton = new JButton("");
-        removeBookButton.setIcon(new ImageIcon("src\\resrc\\exclamation.png"));
-        removeBookButton.setBounds(40, 717, 112, 68);
-        removeBookButton.setContentAreaFilled(false);
-        removeBookButton.setBorderPainted(false);
-        removeBookButton.setFocusPainted(false);
-        removeBookButton.setOpaque(false);
-        removeBookButton.setToolTipText("Removes a book from the library's database");
-        panel.add(removeBookButton);
+        JButton BlackListedStudents = new JButton("");
+        BlackListedStudents.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		new BlackListWindow(tg);
+        		frmDashboard.dispose();
+
+        		
+        	}
+        });
+        BlackListedStudents.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\blacklist_6456893.png"));
+        BlackListedStudents.setBounds(40, 717, 112, 68);
+        BlackListedStudents.setContentAreaFilled(false);
+        BlackListedStudents.setBorderPainted(false);
+        BlackListedStudents.setFocusPainted(false);
+        BlackListedStudents.setOpaque(false);
+        BlackListedStudents.setToolTipText("Removes a book from the library's database");
+        panel.add(BlackListedStudents);
         
-        JLabel blacklistLabel = new JLabel("Blacklist");
-        blacklistLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        blacklistLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        blacklistLabel.setBounds(-17, 796, 102, 21);
-        blacklistLabel.setForeground(Color.WHITE);
-        blacklistLabel.setFont(new Font("Jost", Font.BOLD, 15));
-        panel.add(blacklistLabel);
+        JLabel removeBookLabel = new JLabel("Black List");
+        removeBookLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        removeBookLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+        removeBookLabel.setBounds(-17, 796, 102, 21);
+        removeBookLabel.setForeground(Color.WHITE);
+        removeBookLabel.setFont(new Font("Jost", Font.BOLD, 15));
+        panel.add(removeBookLabel);
         //getClass().getResource("/resrc/borrow_book.png")
         JButton borrowBookButton = new JButton("");
         borrowBookButton.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new LoanManagementDashboard(user,level);
-        		 frmDashboard.dispose();
+        		new LoanManagementDashboard(user,level,tg);
+        		frmDashboard.dispose();
+
+        		 
         	}
         });
-        borrowBookButton.setIcon(new ImageIcon("src\\resrc\\borrow_book.png"));
+        borrowBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\borrow_book.png"));
         borrowBookButton.setBounds(40, 438, 112, 68);
         borrowBookButton.setContentAreaFilled(false);
         borrowBookButton.setBorderPainted(false);
@@ -504,7 +666,7 @@ public class Home {
         panel_1.add(accessLevelLabel1);
         
         JButton addUserButton = new JButton("");
-        addUserButton.addActionListener(_ -> openWindow(new AdminPermissionsWindow(user, level)));
+        addUserButton.addActionListener(e -> openWindow(new AdminPermissionsWindow(user, level,tgl)));
         addUserButton.setIcon(new ImageIcon("src\\resrc\\add_16321386.png"));
         addUserButton.setBounds(1002, 11, 70, 66);
         addUserButton.setContentAreaFilled(false);
@@ -540,21 +702,24 @@ public class Home {
         backHomeButton.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
+        		frmDashboard.dispose();
         		 LibraryApp.main(null);
-        		 frmDashboard.dispose();
+        		 
         		 
         		}
         });
         backHomeButton.setOpaque(false);
-        backHomeButton.setIcon(new ImageIcon("src\\resrc\\log-out_10024482.png"));
+        backHomeButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\log-out_10024482.png"));
         backHomeButton.setFocusPainted(false);
         backHomeButton.setContentAreaFilled(false);
         backHomeButton.setBorderPainted(false);
         backHomeButton.setBounds(1560, 830, 78, 68);
         frmDashboard.getContentPane().add(backHomeButton);
-        JPanel studentsdisplay = new JPanel();
+        RoundedPanel studentsdisplay = new RoundedPanel(new BorderLayout(), 30);
+        //JPanel studentsdisplay = new JPanel();
         studentsdisplay.setBackground(new Color(0, 165, 207));
         studentsdisplay.setBounds(228, 192, 479, 566);
+        studentsdisplay.setBorder(null);
         frmDashboard.getContentPane().add(studentsdisplay);
         studentsdisplay.setLayout(null);
         
@@ -649,8 +814,8 @@ public class Home {
         
         numberLabel_9 = createNumberLabel(19, 483, 39, 39);
         studentsdisplay.add(numberLabel_9);
-        
-        JPanel booksdisplay = new JPanel();
+        RoundedPanel booksdisplay = new RoundedPanel(new BorderLayout(), 30);
+        //JPanel booksdisplay = new JPanel();
         booksdisplay.setBounds(748, 192, 391, 566);
         frmDashboard.getContentPane().add(booksdisplay);
         booksdisplay.setBackground(new Color(37, 161, 142));
@@ -749,8 +914,8 @@ public class Home {
 
         bookNumberLabel_9 = createBookNumberLabel(19, 483, 39, 39);
         booksdisplay.add(bookNumberLabel_9);
-        
-        JPanel empruntdisplay = new JPanel();
+        RoundedPanel empruntdisplay = new RoundedPanel(new BorderLayout(), 30);
+        //JPanel empruntdisplay = new JPanel();
         empruntdisplay.setBackground(new Color(0, 78, 100));
         empruntdisplay.setBounds(1181, 192, 441, 566);
         frmDashboard.getContentPane().add(empruntdisplay);
@@ -848,20 +1013,8 @@ public class Home {
         empruntdisplay.add(empruntidLabel_9);
         
         
-        JLabel recentlyRegisteredStudentsLabel = new JLabel("Recently Registered Students");
-        recentlyRegisteredStudentsLabel.setFont(new Font("Jost", Font.BOLD, 23));
-        recentlyRegisteredStudentsLabel.setBounds(228, 130, 340, 36);
-        frmDashboard.getContentPane().add(recentlyRegisteredStudentsLabel);
         
-        JLabel recentlyAddedBooksLabel = new JLabel("Recently Added Books");
-        recentlyAddedBooksLabel.setFont(new Font("Jost", Font.BOLD, 23));
-        recentlyAddedBooksLabel.setBounds(748, 130, 277, 36);
-        frmDashboard.getContentPane().add(recentlyAddedBooksLabel);
         
-        JLabel lateReturnsLabel = new JLabel("Late returns");
-        lateReturnsLabel.setFont(new Font("Jost", Font.BOLD, 23));
-        lateReturnsLabel.setBounds(1181, 130, 427, 36);
-        frmDashboard.getContentPane().add(lateReturnsLabel);
         empruntdisplay.revalidate();
         empruntdisplay.repaint();
         loadLateEmprunts();
@@ -870,21 +1023,21 @@ public class Home {
         frmDashboard.setVisible(true);
     }
     private JLabel createEmpruntLabel(int x, int y, int width, int height) {
-    	JLabel loanerNameLabel = new JLabel();
+        RoundedLabel label = new RoundedLabel("Hello World!", 20);
     	width=150;
-        loanerNameLabel.setBounds(x, y, width, height);
-        loanerNameLabel.setFont(new Font("Jost", Font.BOLD, 17));
-        loanerNameLabel.setOpaque(true);
-        loanerNameLabel.setBackground(Color.WHITE);
-        loanerNameLabel.setForeground(Color.BLACK); // Ensure text is visible
-        loanerNameLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        loanerNameLabel.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
+        label.setBounds(x, y, width, height);
+        label.setFont(new Font("Jost", Font.BOLD, 17));
+        label.setOpaque(true);
+        label.setBackground(Color.WHITE);
+        label.setForeground(Color.BLACK); // Ensure text is visible
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        label.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
         
-        return loanerNameLabel;
+        return label;
     }
 
     private JLabel createIDLabel(int x, int y, int width, int height) {
-    	 JLabel label = new JLabel("", SwingConstants.CENTER);
+        RoundedLabel label = new RoundedLabel("Hello World!", 50);
          label.setBounds(x, y, width, height);
          label.setFont(new Font("Jost", Font.BOLD, 14));
          label.setOpaque(true);
@@ -894,40 +1047,42 @@ public class Home {
     }
     
     private JLabel createStudentLabel(int x, int y, int width, int height) {
-        JLabel stdNameLabel = new JLabel();
-        stdNameLabel.setBounds(x, y, width, height);
-        stdNameLabel.setFont(new Font("Jost", Font.BOLD, 17));
-        stdNameLabel.setOpaque(true);
-        stdNameLabel.setBackground(Color.WHITE);
-        stdNameLabel.setForeground(Color.BLACK); // Ensure text is visible
-        stdNameLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        stdNameLabel.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
-        return stdNameLabel;
+        //JLabel label = new JLabel();
+        RoundedLabel label = new RoundedLabel("Hello World!", 20);
+
+        label.setBounds(x, y, width, height);
+        label.setFont(new Font("Jost", Font.BOLD, 17));
+        label.setOpaque(true);
+        label.setBackground(Color.WHITE);
+        label.setForeground(Color.BLACK); // Ensure text is visible
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        label.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
+        return label;
     }
     private JLabel createBookLabel(int x, int y, int width, int height) {
-        JLabel bkNameLabel = new JLabel();
+        RoundedLabel label = new RoundedLabel("Hello World!", 20);
         //width=181;
-        bkNameLabel.setBounds(x, y, width, height);
-        bkNameLabel.setFont(new Font("Jost", Font.BOLD, 17));
-        bkNameLabel.setOpaque(true);
-        bkNameLabel.setBackground(Color.WHITE);
-        bkNameLabel.setForeground(Color.BLACK); // Ensure text is visible
-        bkNameLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        bkNameLabel.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
-        return bkNameLabel;
+        label.setBounds(x, y, width, height);
+        label.setFont(new Font("Jost", Font.BOLD, 17));
+        label.setOpaque(true);
+        label.setBackground(Color.WHITE);
+        label.setForeground(Color.BLACK); // Ensure text is visible
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        label.setHorizontalAlignment(SwingConstants.CENTER); // Align text properly
+        return label;
     }
     
     private JLabel createNumberLabel(int x, int y, int width, int height) {
-        JLabel counterLabel = new JLabel("", SwingConstants.CENTER);
-        counterLabel.setBounds(x, y, width, height);
-        counterLabel.setFont(new Font("Jost", Font.BOLD, 14));
-        counterLabel.setOpaque(true);
-        counterLabel.setBackground(new Color(200, 200, 200));
-        counterLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        return counterLabel;
+        RoundedLabel label = new RoundedLabel("Hello World!", 50);
+        label.setBounds(x, y, width, height);
+        label.setFont(new Font("Jost", Font.BOLD, 14));
+        label.setOpaque(true);
+        label.setBackground(new Color(200, 200, 200));
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        return label;
     }
     private JLabel createBookNumberLabel(int x, int y, int width, int height) {
-        JLabel label = new JLabel("", SwingConstants.CENTER);
+        RoundedLabel label = new RoundedLabel("", 50);
         label.setBounds(x, y, width, height);
         label.setFont(new Font("Jost", Font.BOLD, 14));
         label.setOpaque(true);

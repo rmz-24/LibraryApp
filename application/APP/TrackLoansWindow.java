@@ -41,7 +41,7 @@ public class TrackLoansWindow extends JFrame {
     private String currentUser;
     private String accessLevel;
     
-    public TrackLoansWindow(String user, String level) {
+    public TrackLoansWindow(String user, String level,ThemeToggleButton tb) {
         setResizable(false);
         
         this.connection = LibraryApp.getConnection();
@@ -55,18 +55,23 @@ public class TrackLoansWindow extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
         
-        setupUI();
+        setupUI(tb);
         loadLoansData("ALL"); // Load all loans by default
         
         setVisible(true);
     }
-    
-    private void setupUI() {
+
+        private void setupUI(ThemeToggleButton tb) {
+            
+
+        
+      
         JPanel topPanel = new JPanel();
         topPanel.setBackground(new Color(0, 102, 102));
         topPanel.setBounds(0, 0, 1000, 68);
         getContentPane().add(topPanel);
         topPanel.setLayout(null);
+        
         
         JLabel topLabel = new JLabel("TRACK LIBRARY LOANS");
         topLabel.setForeground(new Color(255, 255, 255));
@@ -102,7 +107,7 @@ public class TrackLoansWindow extends JFrame {
         searchButton.setForeground(Color.WHITE);
         searchButton.setFont(new Font("Jost", Font.BOLD, 14));
         searchButton.setBounds(310, 80, 100, 30);
-        searchButton.addActionListener(_ -> performSearch());
+        searchButton.addActionListener(e -> performSearch());
         mainPanel.add(searchButton);
         
         // Filter combo box
@@ -116,7 +121,7 @@ public class TrackLoansWindow extends JFrame {
         filterComboBox = new JComboBox<>(filterOptions);
         filterComboBox.setFont(new Font("Jost", Font.PLAIN, 14));
         filterComboBox.setBounds(560, 80, 150, 30);
-        filterComboBox.addActionListener(_ -> {
+        filterComboBox.addActionListener(e -> {
             String selectedFilter = (String) filterComboBox.getSelectedItem();
             loadLoansData(selectedFilter);
         });
@@ -128,7 +133,7 @@ public class TrackLoansWindow extends JFrame {
         refreshButton.setForeground(Color.WHITE);
         refreshButton.setFont(new Font("Jost", Font.BOLD, 14));
         refreshButton.setBounds(730, 80, 100, 30);
-        refreshButton.addActionListener(_ -> {
+        refreshButton.addActionListener(e -> {
             String selectedFilter = (String) filterComboBox.getSelectedItem();
             loadLoansData(selectedFilter);
         });
@@ -170,11 +175,23 @@ public class TrackLoansWindow extends JFrame {
         backButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new LoanManagementDashboard(currentUser, accessLevel);
+                new LoanManagementDashboard(currentUser, accessLevel,tb);
                 dispose();
             }
         });
         mainPanel.add(backButton);
+        //JPanel panel = new JPanel();
+       // getContentPane().add(panel);
+        //mainPanel.setLayout(null);
+        
+        ///mainPanel.setBounds(0, 0, 1322, 894);
+        if(tb.isSelected()) {
+        	mainPanel.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		mainPanel.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
     }
     
     private void loadLoansData(String filterType) {
@@ -340,7 +357,7 @@ public class TrackLoansWindow extends JFrame {
         }
     }
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TrackLoansWindow("admin", "admin"));
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new TrackLoansWindow("admin", "admin"));
+//    }
 }

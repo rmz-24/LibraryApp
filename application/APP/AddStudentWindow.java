@@ -35,14 +35,14 @@ public class AddStudentWindow extends JFrame {
 	}*/
 	
 	
-	private JTextField matriculeField;
-	private JTextField stdNameField;
-	private JTextField stdSurnameField;
+	private JTextField matriculefield;
+	private JTextField STUDENTNAME;
+	private JTextField STUDENTFNAME;
 	
 	
 	private Connection connection;
-	private JTextField stdPhoneNbrField;
-	private JTextField stdMailField;
+	private JTextField numfield;
+	private JTextField mailfield;
 	
 	
 	public static Properties getProps() {
@@ -91,7 +91,7 @@ public class AddStudentWindow extends JFrame {
         }
     }
 
-    public AddStudentWindow(String user , String pass) {
+    public AddStudentWindow(String user , String pass,ThemeToggleButton tg) {
     	
     	 this.connection = LibraryApp.getConnection();
 		// Dummy authentication (Replace with real validation logic)
@@ -103,6 +103,10 @@ public class AddStudentWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
+        JPanel panelbg = new JPanel();
+        
+        setContentPane(panelbg);
+        panelbg.setLayout(null);
         
         JPanel panel = new JPanel();
         panel.setBackground(new Color(0, 102, 102));
@@ -120,49 +124,56 @@ public class AddStudentWindow extends JFrame {
         String[] levels = {"Licence 1", "Licence 2", "Licence 3", "Master 1", "Master 2", "Doctorat" , "INJ1 ", "INJ2" ,"INJ3","INJ4","INJ5"};
         
         
-        JDateChooser stdRegisterDateField;
+        JDateChooser SIGNEDDATE;
         
         JPanel panel_1 = new JPanel();
         panel_1.setBackground(new Color(145, 149, 153));
         panel_1.setBounds(0, 0, 1174, 973);
         getContentPane().add(panel_1);
         panel_1.setLayout(null);
+        if(tg.isSelected()) {
+        	panel_1.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		panel_1.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
         
-        JLabel stdIdLabel = new JLabel("STUDENT ID *");
-        stdIdLabel.setForeground(Color.WHITE);
-        stdIdLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        stdIdLabel.setBounds(30, 94, 216, 35);
-        panel_1.add(stdIdLabel);
+        JLabel lblStudentId = new JLabel("STUDENT ID *");
+        lblStudentId.setForeground(Color.WHITE);
+        lblStudentId.setFont(new Font("Jost", Font.BOLD, 24));
+        lblStudentId.setBounds(30, 94, 216, 35);
+        panel_1.add(lblStudentId);
         
-        JLabel stdNameLabel = new JLabel("STUDENT NAME *");
-        stdNameLabel.setForeground(Color.WHITE);
-        stdNameLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        stdNameLabel.setBounds(30, 205, 216, 35);
-        panel_1.add(stdNameLabel);
+        JLabel lblStudentname = new JLabel("STUDENT NAME *");
+        lblStudentname.setForeground(Color.WHITE);
+        lblStudentname.setFont(new Font("Jost", Font.BOLD, 24));
+        lblStudentname.setBounds(30, 205, 216, 35);
+        panel_1.add(lblStudentname);
         
-        JLabel stdLevelLabel = new JLabel("STUDENT LEVEL *");
-        stdLevelLabel.setForeground(Color.WHITE);
-        stdLevelLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        stdLevelLabel.setBounds(30, 432, 216, 35);
-        panel_1.add(stdLevelLabel);
+        JLabel lblStudentlevel = new JLabel("STUDENT LEVEL *");
+        lblStudentlevel.setForeground(Color.WHITE);
+        lblStudentlevel.setFont(new Font("Jost", Font.BOLD, 24));
+        lblStudentlevel.setBounds(30, 432, 216, 35);
+        panel_1.add(lblStudentlevel);
         
-        JLabel stdSurnameLabel = new JLabel("STUDENT SURNAME *");
-        stdSurnameLabel.setForeground(Color.WHITE);
-        stdSurnameLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        stdSurnameLabel.setBounds(30, 321, 269, 35);
-        panel_1.add(stdSurnameLabel);
+        JLabel lblStudentfname = new JLabel("STUDENT FIRSTNAME *");
+        lblStudentfname.setForeground(Color.WHITE);
+        lblStudentfname.setFont(new Font("Jost", Font.BOLD, 24));
+        lblStudentfname.setBounds(30, 321, 269, 35);
+        panel_1.add(lblStudentfname);
         
-        JLabel stdRegisterDateLabel = new JLabel("REGISTERED THE  *");
-        stdRegisterDateLabel.setForeground(Color.WHITE);
-        stdRegisterDateLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        stdRegisterDateLabel.setBounds(30, 545, 269, 35);
-        panel_1.add(stdRegisterDateLabel);
+        JLabel lblStudentsigndate = new JLabel("SIGNED IN  *");
+        lblStudentsigndate.setForeground(Color.WHITE);
+        lblStudentsigndate.setFont(new Font("Jost", Font.BOLD, 24));
+        lblStudentsigndate.setBounds(30, 545, 216, 35);
+        panel_1.add(lblStudentsigndate);
         
-        matriculeField = new JTextField();
-        matriculeField.setFont(new Font("Jost", Font.PLAIN, 22));
-        matriculeField.setBounds(30, 140, 269, 43);
-        panel_1.add(matriculeField);
-        matriculeField.addKeyListener(new KeyAdapter() {
+        matriculefield = new JTextField();
+        matriculefield.setFont(new Font("Jost", Font.PLAIN, 22));
+        matriculefield.setBounds(30, 140, 269, 43);
+        panel_1.add(matriculefield);
+        matriculefield.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
@@ -172,41 +183,41 @@ public class AddStudentWindow extends JFrame {
             }
         });
 
-        matriculeField.setColumns(10);
+        matriculefield.setColumns(10);
         
-        stdNameField = new JTextField();
-        stdNameField.setFont(new Font("Jost", Font.PLAIN, 22));
-        stdNameField.setColumns(10);
-        stdNameField.setBounds(30, 252, 269, 43);
-        panel_1.add(stdNameField);
+        STUDENTNAME = new JTextField();
+        STUDENTNAME.setFont(new Font("Jost", Font.PLAIN, 22));
+        STUDENTNAME.setColumns(10);
+        STUDENTNAME.setBounds(30, 252, 269, 43);
+        panel_1.add(STUDENTNAME);
         
-        stdSurnameField = new JTextField();
-        stdSurnameField.setFont(new Font("Jost", Font.PLAIN, 22));
-        stdSurnameField.setColumns(10);
-        stdSurnameField.setBounds(30, 367, 269, 43);
-        panel_1.add(stdSurnameField);
+        STUDENTFNAME = new JTextField();
+        STUDENTFNAME.setFont(new Font("Jost", Font.PLAIN, 22));
+        STUDENTFNAME.setColumns(10);
+        STUDENTFNAME.setBounds(30, 367, 269, 43);
+        panel_1.add(STUDENTFNAME);
         
-        JComboBox<String> stdLevelField = new JComboBox<>(levels);
-        stdLevelField.setFont(new Font("Jost", Font.BOLD, 17));
-        stdLevelField.setBounds(30, 478, 269, 43);
-        panel_1.add(stdLevelField);
+        JComboBox<String> LEVEL = new JComboBox<>(levels);
+        LEVEL.setFont(new Font("Jost", Font.BOLD, 17));
+        LEVEL.setBounds(30, 478, 269, 43);
+        panel_1.add(LEVEL);
         
-        stdRegisterDateField = new JDateChooser();
-        stdRegisterDateField.setBounds(30, 591, 269, 43);
-        panel_1.add(stdRegisterDateField);
-        stdRegisterDateField.setFont(new Font("Jost", Font.PLAIN, 22));
+        SIGNEDDATE = new JDateChooser();
+        SIGNEDDATE.setBounds(30, 591, 269, 43);
+        panel_1.add(SIGNEDDATE);
+        SIGNEDDATE.setFont(new Font("Jost", Font.PLAIN, 22));
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);  // Set to midnight
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);  
         cal.set(Calendar.MILLISECOND, 0);
-        stdRegisterDateField.setDate(cal.getTime());
-        stdPhoneNbrField = new JTextField();
-        stdPhoneNbrField.setFont(new Font("Jost", Font.PLAIN, 22));
-        stdPhoneNbrField.setColumns(10);
-        stdPhoneNbrField.setBounds(386, 480, 269, 43);
-        panel_1.add(stdPhoneNbrField);
-        stdPhoneNbrField.addKeyListener(new KeyAdapter() {
+        SIGNEDDATE.setDate(cal.getTime());
+        numfield = new JTextField();
+        numfield.setFont(new Font("Jost", Font.PLAIN, 22));
+        numfield.setColumns(10);
+        numfield.setBounds(386, 480, 269, 43);
+        panel_1.add(numfield);
+        numfield.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
@@ -216,31 +227,31 @@ public class AddStudentWindow extends JFrame {
             }
         });
         
-        JLabel stdPhoneNbrLabel = new JLabel("PHONE NUMBER *");
-        stdPhoneNbrLabel.setForeground(Color.WHITE);
-        stdPhoneNbrLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        stdPhoneNbrLabel.setBounds(386, 434, 216, 35);
-        panel_1.add(stdPhoneNbrLabel);
+        JLabel lblPhoneNumber = new JLabel("PHONE NUMBER *");
+        lblPhoneNumber.setForeground(Color.WHITE);
+        lblPhoneNumber.setFont(new Font("Jost", Font.BOLD, 24));
+        lblPhoneNumber.setBounds(386, 434, 216, 35);
+        panel_1.add(lblPhoneNumber);
         
-        stdMailField = new JTextField();
-        stdMailField.setFont(new Font("Jost", Font.PLAIN, 22));
-        stdMailField.setColumns(10);
-        stdMailField.setBounds(386, 591, 269, 43);
-        panel_1.add(stdMailField);
+        mailfield = new JTextField();
+        mailfield.setFont(new Font("Jost", Font.PLAIN, 22));
+        mailfield.setColumns(10);
+        mailfield.setBounds(386, 591, 269, 43);
+        panel_1.add(mailfield);
         
-        JLabel stdMailLabel = new JLabel("EMAIL");
-        stdMailLabel.setForeground(Color.WHITE);
-        stdMailLabel.setFont(new Font("Jost", Font.BOLD, 24));
-        stdMailLabel.setBounds(386, 545, 216, 35);
-        panel_1.add(stdMailLabel);
+        JLabel lblEmail = new JLabel("EMAIL");
+        lblEmail.setForeground(Color.WHITE);
+        lblEmail.setFont(new Font("Jost", Font.BOLD, 24));
+        lblEmail.setBounds(386, 545, 216, 35);
+        panel_1.add(lblEmail);
         
-        JButton addStdButton = new JButton("Add New Student");
-        addStdButton.addMouseListener(new MouseAdapter() {
+        JButton btnAddStudent = new JButton("Add New Student");
+        btnAddStudent.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
                     // Get and trim Student ID
-                    String idText = matriculeField.getText().trim();
+                    String idText = matriculefield.getText().trim();
                     System.out.println("Student ID input: [" + idText + "]");  // Debugging
 
                     // Check if ID is empty
@@ -259,11 +270,11 @@ public class AddStudentWindow extends JFrame {
                     String studentId = idText;
 
                     // Get other inputs
-                    String name = stdNameField.getText().trim();
-                    String firstName = stdSurnameField.getText().trim();
-                    String level = (String) stdLevelField.getSelectedItem();
-                    java.util.Date signedDate = stdRegisterDateField.getDate();
-                    String numText = stdPhoneNbrField.getText().trim();
+                    String name = STUDENTNAME.getText().trim();
+                    String firstName = STUDENTFNAME.getText().trim();
+                    String level = (String) LEVEL.getSelectedItem();
+                    java.util.Date signedDate = SIGNEDDATE.getDate();
+                    String numText = numfield.getText().trim();
                     if (numText.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "Number field cannot be empty!", "Input Error", JOptionPane.ERROR_MESSAGE);
                         return;
@@ -271,7 +282,7 @@ public class AddStudentWindow extends JFrame {
                     
                     // Convert to integer after validation
                     int num = Integer.parseInt(numText);
-                    String email = stdMailField.getText().trim();
+                    String email = mailfield.getText().trim();
 
                     // Validate required fields
                     if (name.isEmpty() || firstName.isEmpty() || level == null || signedDate == null ) {
@@ -295,24 +306,24 @@ public class AddStudentWindow extends JFrame {
         });
 
 
-        addStdButton.setForeground(Color.WHITE);
-        addStdButton.setFont(new Font("Jost", Font.BOLD, 18));
-        addStdButton.setBackground(new Color(56, 194, 56));
-        addStdButton.setBounds(217, 667, 181, 40);
-        panel_1.add(addStdButton);
+        btnAddStudent.setForeground(Color.WHITE);
+        btnAddStudent.setFont(new Font("Jost", Font.BOLD, 18));
+        btnAddStudent.setBackground(new Color(56, 194, 56));
+        btnAddStudent.setBounds(217, 667, 181, 40);
+        panel_1.add(btnAddStudent);
         
-        JButton abortButton = new JButton("Abort");
-        abortButton.addMouseListener(new MouseAdapter() {
+        JButton btnAbort = new JButton("Abort");
+        btnAbort.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
         		dispose();
         	}
         });
-        abortButton.setForeground(Color.WHITE);
-        abortButton.setFont(new Font("Jost", Font.BOLD, 18));
-        abortButton.setBackground(new Color(128, 0, 0));
-        abortButton.setBounds(410, 667, 123, 40);
-        panel_1.add(abortButton);
+        btnAbort.setForeground(Color.WHITE);
+        btnAbort.setFont(new Font("Jost", Font.BOLD, 18));
+        btnAbort.setBackground(new Color(128, 0, 0));
+        btnAbort.setBounds(410, 667, 123, 40);
+        panel_1.add(btnAbort);
         
         
 
@@ -322,7 +333,7 @@ public class AddStudentWindow extends JFrame {
         setVisible(true);
     }
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new AddStudentWindow("user", "pass"));
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new AddStudentWindow("user", "pass"));
+//    }
 }

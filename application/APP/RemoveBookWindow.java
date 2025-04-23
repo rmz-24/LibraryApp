@@ -26,7 +26,7 @@ public class RemoveBookWindow extends JFrame {
     private JButton removeBookButton;
     private JButton searchButton;
 
-    public RemoveBookWindow() {
+    public RemoveBookWindow(ThemeToggleButton tg) {
     	setResizable(false);
         // Initialize connection once
         this.connection = LibraryApp.getConnection();
@@ -37,16 +37,26 @@ public class RemoveBookWindow extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
         
-        setupUI();
+        setupUI(tg);
         setVisible(true);
     }
 
-    private void setupUI() {
+    private void setupUI(ThemeToggleButton tg) {
         JPanel panel = new JPanel();
         panel.setBackground(new Color(0, 102, 102));
         panel.setBounds(-52, 0, 755, 66);
         getContentPane().add(panel);
         panel.setLayout(null);
+        JPanel panelbg = new JPanel();
+        panelbg.setLayout(null);
+        setContentPane(panelbg);
+        if(tg.isSelected()) {
+        	panelbg.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		panelbg.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
         
         JLabel topLabel = new JLabel("BOOK DELETION");
         topLabel.setForeground(new Color(255, 255, 255));
@@ -63,7 +73,7 @@ public class RemoveBookWindow extends JFrame {
         bookIdField = new JTextField(16);
         bookIdField.setFont(new Font("Jost", Font.PLAIN, 22));
         bookIdField.setBounds(10, 141, 204, 43);
-        bookIdField.addActionListener(_ -> searchBook()); // Enable Enter key search
+        bookIdField.addActionListener(e -> searchBook()); // Enable Enter key search
         getContentPane().add(bookIdField);
         
         // Search Button
@@ -236,7 +246,7 @@ public class RemoveBookWindow extends JFrame {
         JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static void main(String[] args) {
-        new RemoveBookWindow();
-    }
+//    public static void main(String[] args) {
+//        new RemoveBookWindow();
+//    }
 }

@@ -37,7 +37,7 @@ public class EditBookWindow extends JFrame {
     
     private Connection connection;
     
-    public EditBookWindow() {
+    public EditBookWindow(ThemeToggleButton tg) {
         setResizable(false);
         
         this.connection = LibraryApp.getConnection();
@@ -48,12 +48,12 @@ public class EditBookWindow extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
         
-        setupUI();
+        setupUI(tg);
         
         setVisible(true);
     }
     
-    private void setupUI() {
+    private void setupUI(ThemeToggleButton tg) {
         JPanel topPanel = new JPanel();
         topPanel.setBackground(new Color(0, 102, 102));
         topPanel.setBounds(-76, 0, 999, 68);
@@ -71,6 +71,13 @@ public class EditBookWindow extends JFrame {
         mainPanel.setBounds(0, 0, 1174, 973);
         getContentPane().add(mainPanel);
         mainPanel.setLayout(null);
+        if(tg.isSelected()) {
+        	mainPanel.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		mainPanel.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
         
         // Book ID section
         JLabel bookIdLabel = new JLabel("BOOK ID");
@@ -82,7 +89,7 @@ public class EditBookWindow extends JFrame {
         bookIdField = new JTextField();
         bookIdField.setFont(new Font("Jost", Font.PLAIN, 22));
         bookIdField.setBounds(30, 140, 269, 43);
-        bookIdField.addActionListener(_ -> searchBook());
+        bookIdField.addActionListener(e -> searchBook());
         mainPanel.add(bookIdField);
         bookIdField.setColumns(10);
         
@@ -130,7 +137,28 @@ public class EditBookWindow extends JFrame {
         mainPanel.add(bookAuthorField);
         
         // Category section
-        String[] categories = {"MATHS", "PHYSIQUE", "ARCHI", "MDF"};
+        String[] categories = {"MATHS",          // Mathématiques
+        	    "PHYSIQUE",       // Physique
+        	    "CHIMIE",         // Chimie
+        	    "INFORMATIQUE",   // Informatique
+        	    "ELECTRONIQUE",   // Électronique
+        	    "AUTOMATIQUE",    // Automatique
+        	    "TELECOMS",       // Télécommunications
+        	    "GENIE CIVIL",    // Génie Civil
+        	    "MECANIQUE",      // Mécanique
+        	    "ELECTROTECHNIQUE", // Électrotechnique
+        	    "ARCHI",          // Architecture
+        	    "GEOLOGIE",       // Géologie
+        	    "BIOLOGIE",       // Biologie
+        	    "MDF",            // Méthodes de Fabrication
+        	    "ROBOTIQUE",      // Robotique
+        	    "ENERGIE",        // Énergies renouvelables
+        	    "SCIENCES DE LA TERRE", // Sciences de la Terre
+        	    "GESTION",        // Gestion et économie
+        	    "LANGUE",         // Langues (Français, Anglais, etc.)
+        	    "HISTOIRE",       // Histoire des sciences
+        	    "PHILOSOPHIE"     // Philosophie des sciences
+        	    };
         
         JLabel categoryLabel = new JLabel("CATEGORY");
         categoryLabel.setForeground(Color.WHITE);
@@ -174,7 +202,7 @@ public class EditBookWindow extends JFrame {
         updateButton.setBackground(new Color(56, 194, 56));
         updateButton.setFont(new Font("Jost", Font.BOLD, 18));
         updateButton.setBounds(217, 667, 181, 40);
-        updateButton.addActionListener(_ -> updateBookData());
+        updateButton.addActionListener(e -> updateBookData());
         updateButton.setEnabled(false);
         mainPanel.add(updateButton);
         
@@ -301,7 +329,7 @@ public class EditBookWindow extends JFrame {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new EditBookWindow());
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new EditBookWindow());
+//    }
 }

@@ -41,7 +41,7 @@ public class ReturnRegisteringWindow extends JFrame {
     private String currentUser;
     private String accessLevel;
     
-    public ReturnRegisteringWindow(String user, String level) {
+    public ReturnRegisteringWindow(String user, String level,ThemeToggleButton togglebutton) {
         setResizable(false);
         
         this.connection = LibraryApp.getConnection();
@@ -55,12 +55,12 @@ public class ReturnRegisteringWindow extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
         
-        setupUI();
+        setupUI(togglebutton);
         
         setVisible(true);
     }
     
-    private void setupUI() {
+    private void setupUI(ThemeToggleButton togglebutton) {
         JPanel topPanel = new JPanel();
         topPanel.setBackground(new Color(0, 102, 102));
         topPanel.setBounds(-76, 0, 999, 68);
@@ -89,7 +89,7 @@ public class ReturnRegisteringWindow extends JFrame {
         loanIdField = new JTextField();
         loanIdField.setFont(new Font("Jost", Font.PLAIN, 22));
         loanIdField.setBounds(30, 140, 269, 43);
-        loanIdField.addActionListener(_ -> searchLoan());
+        loanIdField.addActionListener(e -> searchLoan());
         mainPanel.add(loanIdField);
         loanIdField.setColumns(10);
         
@@ -191,7 +191,7 @@ public class ReturnRegisteringWindow extends JFrame {
         registerReturnButton.setBackground(new Color(56, 194, 56));
         registerReturnButton.setFont(new Font("Jost", Font.BOLD, 18));
         registerReturnButton.setBounds(217, 667, 181, 40);
-        registerReturnButton.addActionListener((_) -> registerReturn());
+        registerReturnButton.addActionListener(e -> registerReturn());
         registerReturnButton.setEnabled(false);
         mainPanel.add(registerReturnButton);
         
@@ -200,7 +200,7 @@ public class ReturnRegisteringWindow extends JFrame {
         cancelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new LoanManagementDashboard(currentUser, accessLevel);
+                new LoanManagementDashboard(currentUser, accessLevel ,togglebutton);
                 dispose();
             }
         });
@@ -209,6 +209,13 @@ public class ReturnRegisteringWindow extends JFrame {
         cancelButton.setBackground(new Color(128, 0, 0));
         cancelButton.setBounds(410, 667, 123, 40);
         mainPanel.add(cancelButton);
+        if(togglebutton.isSelected()) {
+        	mainPanel.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		mainPanel.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
     }
     
     private void searchLoan() {
@@ -390,7 +397,7 @@ public class ReturnRegisteringWindow extends JFrame {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ReturnRegisteringWindow("admin", "admin"));
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new ReturnRegisteringWindow("admin", "admin"));
+//    }
 }

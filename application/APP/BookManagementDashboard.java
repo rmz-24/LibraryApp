@@ -21,7 +21,7 @@ public class BookManagementDashboard extends JFrame {
     
     private final JPanel panel = new JPanel();
     
-    public BookManagementDashboard(String user, String level) {
+    public BookManagementDashboard(String user, String level ,ThemeToggleButton tg) {
         setResizable(false);
         
         setTitle("Books Management");
@@ -50,7 +50,7 @@ public class BookManagementDashboard extends JFrame {
         addBookButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new AddBookWindow(user,level);
+                new AddBookWindow(user,level,tg);
             }
         });
         addBookButton.setIcon(new ImageIcon("src\\resrc\\add_12146523.png"));
@@ -65,7 +65,7 @@ public class BookManagementDashboard extends JFrame {
         removeBookButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new RemoveBookWindow();
+                new RemoveBookWindow(tg);
             }
         });
         removeBookButton.setOpaque(false);
@@ -94,11 +94,11 @@ public class BookManagementDashboard extends JFrame {
         editBookButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new EditBookWindow();
+                new EditBookWindow(tg);
             }
         });
         editBookButton.setOpaque(false);
-        editBookButton.setIcon(new ImageIcon("src\\resrc\\textbook_18624674.png"));
+        editBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\textbook_18624674.png"));
         editBookButton.setFocusPainted(false);
         editBookButton.setContentAreaFilled(false);
         editBookButton.setBorderPainted(false);
@@ -109,11 +109,11 @@ public class BookManagementDashboard extends JFrame {
         searchBookButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new SearchBookWindow();
+                new SearchBookWindow(tg);
             }
         });
         searchBookButton.setOpaque(false);
-        searchBookButton.setIcon(new ImageIcon("src\\resrc\\SEARCHBOOK.png")); // Use an appropriate search icon
+        searchBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\SEARCHBOOK.png")); // Use an appropriate search icon
         searchBookButton.setFocusPainted(false);
         searchBookButton.setContentAreaFilled(false);
         searchBookButton.setBorderPainted(false);
@@ -132,13 +132,19 @@ public class BookManagementDashboard extends JFrame {
         searchBookLabel.setFont(new Font("Jost", Font.BOLD, 13));
         searchBookLabel.setBounds(301, 335, 97, 14);
         panel.add(searchBookLabel);
-        
+        if(tg.isSelected()) {
+        	panel.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		panel.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
         // Back button
         JButton backHomeButton = new JButton("");
         backHomeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new Home(user,level);
+                new Home(user,level,tg);
                 dispose();
             }
         });
@@ -154,7 +160,7 @@ public class BookManagementDashboard extends JFrame {
         removeStudentButton_1_1.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new BookListWindow();
+        		new BookListWindow(tg);
         	}
         });
         removeStudentButton_1_1.setOpaque(false);
@@ -168,7 +174,7 @@ public class BookManagementDashboard extends JFrame {
         setVisible(true);
     }
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new BookManagementDashboard("user","level"));
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new BookManagementDashboard("user","level"));
+//    }
 }

@@ -87,6 +87,11 @@ public class AdminPermissionsWindow extends JFrame {
 	    }
 	    return false;
 	}
+	private ImageIcon loadImage(String imageName) {
+	    return new ImageIcon(getClass().getResource("/resrc/" + imageName));
+	}
+	
+	
 	private void loadUserData() {
 	    DefaultTableModel model = (DefaultTableModel) usersTable.getModel();
 	    model.setRowCount(0); // Clear table before loading new data
@@ -120,10 +125,19 @@ public class AdminPermissionsWindow extends JFrame {
 	private JTextField passwordfield;
 	
 	
+	// Log Message Method. Called Line 128
+	private JLabel addedUser() { //TODO: Not Working
+		JLabel logMessageLabel = new JLabel("Added User!");
+		logMessageLabel.setForeground(new Color(22, 196, 127));
+		logMessageLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+		logMessageLabel.setBounds(133, 423, 105, 27);
+		return logMessageLabel;
+	}
+	
 	/**
 	 * Create the frame.
 	 */
-	public AdminPermissionsWindow(String username, String accessLevel) {
+	public AdminPermissionsWindow(String username, String accessLevel,ThemeToggleButton tg) {
 		setResizable(false);
 		
 		
@@ -292,7 +306,7 @@ public class AdminPermissionsWindow extends JFrame {
 		loadUserData();
 
 		// Add row selection listener
-		usersTable.getSelectionModel().addListSelectionListener(_ -> {
+		usersTable.getSelectionModel().addListSelectionListener(e -> {
 		    removeUserButton.setEnabled(usersTable.getSelectedRow() != -1);
 		});
 		usersTable.setBackground(new Color(192, 192, 192));
@@ -336,6 +350,18 @@ public class AdminPermissionsWindow extends JFrame {
 		ButtonGroup accessLevelGroup = new ButtonGroup();
 		accessLevelGroup.add(adminRadio);
 		accessLevelGroup.add(staffRadio);
+		if(tg.isSelected()) {
+			contentPane.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+			//staffRadio.setForeground(Color.WHITE);
+			//adminRadio.setForeground(Color.WHITE);
+			permissionLabel.setForeground(Color.WHITE);
+			passwordlabel.setForeground(Color.WHITE);
+			usernameLabel.setForeground(Color.WHITE);
+
+	  	}else {
+	  		contentPane.setBackground(new Color(240, 240, 240));
+	  		
+	  	}
 		
 		JButton addUserButton = new JButton("Add User");
 		addUserButton.setBackground(new Color(0, 64, 128));
@@ -425,7 +451,7 @@ public class AdminPermissionsWindow extends JFrame {
 		btncommit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new Home(username,accessLevel);
+				new Home(username,accessLevel,tg);
         		dispose();
 				
 			}

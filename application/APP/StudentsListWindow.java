@@ -15,20 +15,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import com.toedter.calendar.JDateChooser;
+import java.util.*;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 
 public class StudentsListWindow extends JFrame{
-	  /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private Connection connection;
+	  private final JPanel panel = new JPanel();
+	  private Connection connection;
+	  private final JPanel panel_1 = new JPanel();
 	  private JTable StudentsTable;
 	  
-	  public StudentsListWindow() {
+	  public StudentsListWindow(ThemeToggleButton tg) {
 		    connection=LibraryApp.getConnection();
 		    setResizable(false);
 	        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resrc\\LMsmall.png"));
@@ -37,7 +40,8 @@ public class StudentsListWindow extends JFrame{
 	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Changed to DISPOSE_ON_CLOSE
 	        setLocationRelativeTo(null);
 	        getContentPane().setLayout(null);
-	        
+	        setContentPane(panel_1);
+	        panel_1.setLayout(null);
 	        JPanel topColorPanel = new JPanel();
 	        topColorPanel.setLayout(null);
 	        topColorPanel.setBackground(new Color(0, 102, 102));
@@ -90,7 +94,7 @@ public class StudentsListWindow extends JFrame{
 				public void mouseClicked(MouseEvent e) {
 					String user =LibraryApp.getuser();
 					String level =LibraryApp.getlevel();
-					new StudentManagementDashboard(user,level);
+					new StudentManagementDashboard(user,level,tg);
 					dispose();
 				}
 			});
@@ -100,6 +104,13 @@ public class StudentsListWindow extends JFrame{
 			btnGoBack.setBounds(558, 764, 181, 40);
 			getContentPane().add(btnGoBack);
 			loadUserData();
+			if(tg.isSelected()) {
+	        	panel_1.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+		  	}else {
+		  		panel_1.setBackground(new Color(182, 182, 182));
+		  		
+		  	}
 		  
 		  
 		  
@@ -130,9 +141,10 @@ public class StudentsListWindow extends JFrame{
 		            "Error loading users from database.", 
 		            "Database Error", JOptionPane.ERROR_MESSAGE);
 		    }
+		    
 		}
-	public static void main(String[] args) {
-		new StudentsListWindow();
-		
-	}
+//	public static void main(String[] args) {
+//		new StudentsListWindow();
+//		
+//	}
 }

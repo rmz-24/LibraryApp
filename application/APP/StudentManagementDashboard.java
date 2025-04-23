@@ -16,7 +16,7 @@ public class StudentManagementDashboard extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private final JPanel panel = new JPanel();
-    public StudentManagementDashboard(String user , String level) {
+    public StudentManagementDashboard(String user , String level,ThemeToggleButton tg) {
     	setResizable(false);
     	//private Connection connection;
     	//this.connection = LibraryApp.getConnection();
@@ -54,7 +54,7 @@ public class StudentManagementDashboard extends JFrame {
         addStudentButton.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new AddStudentWindow(user,level);
+        		new AddStudentWindow(user,level,tg);
         	}
         });
         addStudentButton.setIcon(new ImageIcon("src\\resrc\\profile_10655019.png"));
@@ -69,7 +69,7 @@ public class StudentManagementDashboard extends JFrame {
         removeStudentButton.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new RemoveStudentWindow();
+        		new RemoveStudentWindow(tg);
         	}
         });
         removeStudentButton.setOpaque(false);
@@ -96,7 +96,7 @@ public class StudentManagementDashboard extends JFrame {
         backHomeButton.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new Home(user,level);
+        		new Home(user,level,tg);
         		dispose();
         		
         	}
@@ -119,7 +119,7 @@ public class StudentManagementDashboard extends JFrame {
         removeStudentButton_1.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new EditStudentWindow();
+        		new EditStudentWindow(tg);
         		
         		
         	}
@@ -136,7 +136,7 @@ public class StudentManagementDashboard extends JFrame {
         removeStudentButton_1_1.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		new StudentsListWindow();
+        		new StudentsListWindow(tg);
         		dispose();
         	}
         });
@@ -147,11 +147,18 @@ public class StudentManagementDashboard extends JFrame {
         removeStudentButton_1_1.setBorderPainted(false);
         removeStudentButton_1_1.setBounds(481, 126, 33, 33);
         panel.add(removeStudentButton_1_1);
+        if(tg.isSelected()) {
+        	panel.setBackground(new Color(60, 63, 65)); // Light grayColor(60, 63, 65)
+
+	  	}else {
+	  		panel.setBackground(new Color(182, 182, 182));
+	  		
+	  	}
 
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new StudentManagementDashboard("user","level"));
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new StudentManagementDashboard("user","level"));
+//    }
 }
