@@ -2,16 +2,12 @@ package APP;
 
 import javax.swing.*;
 
-import com.sun.jdi.connect.spi.Connection;
-
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Properties;
 import java.sql.*;
 
 public class Home {
@@ -46,8 +42,9 @@ public class Home {
 	        Graphics2D g2d = (Graphics2D) g.create();
 	        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-	        // Draw rounded background
-	        Color bgcolor = getForeground().white;
+	        getForeground();
+			// Draw rounded background
+	        Color bgcolor = Color.white;
 	        g2d.setColor(bgcolor);
 	        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius);
 
@@ -106,7 +103,11 @@ public class Home {
 	
 	
 	public class RoundedPanel extends JPanel {
-	    private int cornerRadius;
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private int cornerRadius;
 
 	    public RoundedPanel(int cornerRadius) {
 	        super();
@@ -421,16 +422,10 @@ public class Home {
     private JLabel numberLabel_7;
     private JLabel numberLabel_8;
     private JLabel numberLabel_9;
-    private JPanel mainBackgroundPanel;
     private JLabel lbldisplay1; // "Students recently added"
     private JLabel lblBooksRecentlyAdded; // "Books recently added"
     private JLabel lbllatereturn;
  
-    /**
-     * @wbp.nonvisual location=-43,-11
-     */
-    private final JPanel panel_6 = new JPanel();
-    
     private void openWindow(JFrame newWindow) {
         frmDashboard.dispose();
         newWindow.setVisible(true);
@@ -568,7 +563,7 @@ public class Home {
         		
         	}
         });
-        BlackListedStudents.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\blacklist_6456893.png"));
+        BlackListedStudents.setIcon(new ImageIcon("src\\resrc\\blacklist_6456893.png"));
         BlackListedStudents.setBounds(40, 717, 112, 68);
         BlackListedStudents.setContentAreaFilled(false);
         BlackListedStudents.setBorderPainted(false);
@@ -595,7 +590,7 @@ public class Home {
         		 
         	}
         });
-        borrowBookButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\borrow_book.png"));
+        borrowBookButton.setIcon(new ImageIcon("src\\resrc\\borrow_book.png"));
         borrowBookButton.setBounds(40, 438, 112, 68);
         borrowBookButton.setContentAreaFilled(false);
         borrowBookButton.setBorderPainted(false);
@@ -709,7 +704,7 @@ public class Home {
         		}
         });
         backHomeButton.setOpaque(false);
-        backHomeButton.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\log-out_10024482.png"));
+        backHomeButton.setIcon(new ImageIcon("src\\resrc\\log-out_10024482.png"));
         backHomeButton.setFocusPainted(false);
         backHomeButton.setContentAreaFilled(false);
         backHomeButton.setBorderPainted(false);

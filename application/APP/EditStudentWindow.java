@@ -9,9 +9,11 @@ import java.awt.event.MouseEvent;
 import java.sql.*;
 
 public class EditStudentWindow extends JFrame{
-	private JTextField studentiddlt;
-    private JTextArea Sname, Sfname, Slevel;
-    private Connection conn;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Connection conn;
     private JTextField Ssearch;
     private JTextField  sid;          // Student ID display field
     private JTextField  stuname;      // Student name field
@@ -268,13 +270,6 @@ public class EditStudentWindow extends JFrame{
         getContentPane().add(Ssearch);
 
         // ... rest of your component initialization ...
-    }
-    private void configureButton(JButton button, Color bg, int x, int y) {
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Jost", Font.BOLD, 24));
-        button.setBackground(bg);
-        button.setBounds(x, y, 140, 50);
-        getContentPane().add(button);
     }
     private void configureTextField(JTextField field, int x, int y) {
         field.setFont(new Font("Jost", Font.PLAIN, 20));

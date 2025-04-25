@@ -15,19 +15,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import com.toedter.calendar.JDateChooser;
-import java.util.*;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 
 public class StudentsListWindow extends JFrame{
-	  private final JPanel panel = new JPanel();
-	  private Connection connection;
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Connection connection;
 	  private final JPanel panel_1 = new JPanel();
 	  private JTable StudentsTable;
 	  

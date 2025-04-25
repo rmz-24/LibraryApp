@@ -10,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class LoanManagementDashboard extends JFrame{
 	
@@ -68,7 +67,7 @@ public class LoanManagementDashboard extends JFrame{
 				dispose();
 			}
 		});
-		addemprunt.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\handbook_18447619.png"));
+		addemprunt.setIcon(new ImageIcon("src\\resrc\\handbook_18447619.png"));
 		addemprunt.setBounds(51, 199, 64, 64);
 		addemprunt.setBorderPainted(false); // Removes border
 		addemprunt.setFocusPainted(false); // Removes focus border
@@ -78,7 +77,7 @@ public class LoanManagementDashboard extends JFrame{
 		
 		JButton reviwreturns = new JButton("");
 		reviwreturns.setOpaque(false);
-		reviwreturns.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\bookreturn_11860727.png"));
+		reviwreturns.setIcon(new ImageIcon("src\\resrc\\bookreturn_11860727.png"));
 		reviwreturns.setFocusPainted(false);
 		reviwreturns.setBorderPainted(false);
 		reviwreturns.setBounds(224, 199, 64, 64);
@@ -94,7 +93,7 @@ public class LoanManagementDashboard extends JFrame{
 		
 		JButton reviewloans = new JButton("");
 		reviewloans.setOpaque(false);
-		reviewloans.setIcon(new ImageIcon("E:\\ECLIPSE-PROJECT\\BDD_APP\\src\\resrc\\location-book_18588122.png"));
+		reviewloans.setIcon(new ImageIcon("src\\resrc\\location-book_18588122.png"));
 		reviewloans.setFocusPainted(false);
 		reviewloans.setBorderPainted(false);
 		reviewloans.setBounds(391, 199, 64, 64);

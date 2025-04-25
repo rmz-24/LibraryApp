@@ -1,3 +1,5 @@
+package APP;
+
 import java.awt.Color;
 
 public class ThemeManager {

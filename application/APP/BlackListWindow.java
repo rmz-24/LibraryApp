@@ -15,20 +15,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import com.toedter.calendar.JDateChooser;
-import java.util.*;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 
 public class BlackListWindow extends JFrame{
-	  private final JPanel panel = new JPanel();
-	  private Connection connection;
-	  private final JPanel panel_1 = new JPanel();
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Connection connection;
 	  private JTable StudentsTable;
 	  
 	  public BlackListWindow(ThemeToggleButton tg) {
@@ -105,6 +102,19 @@ public class BlackListWindow extends JFrame{
 			btnGoBack.setBounds(558, 764, 181, 40);
 			getContentPane().add(btnGoBack);
 			
+			JButton btnRevoke = new JButton("REVOKE");
+			btnRevoke.addMouseListener(new MouseAdapter() {
+			    @Override
+			    public void mouseClicked(MouseEvent e) {
+			        revokeSelectedStudent();
+			    }
+			});
+			btnRevoke.setForeground(Color.WHITE);
+			btnRevoke.setFont(new Font("Jost", Font.BOLD, 18));
+			btnRevoke.setBackground(new Color(128, 0, 0));
+			btnRevoke.setBounds(350, 764, 181, 40);  // Adjust position as needed
+			getContentPane().add(btnRevoke);
+			
 			
 			getContentPane().add(panel_2);
 			
@@ -117,6 +127,7 @@ public class BlackListWindow extends JFrame{
 		  
 		  setVisible(true);
 	  }
+	  
 	  private void loadUserData() {
 		    DefaultTableModel model = (DefaultTableModel) StudentsTable.getModel();
 		    model.setRowCount(0); // Clear table before loading new data
@@ -144,4 +155,35 @@ public class BlackListWindow extends JFrame{
 		            "Database Error", JOptionPane.ERROR_MESSAGE);
 		    }
 		}
+	  
+	  private void revokeSelectedStudent() {
+		    int selectedRow = StudentsTable.getSelectedRow();
+
+		    if (selectedRow == -1) {
+		        JOptionPane.showMessageDialog(this, "Please select a student from the table.", 
+		            "No Selection", JOptionPane.WARNING_MESSAGE);
+		        return;
+		    }
+
+		    String studentId = StudentsTable.getValueAt(selectedRow, 0).toString(); // First column = studentid
+
+		    try {
+		        String updateQuery = "UPDATE blacklist SET attempts = 0, etat = 'clear' WHERE studentid = ?";
+		        PreparedStatement stmt = connection.prepareStatement(updateQuery);
+		        stmt.setString(1, studentId);
+		        int rowsUpdated = stmt.executeUpdate();
+		        stmt.close();
+
+		        if (rowsUpdated > 0) {
+		            JOptionPane.showMessageDialog(this, "Blacklist revoked successfully!", 
+		                "Success", JOptionPane.INFORMATION_MESSAGE);
+		            loadUserData();  // Refresh table
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        JOptionPane.showMessageDialog(this, "Error revoking blacklist: " + e.getMessage(), 
+		            "Database Error", JOptionPane.ERROR_MESSAGE);
+		    }
+		}
+
 }

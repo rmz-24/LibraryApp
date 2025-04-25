@@ -81,6 +81,13 @@ public class AddStudentWindow extends JFrame {
 
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0) {
+            	// Insert into blacklist
+                String blacklistSql = "INSERT INTO blacklist (studentid) VALUES (?)";
+                PreparedStatement blacklistStmt = connection.prepareStatement(blacklistSql);
+                blacklistStmt.setString(1, studentId);
+                blacklistStmt.executeUpdate();
+                blacklistStmt.close();
+                
                 JOptionPane.showMessageDialog(this, "Student added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
             

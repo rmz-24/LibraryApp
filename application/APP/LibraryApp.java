@@ -10,7 +10,6 @@ import java.awt.geom.RoundRectangle2D;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
@@ -29,6 +28,7 @@ public class LibraryApp {
     public static String getlevel() {
         return level;
     }
+    
 	private static String getAccessLevel(String username) {
 	    // First check for benallal
 	    if ("benallal".equalsIgnoreCase(username.trim())) {
@@ -56,18 +56,7 @@ public class LibraryApp {
 	    }
 	    return "STAFF"; // Default access level
 	}
-	private ImageIcon loadImage(String imageName) {
-	    URL imageURL = getClass().getClassLoader().getResource("resrc/" + imageName);
-	    if (imageURL != null) {
-	        return new ImageIcon(imageURL);
-	    }
-	    
-	    System.err.println("Image not found: " + imageName);
-	    return null; // Avoid NullPointerException
-	}
-
 	
-	//private static Connection connection;
 	private static Connection connection;
 	public static Properties getProps() {
 		Properties props = new Properties();
@@ -113,6 +102,68 @@ public class LibraryApp {
 	    }
 	    return false;
 	}
+	
+	public static void checkOverdueLoans(Connection connection) {
+	    try {
+	        java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
+
+	        
+	        String overdueQuery = "SELECT Num_Etu FROM emprunts WHERE Date_ret_assum < ? AND statut != 2";
+	        PreparedStatement overdueStmt = connection.prepareStatement(overdueQuery);
+	        overdueStmt.setDate(1, today);
+	        ResultSet overdueRs = overdueStmt.executeQuery();
+
+	        while (overdueRs.next()) {
+	            String studentId = overdueRs.getString("Num_Etu");
+
+	            
+	            String checkBlacklist = "SELECT attempts FROM blacklist WHERE studentid = ?";
+	            PreparedStatement checkStmt = connection.prepareStatement(checkBlacklist);
+	            checkStmt.setString(1, studentId);
+	            ResultSet checkRs = checkStmt.executeQuery();
+
+	            if (checkRs.next()) {
+	                
+	                int attempts = checkRs.getInt("attempts") + 1;
+
+	                
+	                if (attempts > 3) attempts = 3;
+
+	                String updateBlacklist = "UPDATE blacklist SET attempts = ?, etat = CASE WHEN ? = 3 THEN 'black' ELSE 'clear' END WHERE studentid = ?";
+	                PreparedStatement updateStmt = connection.prepareStatement(updateBlacklist);
+	                updateStmt.setInt(1, attempts);
+	                updateStmt.setInt(2, attempts);
+	                updateStmt.setString(3, studentId);
+	                updateStmt.executeUpdate();
+	                updateStmt.close();
+	            } else {
+	                
+	                String insertBlacklist = "INSERT INTO blacklist (studentid, attempts, etat) VALUES (?, 1, 'clear')";
+	                PreparedStatement insertStmt = connection.prepareStatement(insertBlacklist);
+	                insertStmt.setString(1, studentId);
+	                insertStmt.executeUpdate();
+	                insertStmt.close();
+	            }
+
+	            checkRs.close();
+	            checkStmt.close();
+
+	            
+	            String updateLoan = "UPDATE emprunts SET statut = 2 WHERE Num_Etu = ? AND Date_ret_assum < ? AND statut != 2";
+	            PreparedStatement updateLoanStmt = connection.prepareStatement(updateLoan);
+	            updateLoanStmt.setString(1, studentId);
+	            updateLoanStmt.setDate(2, today);
+	            updateLoanStmt.executeUpdate();
+	            updateLoanStmt.close();
+	        }
+
+	        overdueRs.close();
+	        overdueStmt.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 	public static Connection getConnection() {
         try {
 			return connection;
@@ -127,7 +178,6 @@ public class LibraryApp {
 	
 	
 	private JFrame frmLibraryapp;
-	private JPasswordField passwordField;
 	class RoundedTextField extends JTextField {
 		private static final long serialVersionUID = 1L;
 		private int cornerRadius;
@@ -374,6 +424,8 @@ public class LibraryApp {
                                 props.getProperty("db.user"), 
                                 props.getProperty("db.password"));
                             
+                            checkOverdueLoans(connection);
+                            
                             new Home(user, level,toggleButton);
                             frmLibraryapp.dispose();
                             
@@ -406,6 +458,8 @@ public class LibraryApp {
                             props.getProperty("db.url"), 
                             props.getProperty("db.user"), 
                             props.getProperty("db.password"));
+                        
+                        checkOverdueLoans(connection);
                         
                         new Home(user, accessLevel,toggleButton);
                         frmLibraryapp.dispose();

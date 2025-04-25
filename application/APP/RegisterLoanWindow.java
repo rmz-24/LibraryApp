@@ -6,22 +6,21 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
-import java.sql.Date;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import com.toedter.calendar.JDateChooser;
-import java.util.*;
 
 public class RegisterLoanWindow extends JFrame {
-    private final JPanel panel = new JPanel();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final JPanel panel = new JPanel();
     private JTextField sid;
     private JTextField sname;
     private JDateChooser dateEmpChooser;
@@ -178,6 +177,32 @@ public class RegisterLoanWindow extends JFrame {
     
     private void  addnewloan() {
     	String numEtu = sid.getText();
+    	try {
+    	    // Check if student is blacklisted
+    	    String blacklistQuery = "SELECT etat FROM blacklist WHERE studentid = ?";
+    	    PreparedStatement blacklistStmt = connection.prepareStatement(blacklistQuery);
+    	    blacklistStmt.setString(1, numEtu);
+    	    ResultSet blacklistRs = blacklistStmt.executeQuery();
+
+    	    if (blacklistRs.next()) {
+    	        String etat = blacklistRs.getString("etat");
+    	        if ("black".equalsIgnoreCase(etat)) {
+    	            JOptionPane.showMessageDialog(this, "This student is blacklisted and cannot borrow books!", 
+    	                "Access Denied", JOptionPane.ERROR_MESSAGE);
+    	            blacklistRs.close();
+    	            blacklistStmt.close();
+    	            return; // Stop the loan process
+    	        }
+    	    }
+
+    	    blacklistRs.close();
+    	    blacklistStmt.close();
+    	} catch (SQLException e) {
+    	    e.printStackTrace();
+    	    JOptionPane.showMessageDialog(this, "Error checking blacklist status: " + e.getMessage(), 
+    	        "Database Error", JOptionPane.ERROR_MESSAGE);
+    	    return; // Stop process if blacklist check fails
+    	}
         String bookCode = sname.getText();
         java.util.Date dateEmp = dateEmpChooser.getDate();
         java.util.Date dateRetAssum = dateRetAssumChooser.getDate();
