@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -41,7 +43,7 @@ public class BookManagementDashboard extends JFrame {
         
         JLabel iconLabel = new JLabel("");
         iconLabel.setBounds(87, 11, 100, 100);
-        iconLabel.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+        iconLabel.setIcon(loadImageIcon("/resrc/LMsmall.png"));
         topColorPanel.add(iconLabel);
         
         // Top row buttons
@@ -52,7 +54,7 @@ public class BookManagementDashboard extends JFrame {
                 new AddBookWindow(user,level,tg);
             }
         });
-        addBookButton.setIcon(new ImageIcon("src\\resrc\\add_12146523.png"));
+        addBookButton.setIcon(loadImageIcon("/resrc/add_12146523.png"));
         addBookButton.setBounds(113, 145, 104, 68);
         addBookButton.setContentAreaFilled(false);
         addBookButton.setBorderPainted(false); // Removes border
@@ -68,7 +70,7 @@ public class BookManagementDashboard extends JFrame {
             }
         });
         removeBookButton.setOpaque(false);
-        removeBookButton.setIcon(new ImageIcon("src\\resrc\\remove_12146882.png"));
+        removeBookButton.setIcon(loadImageIcon("/resrc/remove_12146882.png"));
         removeBookButton.setFocusPainted(false);
         removeBookButton.setContentAreaFilled(false);
         removeBookButton.setBorderPainted(false);
@@ -97,7 +99,8 @@ public class BookManagementDashboard extends JFrame {
             }
         });
         editBookButton.setOpaque(false);
-        editBookButton.setIcon(new ImageIcon("src\\resrc\\textbook_18624674.png"));
+        editBookButton.setIcon(loadImageIcon("/resrc/textbook_18624674.png"));
+
         editBookButton.setFocusPainted(false);
         editBookButton.setContentAreaFilled(false);
         editBookButton.setBorderPainted(false);
@@ -112,7 +115,7 @@ public class BookManagementDashboard extends JFrame {
             }
         });
         searchBookButton.setOpaque(false);
-        searchBookButton.setIcon(new ImageIcon("src\\resrc\\SEARCHBOOK.png")); // Use an appropriate search icon
+        searchBookButton.setIcon(loadImageIcon("/resrc/SEARCHBOOK.png")); // Use an appropriate search icon
         searchBookButton.setFocusPainted(false);
         searchBookButton.setContentAreaFilled(false);
         searchBookButton.setBorderPainted(false);
@@ -148,7 +151,7 @@ public class BookManagementDashboard extends JFrame {
             }
         });
         backHomeButton.setOpaque(false);
-        backHomeButton.setIcon(new ImageIcon("src\\resrc\\left-arrow_10117838.png"));
+        backHomeButton.setIcon(loadImageIcon("/resrc/left-arrow_10117838.png"));
         backHomeButton.setFocusPainted(false);
         backHomeButton.setContentAreaFilled(false);
         backHomeButton.setBorderPainted(false);
@@ -163,7 +166,7 @@ public class BookManagementDashboard extends JFrame {
         	}
         });
         removeStudentButton_1_1.setOpaque(false);
-        removeStudentButton_1_1.setIcon(new ImageIcon("src\\resrc\\list_11916758.png"));
+        removeStudentButton_1_1.setIcon(loadImageIcon("/resrc/list_11916758.png"));
         removeStudentButton_1_1.setFocusPainted(false);
         removeStudentButton_1_1.setContentAreaFilled(false);
         removeStudentButton_1_1.setBorderPainted(false);
@@ -172,7 +175,30 @@ public class BookManagementDashboard extends JFrame {
         
         setVisible(true);
     }
-    
+    private ImageIcon loadImageIcon(String path) {
+        try {
+            // First try loading from resources (works in JAR)
+            URL imageUrl = getClass().getResource(path);
+            if (imageUrl != null) {
+                return new ImageIcon(imageUrl);
+            }
+            
+            // Fallback for development (absolute path)
+            String projectPath = System.getProperty("user.dir");
+            String fullPath = projectPath + "/src/main/resources" + path;
+            File imageFile = new File(fullPath);
+            
+            if (imageFile.exists()) {
+                return new ImageIcon(fullPath);
+            } else {
+                System.err.println("Image not found at: " + path);
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 //    public static void main(String[] args) {
 //        SwingUtilities.invokeLater(() -> new BookManagementDashboard("user","level"));
 //    }

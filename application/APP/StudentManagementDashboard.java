@@ -7,8 +7,34 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 //import java.sql.Connection;
+import java.io.File;
+import java.net.URL;
 
 public class StudentManagementDashboard extends JFrame {
+	private ImageIcon loadImageIcon(String path) {
+        try {
+            // First try loading from resources (works in JAR)
+            URL imageUrl = getClass().getResource(path);
+            if (imageUrl != null) {
+                return new ImageIcon(imageUrl);
+            }
+            
+            // Fallback for development (absolute path)
+            String projectPath = System.getProperty("user.dir");
+            String fullPath = projectPath + "/src/main/resources" + path;
+            File imageFile = new File(fullPath);
+            
+            if (imageFile.exists()) {
+                return new ImageIcon(fullPath);
+            } else {
+                System.err.println("Image not found at: " + path);
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 	/*private ImageIcon loadImage(String imageName) {
 	    return new ImageIcon(getClass().getResource("/resrc/" + imageName));
 	}*/
@@ -42,11 +68,12 @@ public class StudentManagementDashboard extends JFrame {
         
         JLabel iconLabel = new JLabel("");
         iconLabel.setBounds(87, 11, 100, 100);
-        iconLabel.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+        
+        iconLabel.setIcon(loadImageIcon("/resrc/LMsmall.png"));
         topColorPanel.add(iconLabel);
         
         JLabel iconLabel_1 = new JLabel("");
-        iconLabel_1.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+        iconLabel_1.setIcon(loadImageIcon("/resrc/LMsmall.png"));
         iconLabel_1.setBounds(87, 11, 100, 100);
         topColorPanel.add(iconLabel_1);
         
@@ -57,7 +84,8 @@ public class StudentManagementDashboard extends JFrame {
         		new AddStudentWindow(user,level,tg);
         	}
         });
-        addStudentButton.setIcon(new ImageIcon("src\\resrc\\profile_10655019.png"));
+       
+        addStudentButton.setIcon(loadImageIcon("/resrc/profile_10655019.png"));
         addStudentButton.setBounds(22, 196, 104, 68);
         addStudentButton.setContentAreaFilled(false);
         addStudentButton.setBorderPainted(false); // Removes border
@@ -73,7 +101,8 @@ public class StudentManagementDashboard extends JFrame {
         	}
         });
         removeStudentButton.setOpaque(false);
-        removeStudentButton.setIcon(new ImageIcon("src\\resrc\\delete-account_16321987.png"));
+        
+        removeStudentButton.setIcon(loadImageIcon("/resrc/delete-account_16321987.png"));
         removeStudentButton.setFocusPainted(false);
         removeStudentButton.setContentAreaFilled(false);
         removeStudentButton.setBorderPainted(false);
@@ -102,7 +131,8 @@ public class StudentManagementDashboard extends JFrame {
         	}
         });
         backHomeButton.setOpaque(false);
-        backHomeButton.setIcon(new ImageIcon("src\\resrc\\left-arrow_10117838.png"));
+        
+        backHomeButton.setIcon(loadImageIcon("/resrc/left-arrow_10117838.png"));
         backHomeButton.setFocusPainted(false);
         backHomeButton.setContentAreaFilled(false);
         backHomeButton.setBorderPainted(false);
@@ -125,7 +155,8 @@ public class StudentManagementDashboard extends JFrame {
         	}
         });
         removeStudentButton_1.setOpaque(false);
-        removeStudentButton_1.setIcon(new ImageIcon("src\\resrc\\user_16784047.png"));
+       
+        removeStudentButton_1. setIcon(loadImageIcon("/resrc/user_16784047.png"));
         removeStudentButton_1.setFocusPainted(false);
         removeStudentButton_1.setContentAreaFilled(false);
         removeStudentButton_1.setBorderPainted(false);
@@ -141,7 +172,8 @@ public class StudentManagementDashboard extends JFrame {
         	}
         });
         removeStudentButton_1_1.setOpaque(false);
-        removeStudentButton_1_1.setIcon(new ImageIcon("src\\resrc\\list_11916758.png"));
+        
+        removeStudentButton_1_1.setIcon(loadImageIcon("/resrc/list_11916758.png"));
         removeStudentButton_1_1.setFocusPainted(false);
         removeStudentButton_1_1.setContentAreaFilled(false);
         removeStudentButton_1_1.setBorderPainted(false);

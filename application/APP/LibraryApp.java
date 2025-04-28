@@ -6,10 +6,13 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.io.File;
 //import java.awt.geom.RoundRectangle2D;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
@@ -59,22 +62,41 @@ public class LibraryApp {
 	
 	private static Connection connection;
 	public static Properties getProps() {
-		Properties props = new Properties();
-		try {
-			props.load(new FileInputStream("config.properties"));
-			return props;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		 Properties props = new Properties();
+		    
+		try (InputStream input = LibraryApp.class.getResourceAsStream("config.properties")) {
+	        if (input != null) {
+	            props.load(input);
+	            return props;
+	        }
+	    } catch (IOException e) {
+	        System.err.println("Warning: Error reading classpath config - " + e.getMessage());
+	    }
+	    
+	    // If not found in classpath, try filesystem
+	    try (InputStream input = new FileInputStream("config.properties")) {
+	        props.load(input);
+	    } catch (FileNotFoundException e) {
+	        System.err.println("Warning: config.properties not found in classpath or working directory (" + 
+	            System.getProperty("user.dir") + ") - using empty properties");
+	    } catch (IOException e) {
+	        System.err.println("Warning: Error reading config.properties - " + e.getMessage());
+	    }
+	    
+	    return props;
 	}
+	
 	
 	public static boolean authenticate(String username, String password) {
 	    // First check for benallal/amine
 	    if ("benallal".equalsIgnoreCase(username.trim()) && "amine".equals(password)) {
 	        return true;
+	    }
+	    if (getProps() == null) {
+	        JOptionPane.showMessageDialog(null, 
+	            "Configuration file is missing or invalid", 
+	            "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
 	    
 	    // If not benallal/amine, check against userstable
@@ -349,7 +371,7 @@ public class LibraryApp {
 		//lblNewLabel_6.setIcon(loadImage("LM.png"));
 		
 		lblNewLabel_6.setSize(new Dimension(10, 10));
-		lblNewLabel_6.setIcon(new ImageIcon("src\\resrc\\LM.png"));
+		lblNewLabel_6.setIcon(loadImage("/resrc/LM.png"));
 		lblNewLabel_6.setBounds(40, 146, 297, 251);
 		panel.add(lblNewLabel_6);
 		
@@ -358,7 +380,7 @@ public class LibraryApp {
 		frmLibraryapp.getContentPane().add(lblNewLabel_3);
 		lblNewLabel_3.setMinimumSize(new Dimension(50, 50));
 		lblNewLabel_3.setMaximumSize(new Dimension(100, 100));
-		lblNewLabel_3.setIcon(new ImageIcon("src\\resrc\\Untitled design.png"));
+		lblNewLabel_3.setIcon(loadImage("/resrc/Untitled design.png"));
 		
 		JLabel lblusername = new JLabel("Username");
 		lblusername.setForeground(Color.BLACK);
@@ -446,11 +468,11 @@ public class LibraryApp {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                 user = textArea.getText().trim();
+                user = textArea.getText().trim();
                 pass = String.valueOf(passwordField.getPassword());
 
                 if (authenticate(user, pass)) {
-                    String accessLevel = getAccessLevel(user);
+                    level = getAccessLevel(user);
                     
                     Properties props = getProps();
                     try {
@@ -461,7 +483,7 @@ public class LibraryApp {
                         
                         checkOverdueLoans(connection);
                         
-                        new Home(user, accessLevel,toggleButton);
+                        new Home(user, level, toggleButton);
                         frmLibraryapp.dispose();
                         
                     } catch (SQLException e1) {
@@ -486,5 +508,33 @@ public class LibraryApp {
 	
 		
 		
+	}
+	private ImageIcon loadImage(String path) {
+	    try {
+	        // Load from resources (works in JAR)
+	        URL imageUrl = getClass().getResource(path);
+	        if (imageUrl != null) {
+	            return new ImageIcon(imageUrl);
+	        }
+	        
+	        // Debug output
+	        System.out.println("Failed to load: " + path);
+	        System.out.println("Trying absolute path...");
+	        
+	        // Fallback for development (absolute path)
+	        String projectPath = System.getProperty("user.dir");
+	        String fullPath = projectPath + "/src/main/resources" + path;
+	        File imageFile = new File(fullPath);
+	        
+	        if (imageFile.exists()) {
+	            return new ImageIcon(fullPath);
+	        } else {
+	            System.err.println("Image not found at: " + fullPath);
+	            return null;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
 }

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -78,7 +80,8 @@ public class RemoveBookWindow extends JFrame {
         
         // Search Button
         searchButton = new JButton("");
-        searchButton.setIcon(new ImageIcon("src\\resrc\\find_11916806.png"));
+        
+        searchButton.setIcon(loadImageIcon("/resrc/searchicon.png"));
         searchButton.setBounds(160, 195, 50, 50);
         searchButton.setFocusPainted(false);
         searchButton.setContentAreaFilled(false);
@@ -244,6 +247,30 @@ public class RemoveBookWindow extends JFrame {
 
     private void showSuccess(String message) {
         JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+    private ImageIcon loadImageIcon(String path) {
+        try {
+            // First try loading from resources (works in JAR)
+            URL imageUrl = getClass().getResource(path);
+            if (imageUrl != null) {
+                return new ImageIcon(imageUrl);
+            }
+            
+            // Fallback for development (absolute path)
+            String projectPath = System.getProperty("user.dir");
+            String fullPath = projectPath + "/src/main/resources" + path;
+            File imageFile = new File(fullPath);
+            
+            if (imageFile.exists()) {
+                return new ImageIcon(fullPath);
+            } else {
+                System.err.println("Image not found at: " +projectPath+ path);
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 //    public static void main(String[] args) {

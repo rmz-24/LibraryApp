@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.URL;
 import java.sql.*;
 
 public class EditStudentWindow extends JFrame{
@@ -75,7 +77,7 @@ public class EditStudentWindow extends JFrame{
         		
         	}
         });
-        btnsearch.setIcon(new ImageIcon("src\\resrc\\find_11916806.png"));
+        btnsearch.setIcon(loadImageIcon("/resrc/searchicon.png"));
         btnsearch.setFocusPainted(false);
         btnsearch.setContentAreaFilled(false);
         btnsearch.setBorderPainted(false);
@@ -283,7 +285,30 @@ public class EditStudentWindow extends JFrame{
         getContentPane().add(field);
     }
     
-    
+    private ImageIcon loadImageIcon(String path) {
+        try {
+            // First try loading from resources (works in JAR)
+            URL imageUrl = getClass().getResource(path);
+            if (imageUrl != null) {
+                return new ImageIcon(imageUrl);
+            }
+            
+            // Fallback for development (absolute path)
+            String projectPath = System.getProperty("user.dir");
+            String fullPath = projectPath + "/src/main/resources" + path;
+            File imageFile = new File(fullPath);
+            
+            if (imageFile.exists()) {
+                return new ImageIcon(fullPath);
+            } else {
+                System.err.println("Image not found at: " + path);
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 //    public static void main(String[] args) {
 //        new EditStudentWindow();
 //    }

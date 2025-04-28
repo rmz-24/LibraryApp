@@ -4,6 +4,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -56,7 +58,8 @@ public class LoanManagementDashboard extends JFrame{
 		
 		JLabel iconLabel = new JLabel("");
 		iconLabel.setBounds(87, 11, 100, 100);
-		iconLabel.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+		
+		iconLabel.setIcon(loadImageIcon("/resrc/LMsmall.png"));
 		topColorPanel.add(iconLabel);
 		
 		JButton addemprunt = new JButton("");
@@ -67,7 +70,8 @@ public class LoanManagementDashboard extends JFrame{
 				dispose();
 			}
 		});
-		addemprunt.setIcon(new ImageIcon("src\\resrc\\handbook_18447619.png"));
+		
+		addemprunt.setIcon(loadImageIcon("/resrc/handbook_18447619.png"));
 		addemprunt.setBounds(51, 199, 64, 64);
 		addemprunt.setBorderPainted(false); // Removes border
 		addemprunt.setFocusPainted(false); // Removes focus border
@@ -77,7 +81,8 @@ public class LoanManagementDashboard extends JFrame{
 		
 		JButton reviwreturns = new JButton("");
 		reviwreturns.setOpaque(false);
-		reviwreturns.setIcon(new ImageIcon("src\\resrc\\bookreturn_11860727.png"));
+		
+		reviwreturns.setIcon(loadImageIcon("/resrc/bookreturn_11860727.png"));
 		reviwreturns.setFocusPainted(false);
 		reviwreturns.setBorderPainted(false);
 		reviwreturns.setBounds(224, 199, 64, 64);
@@ -93,7 +98,8 @@ public class LoanManagementDashboard extends JFrame{
 		
 		JButton reviewloans = new JButton("");
 		reviewloans.setOpaque(false);
-		reviewloans.setIcon(new ImageIcon("src\\resrc\\location-book_18588122.png"));
+		
+		reviewloans.setIcon(loadImageIcon("/resrc/location-book_18588122.png"));
 		reviewloans.setFocusPainted(false);
 		reviewloans.setBorderPainted(false);
 		reviewloans.setBounds(391, 199, 64, 64);
@@ -127,7 +133,8 @@ public class LoanManagementDashboard extends JFrame{
 		
 		JButton backHomeButton = new JButton("");
 		backHomeButton.setOpaque(false);
-		backHomeButton.setIcon(new ImageIcon("src\\resrc\\left-arrow_10117838.png"));
+		
+		backHomeButton.setIcon(loadImageIcon("/resrc/left-arrow_10117838.png"));
 		backHomeButton.setFocusPainted(false);
 		backHomeButton.setContentAreaFilled(false);
 		backHomeButton.setBorderPainted(false);
@@ -146,7 +153,30 @@ public class LoanManagementDashboard extends JFrame{
 		
 		setVisible(true);
 	}
-	
+	private ImageIcon loadImageIcon(String path) {
+        try {
+            // First try loading from resources (works in JAR)
+            URL imageUrl = getClass().getResource(path);
+            if (imageUrl != null) {
+                return new ImageIcon(imageUrl);
+            }
+            
+            // Fallback for development (absolute path)
+            String projectPath = System.getProperty("user.dir");
+            String fullPath = projectPath + "/src/main/resources" + path;
+            File imageFile = new File(fullPath);
+            
+            if (imageFile.exists()) {
+                return new ImageIcon(fullPath);
+            } else {
+                System.err.println("Image not found at: " + path);
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 //	public static void main(String[] args) {
 //		SwingUtilities.invokeLater(new Runnable() {
 //			@Override

@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.URL;
 import java.sql.*;
 
 public class RemoveStudentWindow extends JFrame {
@@ -60,38 +62,97 @@ public class RemoveStudentWindow extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 String studentID = studentiddlt.getText().trim();
+                
                 if (studentID.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a Student ID!", "Warning", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
                 try {
-                    conn = LibraryApp.getConnection(); // Ensure connection is established
-                    String sql = "DELETE FROM studentlist WHERE STUDENTID = ?";
-                    PreparedStatement stmt = conn.prepareStatement(sql);
-                    stmt.setString(1, studentID);
-
-                    int rowsAffected = stmt.executeUpdate(); // Use executeUpdate() for DELETE
-
-                    if (rowsAffected > 0) {
-                        JOptionPane.showMessageDialog(null, "Student deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                        studentiddlt.setText(""); // Clear input field
-                        Sname.setText("");
-                        Sfname.setText("");
-                        Slevel.setText("");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Student not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                    conn = LibraryApp.getConnection();
+                    
+                    // 1. Check blacklist status
+                    String blacklistStatus = null;
+                    boolean isBlacklisted = false;
+                    String sqlCheckBlacklist = "SELECT ETAT FROM blacklist WHERE STUDENTID = ?";
+                    try (PreparedStatement stmtBlacklist = conn.prepareStatement(sqlCheckBlacklist)) {
+                        stmtBlacklist.setString(1, studentID);
+                        try (ResultSet rs = stmtBlacklist.executeQuery()) {
+                            if (rs.next()) {
+                                blacklistStatus = rs.getString("ETAT");
+                                // Assuming "BLOCKED", "BANNED", "RESTRICTED" etc. mean blacklisted
+                                // and only "CLEAR" means not blacklisted
+                                isBlacklisted = !"CLEAR".equalsIgnoreCase(blacklistStatus);
+                            } else {
+                                // Student not found in blacklist table at all
+                                isBlacklisted = false;
+                            }
+                        }
                     }
 
-                    //stmt.close();
-                    //conn.close();
+                    // 2. Check if student has pending loans
+                    boolean hasPendingLoans = false;
+                    String sqlCheckLoans = "SELECT COUNT(*) AS loan_count FROM EMPRUNTS WHERE NUM_ETU = ? AND STATUT IN (0, 2)";
+                    try (PreparedStatement stmtLoans = conn.prepareStatement(sqlCheckLoans)) {
+                        stmtLoans.setString(1, studentID);
+                        try (ResultSet rs = stmtLoans.executeQuery()) {
+                            if (rs.next()) {
+                                int count = rs.getInt("loan_count");
+                                hasPendingLoans = (count > 0);
+                                System.out.println("DEBUG: Found " + count + " pending/late loans"); // Debug output
+                            }
+                        }
+                    }
 
+                    // 2. Decision logic
+                    
+
+                    // 2. Only proceed if count is 0
+                    
+
+                    // 3. Decision logic
+                    
+                    if (blacklistStatus != null && !"clear".equals(blacklistStatus)) {
+                        JOptionPane.showMessageDialog(null, 
+                            "The student is Blacklisted. Please review the student's state", 
+                            "Warning", JOptionPane.WARNING_MESSAGE);
+                    }else if (hasPendingLoans) {
+                        JOptionPane.showMessageDialog(null, 
+                                "This student has  pending/late loans. Resolve them before deletion.", 
+                                "Warning", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        
+                    } else {
+                        // Proceed with deletion
+                        String sqlDelete = "DELETE FROM studentlist WHERE STUDENTID = ?";
+                        try (PreparedStatement stmtDelete = conn.prepareStatement(sqlDelete)) {
+                            stmtDelete.setString(1, studentID);
+                            int rowsAffected = stmtDelete.executeUpdate();
+                            
+                            if (rowsAffected > 0) {
+                                JOptionPane.showMessageDialog(null, 
+                                    "Student deleted successfully!", 
+                                    "Success", JOptionPane.INFORMATION_MESSAGE);
+                                // Clear input fields
+                                studentiddlt.setText("");
+                                Sname.setText("");
+                                Sfname.setText("");
+                                Slevel.setText("");
+                            } else {
+                                JOptionPane.showMessageDialog(null, 
+                                    "Student not found!", 
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(RemoveStudentWindow.this, "Error: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
-                }
+                    JOptionPane.showMessageDialog(RemoveStudentWindow.this, 
+                        "Database Error: " + ex.getMessage(), 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                } 
             }
         });
-
         btndeletestudent.setBackground(new Color(128, 0, 0));
         btndeletestudent.setForeground(new Color(255, 255, 255));
         btndeletestudent.setFont(new Font("Jost", Font.BOLD, 24));
@@ -135,7 +196,8 @@ public class RemoveStudentWindow extends JFrame {
         getContentPane().add(lblleveldlt);
 
         JButton btnsearch = new JButton("");
-        btnsearch.setIcon(new ImageIcon("src\\resrc\\find_11916806.png"));
+        
+        btnsearch.setIcon(loadImageIcon("/resrc/searchicon.png"));
         btnsearch.setBounds(160, 195, 50, 50);
         btnsearch.setFocusPainted(false);
         btnsearch.setContentAreaFilled(false);
@@ -185,6 +247,30 @@ public class RemoveStudentWindow extends JFrame {
             //conn.close();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private ImageIcon loadImageIcon(String path) {
+        try {
+            // First try loading from resources (works in JAR)
+            URL imageUrl = getClass().getResource(path);
+            if (imageUrl != null) {
+                return new ImageIcon(imageUrl);
+            }
+            
+            // Fallback for development (absolute path)
+            String projectPath = System.getProperty("user.dir");
+            String fullPath = projectPath + "/src/main/resources" + path;
+            File imageFile = new File(fullPath);
+            
+            if (imageFile.exists()) {
+                return new ImageIcon(fullPath);
+            } else {
+                System.err.println("Image not found at: " + path);
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

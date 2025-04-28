@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.io.File;
+import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.*;
@@ -180,6 +182,7 @@ public class Home {
 	    };
 
 	    java.sql.Connection conn = LibraryApp.getConnection();
+	    LibraryApp.checkOverdueLoans(conn);
 	    final String query = "SELECT BOOKNAME, AVAILABLE_QTY FROM (SELECT BOOKNAME, AVAILABLE_QTY, ROW_NUMBER() OVER (ORDER BY BOOKID  DESC) AS rn FROM BOOKSLIST) WHERE rn <= 10";
 
 	    try (PreparedStatement stmtn = conn.prepareStatement(query)) {
@@ -494,7 +497,8 @@ public class Home {
         
         JLabel lbllogo = new JLabel("");
         lbllogo.setBounds(40, 11, 112, 80);
-        lbllogo.setIcon(new ImageIcon("src\\resrc\\LMsmall.png"));
+        
+        lbllogo.setIcon(loadImageIcon("/resrc/LMsmall.png"));
         panel.add(lbllogo);
         
         JButton studentManagementButton = new JButton("");
@@ -509,7 +513,7 @@ public class Home {
         });
         
         studentManagementButton.setBackground(new Color(0, 102, 102));
-        studentManagementButton.setIcon(new ImageIcon("src\\resrc\\student.png"));
+        studentManagementButton.setIcon(loadImageIcon("/resrc/student.png"));
         studentManagementButton.setBounds(40, 137, 112, 68);
         studentManagementButton.setContentAreaFilled(false);
         studentManagementButton.setBorderPainted(false);
@@ -537,7 +541,7 @@ public class Home {
       
        
 
-        bookManagementButton.setIcon(new ImageIcon("src\\resrc\\books.png"));
+        bookManagementButton.setIcon(loadImageIcon("/resrc/books.png"));
         bookManagementButton.setBounds(40, 280, 112, 68);
         bookManagementButton.setContentAreaFilled(false);
         bookManagementButton.setBorderPainted(false);
@@ -563,7 +567,8 @@ public class Home {
         		
         	}
         });
-        BlackListedStudents.setIcon(new ImageIcon("src\\resrc\\blacklist_6456893.png"));
+        
+        BlackListedStudents.setIcon(loadImageIcon("/resrc/blacklist_6456893.png"));
         BlackListedStudents.setBounds(40, 717, 112, 68);
         BlackListedStudents.setContentAreaFilled(false);
         BlackListedStudents.setBorderPainted(false);
@@ -590,7 +595,7 @@ public class Home {
         		 
         	}
         });
-        borrowBookButton.setIcon(new ImageIcon("src\\resrc\\borrow_book.png"));
+        borrowBookButton.setIcon(loadImageIcon("/resrc/borrow_book.png"));
         borrowBookButton.setBounds(40, 438, 112, 68);
         borrowBookButton.setContentAreaFilled(false);
         borrowBookButton.setBorderPainted(false);
@@ -662,7 +667,7 @@ public class Home {
         
         JButton addUserButton = new JButton("");
         addUserButton.addActionListener(e -> openWindow(new AdminPermissionsWindow(user, level,tgl)));
-        addUserButton.setIcon(new ImageIcon("src\\resrc\\add_16321386.png"));
+        addUserButton.setIcon(loadImageIcon("/resrc/add_16321386.png"));
         addUserButton.setBounds(1002, 11, 70, 66);
         addUserButton.setContentAreaFilled(false);
         addUserButton.setBorderPainted(false);
@@ -704,7 +709,9 @@ public class Home {
         		}
         });
         backHomeButton.setOpaque(false);
-        backHomeButton.setIcon(new ImageIcon("src\\resrc\\log-out_10024482.png"));
+        
+
+        backHomeButton.setIcon(loadImageIcon("/resrc/log-out_10024482.png"));
         backHomeButton.setFocusPainted(false);
         backHomeButton.setContentAreaFilled(false);
         backHomeButton.setBorderPainted(false);
@@ -1084,5 +1091,29 @@ public class Home {
         label.setBackground(new Color(200, 200, 200));
         label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         return label;
+    }
+    private ImageIcon loadImageIcon(String path) {
+        try {
+            // First try loading from resources (works in JAR)
+            URL imageUrl = getClass().getResource(path);
+            if (imageUrl != null) {
+                return new ImageIcon(imageUrl);
+            }
+            
+            // Fallback for development (absolute path)
+            String projectPath = System.getProperty("user.dir");
+            String fullPath = projectPath + "/src/main/resources" + path;
+            File imageFile = new File(fullPath);
+            
+            if (imageFile.exists()) {
+                return new ImageIcon(fullPath);
+            } else {
+                System.err.println("Image not found at: " + path);
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
